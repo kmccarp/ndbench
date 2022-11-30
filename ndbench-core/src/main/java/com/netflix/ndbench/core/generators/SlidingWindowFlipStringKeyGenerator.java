@@ -79,7 +79,7 @@ public class SlidingWindowFlipStringKeyGenerator extends StringKeyGenerator {
     private int getCurrentWindowIndex()
     {
         long currentTime = System.currentTimeMillis();
-        long currentWindow =((currentTime - startTime) / windowDurationInMs);
+        long currentWindow =(currentTime - startTime) / windowDurationInMs;
         return (int) currentWindow%(numKeys/windowSize);
     }
 }

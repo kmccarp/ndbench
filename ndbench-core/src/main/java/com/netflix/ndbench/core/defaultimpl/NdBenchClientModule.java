@@ -61,8 +61,8 @@ public class NdBenchClientModule extends AbstractModule {
         if (maps == null) {
             TypeLiteral<String> stringTypeLiteral = new TypeLiteral<String>() {
             };
-            TypeLiteral<NdBenchAbstractClient<?>> ndbClientTypeLiteral = (new TypeLiteral<NdBenchAbstractClient<?>>() {
-            });
+            TypeLiteral<NdBenchAbstractClient<?>> ndbClientTypeLiteral = new TypeLiteral<NdBenchAbstractClient<?>>() {
+            };
             maps = MapBinder.newMapBinder(binder(), stringTypeLiteral, ndbClientTypeLiteral);
         }
 

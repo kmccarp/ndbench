@@ -137,8 +137,9 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
             case 2:
                 return readCollectionsByKey(key);
             default:
-                 if (readAllByKey(key) != CacheMiss && readUDTByKey(key) != CacheMiss && readCollectionsByKey(key) != CacheMiss)
+                if (readAllByKey(key) != CacheMiss && readUDTByKey(key) != CacheMiss && readCollectionsByKey(key) != CacheMiss) {
                     return ResultOK;
+                }
                  return CacheMiss;
         }
 
@@ -189,8 +190,9 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
             case 2:
                 return updateCasSimple(key);
             default:
-                if (insertSimple(key) != CacheMiss && updateSimple(key) != CacheMiss && updateCasSimple(key) != CacheMiss)
+                if (insertSimple(key) != CacheMiss && updateSimple(key) != CacheMiss && updateCasSimple(key) != CacheMiss) {
                     return ResultOK;
+                }
                 return CacheMiss;
         }
 
@@ -211,15 +213,16 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
 
         ResultSet rs = session.execute(bStmt);
 
-        if (rs !=null)
+        if (rs != null) {
             return ResultOK;
+        }
 
         return ResutlFailed;
     }
 
     private String updateSimple(String key) {
 
-        Map<String, UDTValue> billing_addresses = new HashMap<>();
+        Map<String, UDTValue> billingAddresses = new HashMap<>();
 
         HashSet<String> phones = new HashSet<>();
         for (int i = 0; i < this.dataGenerator.getRandomInteger()%6+1; i++) {
@@ -233,7 +236,7 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
         address.setInt("zip_code", this.dataGenerator.getRandomInteger());
         address.setSet("phones", phones);
 
-        billing_addresses.put(RandomStringUtils.randomAlphanumeric(8),address);
+        billingAddresses.put(RandomStringUtils.randomAlphanumeric(8),address);
 
 
         HashSet<UDTValue> emails = new HashSet<>();
@@ -246,7 +249,7 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
 
         BoundStatement bStmt = updatePstmt1.bind();
 
-        bStmt.setMap("billing_addresses", billing_addresses);
+        bStmt.setMap("billing_addresses", billingAddresses);
         bStmt.setSet("emails", emails);
         bStmt.setString("id", key);
 
@@ -254,8 +257,9 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
 
         ResultSet rs = session.execute(bStmt);
 
-        if (rs !=null)
+        if (rs != null) {
             return ResultOK;
+        }
 
         return ResutlFailed;
     }
@@ -340,8 +344,9 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
 
         batch.clear();
 
-        if (rs !=null)
+        if (rs != null) {
             return ResultOK;
+        }
 
         return ResutlFailed;
     }

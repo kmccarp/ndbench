@@ -67,26 +67,30 @@ public class DynoJedisExtFunc extends NdBenchBaseClient {
         DynoJedisUtils jedisUtils = new DynoJedisUtils(jedisClient);
 
         correct = jedisUtils.nonPipelineRead(key);
-        if (correct == null)
+        if (correct == null) {
             return null;
+        }
 
         sb.append("simple get: " + correct + " , ");
 
         correct = jedisUtils.pipelineRead(key, MAX_PIPE_KEYS, MIN_PIPE_KEYS);
-        if (correct == null)
+        if (correct == null) {
             return null;
+        }
 
         sb.append("pipeline get: " + correct + " , ");
 
         correct = jedisUtils.pipelineReadHGETALL(key, HM_KEY_PREFIX);
-        if (correct == null)
+        if (correct == null) {
             return null;
+        }
 
         sb.append("pipeline hash: " + correct + " , ");
 
         correct = jedisUtils.nonPipelineZRANGE(key, MAX_SCORE);
-        if (correct == null)
+        if (correct == null) {
             return null;
+        }
 
         sb.append("sorted set: " + correct + " , ");
 
@@ -106,20 +110,23 @@ public class DynoJedisExtFunc extends NdBenchBaseClient {
         sb.append("simple get: " + correct + " , ");
 
         correct = jedisUtils.pipelineWrite(key, dataGenerator, MAX_PIPE_KEYS, MIN_PIPE_KEYS);
-        if (correct == null)
+        if (correct == null) {
             return null;
+        }
 
         sb.append("pipeline set: " + correct + " , ");
 
         correct = jedisUtils.pipelineWriteHMSET(key, dataGenerator, HM_KEY_PREFIX);
-        if (correct == null)
+        if (correct == null) {
             return null;
+        }
 
         sb.append("pipeline HMSET: " + correct + " , ");
 
         correct = jedisUtils.nonPipelineZADD(key, dataGenerator, Z_KEY_PREFIX, MAX_SCORE);
-        if (correct == null)
+        if (correct == null) {
             return null;
+        }
 
         sb.append("non pipeline ZADD: " + correct + " , ");
         return sb.toString();

@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @author vchella
  */
-public class RateLimitUtil {
+public final class RateLimitUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(RateLimitUtil.class);
 
@@ -74,9 +74,9 @@ public class RateLimitUtil {
             return false;
         }
     }
-    
-    
-    private class InnerState {
+
+
+    private final class InnerState {
         
         private final AtomicInteger counter = new AtomicInteger();
         private final AtomicLong second = new AtomicLong(0L);
@@ -154,7 +154,7 @@ public class RateLimitUtil {
                 
                 long duration = end.get() - start;
                 long totalCount = counter.get();
-                double resultRps = ((double)(totalCount)/((double)duration/1000.0));
+                double resultRps = (double)(totalCount)/((double)duration/1000.0);
                 logger.info("Total Count : " + totalCount + ", duration:  " + duration + ", getSuccess rps: " + resultRps);
                 
                 double percentageDiff = Math.abs(expectedRps-resultRps)*100/resultRps;

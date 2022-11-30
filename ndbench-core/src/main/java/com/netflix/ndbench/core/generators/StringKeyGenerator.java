@@ -40,8 +40,9 @@ public abstract class StringKeyGenerator implements KeyGenerator<String> {
         if (this.isPreLoadKeys()) {
             logger.info("Preloading " + numKeys + " keys");
             for (int i = 0; i < getNumKeys(); i++) {
-                if (i % 10000 == 0)
-                    logger.info("Still initializing sample data for Keys. So far: "+ i+" /"+numKeys);
+                if (i % 10000 == 0) {
+                    logger.info("Still initializing sample data for Keys. So far: " + i + " /" + numKeys);
+                }
                 keys.add("T" + i);
             }
             logger.info("Preloaded " + numKeys + " keys");
