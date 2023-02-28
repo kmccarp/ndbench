@@ -68,7 +68,7 @@ public class DataBackfillTest
         for (int i = 0; i < 100; i++)
         {
             List<Pair<Integer, Integer>> s = dataBackfill.getKeyRangesPerThread(10, 4, 100);
-            s.forEach(st_end -> Assert.assertTrue(st_end.getRight() <= 100));
+            s.forEach(stEnd -> Assert.assertTrue(stEnd.getRight() <= 100));
             s.forEach(System.out::println);
         }
     }

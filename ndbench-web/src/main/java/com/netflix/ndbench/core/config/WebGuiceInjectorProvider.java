@@ -32,7 +32,7 @@ public class WebGuiceInjectorProvider extends GuiceInjectorProvider {
         // because choice of LookupService impl should be made at application level to avoid conflicts from
         // different modules creating different LookupService implementations.
         String discoveryEnv = System.getenv(NdBenchConstants.DISCOVERY_ENV);
-        if(StringUtils.isBlank(discoveryEnv) || discoveryEnv == "local"){
+        if(StringUtils.isBlank(discoveryEnv) || "local".equals(discoveryEnv)){
             moduleList.add(Modules.override(new EurekaModule()).with(new AbstractModule() {
                 @Override
                 protected void configure() {

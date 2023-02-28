@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
  */
 @Singleton
 public class EnvParser {
-  private final String PROPERTIES_VCAP_SERVICES = "VCAP_SERVICES";
-  private final String SERVICE_NAME = "p-cloudcache";
+  private final String propertiesVcapServices = "VCAP_SERVICES";
+  private final String serviceName = "p-cloudcache";
   private PropertyFactory propertyFactory;
 
   private final Pattern p = Pattern.compile("(.*)\\[(\\d*)\\]");
@@ -63,7 +63,7 @@ public class EnvParser {
 
   private Map getCredentials() throws IOException {
     Map credentials = null;
-    String envContent = propertyFactory.getProperty(PROPERTIES_VCAP_SERVICES).asString("{}").get();
+    String envContent = propertyFactory.getProperty(propertiesVcapServices).asString("{}").get();
     ObjectMapper objectMapper = new ObjectMapper();
     Map services = objectMapper.readValue(envContent, Map.class);
     List gemfireService = getGemFireService(services);
@@ -76,7 +76,7 @@ public class EnvParser {
   }
 
   private List getGemFireService(Map services) {
-    List l = (List) services.get(SERVICE_NAME);
+    List l = (List) services.get(serviceName);
     if (l == null) {
       throw new IllegalStateException("GemFire service is not bound to this application");
     }

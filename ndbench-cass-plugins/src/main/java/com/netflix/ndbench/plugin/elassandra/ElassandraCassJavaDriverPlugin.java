@@ -50,12 +50,12 @@ public class ElassandraCassJavaDriverPlugin implements NdBenchClient{
 
     //settings
     private volatile DataGenerator dataGenerator;
-    private volatile String ClusterName;
-    private volatile String ClusterContactPoint;
-    private volatile String KeyspaceName;
-    private volatile String TableName;
-    private volatile ConsistencyLevel WriteConsistencyLevel;
-    private volatile ConsistencyLevel ReadConsistencyLevel;
+    private volatile String clusterName;
+    private volatile String clusterContactPoint;
+    private volatile String keyspaceName;
+    private volatile String tableName;
+    private volatile ConsistencyLevel writeConsistencyLevel;
+    private volatile ConsistencyLevel readConsistencyLevel;
 
     private volatile Cluster cluster;
     private volatile Session session;
@@ -69,26 +69,26 @@ public class ElassandraCassJavaDriverPlugin implements NdBenchClient{
     public void init(DataGenerator dataGenerator) {
         this.dataGenerator = dataGenerator;
 
-        this.ClusterName = configs.getCluster();
-        logger.info("Cassandra  Cluster: " + ClusterName);
+        this.clusterName = configs.getCluster();
+        logger.info("Cassandra  Cluster: " + clusterName);
 
-        this.ClusterContactPoint = configs.getHost();
-        this.KeyspaceName = configs.getKeyspace();
-        this.TableName = configs.getCfname();
-        this.WriteConsistencyLevel = ConsistencyLevel.valueOf(configs.getWriteConsistencyLevel());
-        this.ReadConsistencyLevel = ConsistencyLevel.valueOf(configs.getReadConsistencyLevel());
+        this.clusterContactPoint = configs.getHost();
+        this.keyspaceName = configs.getKeyspace();
+        this.tableName = configs.getCfname();
+        this.writeConsistencyLevel = ConsistencyLevel.valueOf(configs.getWriteConsistencyLevel());
+        this.readConsistencyLevel = ConsistencyLevel.valueOf(configs.getReadConsistencyLevel());
 
         cluster = Cluster.builder()
-                .withClusterName(ClusterName)
-                .addContactPoint(ClusterContactPoint)
+                .withClusterName(clusterName)
+                .addContactPoint(clusterContactPoint)
                 .build();
         session = cluster.connect();
 
         upsertKeyspace(this.session);
         upsertCF(this.session);
 
-        writePstmt = session.prepare("INSERT INTO "+ TableName +" (\"_id\", name) VALUES (?, ?)");
-        readPstmt = session.prepare("SELECT * From "+ TableName +" Where \"_id\" = ?");
+        writePstmt = session.prepare("INSERT INTO "+ tableName +" (\"_id\", name) VALUES (?, ?)");
+        readPstmt = session.prepare("SELECT * From "+ tableName +" Where \"_id\" = ?");
 
         logger.info("Initialized ElassandraCassJavaDriverPlugin");
     }
@@ -104,7 +104,7 @@ public class ElassandraCassJavaDriverPlugin implements NdBenchClient{
     public String readSingle(String key) throws Exception {
         BoundStatement bStmt = readPstmt.bind();
         bStmt.setString("\"_id\"", key);
-        bStmt.setConsistencyLevel(this.ReadConsistencyLevel);
+        bStmt.setConsistencyLevel(this.readConsistencyLevel);
         ResultSet rs = session.execute(bStmt);
 
         List<Row> result=rs.all();
@@ -133,7 +133,7 @@ public class ElassandraCassJavaDriverPlugin implements NdBenchClient{
         BoundStatement bStmt = writePstmt.bind();
         bStmt.setString("\"_id\"", key);
         bStmt.setList("name", Arrays.asList(this.dataGenerator.getRandomValue())) ;
-        bStmt.setConsistencyLevel(this.WriteConsistencyLevel);
+        bStmt.setConsistencyLevel(this.writeConsistencyLevel);
 
         session.execute(bStmt);
         return ResultOK;
@@ -153,7 +153,7 @@ public class ElassandraCassJavaDriverPlugin implements NdBenchClient{
      */
     @Override
     public String getConnectionInfo() throws Exception {
-        return String.format("Cluster Name - %s : Keyspace Name - %s : CF Name - %s ::: ReadCL - %s : WriteCL - %s ", ClusterName, KeyspaceName, TableName, ReadConsistencyLevel, WriteConsistencyLevel);
+        return String.format("Cluster Name - %s : Keyspace Name - %s : CF Name - %s ::: ReadCL - %s : WriteCL - %s ", clusterName, keyspaceName, tableName, readConsistencyLevel, writeConsistencyLevel);
     }
 
     /**
@@ -167,13 +167,13 @@ public class ElassandraCassJavaDriverPlugin implements NdBenchClient{
     }
 
     void upsertKeyspace(Session session) {
-        session.execute("CREATE KEYSPACE IF NOT EXISTS " + KeyspaceName +" WITH replication = {'class': 'NetworkTopologyStrategy', 'dc1': '1'}  AND durable_writes = true;");
+        session.execute("CREATE KEYSPACE IF NOT EXISTS " + keyspaceName +" WITH replication = {'class': 'NetworkTopologyStrategy', 'dc1': '1'}  AND durable_writes = true;");
         //session.execute("CREATE KEYSPACE IF NOT EXISTS " + keyspaceName +" WITH replication = {'class':'SimpleStrategy','replication_factor': 2};");
-        session.execute("Use " + KeyspaceName);
+        session.execute("Use " + keyspaceName);
     }
     
     void upsertCF(Session session) {
-        session.execute("CREATE TABLE IF NOT EXISTS "+ TableName +" (\"_id\" text PRIMARY KEY, name list<text>) WITH bloom_filter_fp_chance = 0.01 " + 
+        session.execute("CREATE TABLE IF NOT EXISTS "+ tableName +" (\"_id\" text PRIMARY KEY, name list<text>) WITH bloom_filter_fp_chance = 0.01 " + 
                        " AND caching = '{\"keys\":\"ALL\", \"rows_per_partition\":\"NONE\"}'" +
                        " AND comment = 'Auto-created by Elassandra' " +
                        " AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy'} " +
