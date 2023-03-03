@@ -387,9 +387,11 @@ public class NdBenchResource {
     public Response getReadStatus() throws Exception {
 
         try {
-            if (ndBenchDriver.getIsReadRunning())
+            if (ndBenchDriver.getIsReadRunning()) {
                 return sendSuccessResponse("Read process running");
-            else return sendSuccessResponse( "No Read process is running");
+            } else {
+                return sendSuccessResponse("No Read process is running");
+            }
         } catch (Exception e) {
             logger.error("Error getting NdBench getReadStatus", e);
             return sendErrorResponse("NdBench getReadStatus failed! ", e);
@@ -403,9 +405,11 @@ public class NdBenchResource {
     public Response getWriteStatus() throws Exception {
 
         try {
-            if (ndBenchDriver.getIsWriteRunning())
+            if (ndBenchDriver.getIsWriteRunning()) {
                 return sendSuccessResponse("Writes process running");
-            else  return sendSuccessResponse("No Write process is running");
+            } else {
+                return sendSuccessResponse("No Write process is running");
+            }
         } catch (Exception e) {
             logger.error("Error getting NdBench getWriteStatus", e);
             return sendErrorResponse("NdBench getWriteStatus failed! ", e);
@@ -453,22 +457,25 @@ public class NdBenchResource {
 
             serverStatusJson.put("ClientDrivers",clientFactory.getClientDrivers());
             serverStatusJson.put("LoadPatterns", Arrays.asList(LoadPattern.values()));
-            String currentRunningDriver="NA",connectionInfo="NA", currentWriteLoadPattern="NA", currentReadLoadPattern="NA";
+            String currentRunningDriver = "NA";
+            String connectionInfo = "NA";
+            String currentWriteLoadPattern = "NA";
+            String currentReadLoadPattern = "NA";
 
-            NdBenchAbstractClient<?> NdBenchClient= ndBenchDriver.getClient();
+            NdBenchAbstractClient<?> ndBenchClient= ndBenchDriver.getClient();
 
-            if(NdBenchClient!=null)
+            if(ndBenchClient!=null)
             {
-                if(NdBenchClient.getClass().getAnnotation(NdBenchClientPlugin.class)!=null)
+                if(ndBenchClient.getClass().getAnnotation(NdBenchClientPlugin.class)!=null)
                 {
-                    currentRunningDriver=NdBenchClient.getClass().getAnnotation(NdBenchClientPlugin.class).value();
+                    currentRunningDriver=ndBenchClient.getClass().getAnnotation(NdBenchClientPlugin.class).value();
                 }
                 else
                 {
-                    currentRunningDriver=NdBenchClient.getClass().getSimpleName();
+                    currentRunningDriver=ndBenchClient.getClass().getSimpleName();
                 }
 
-                connectionInfo=NdBenchClient.getConnectionInfo();
+                connectionInfo=ndBenchClient.getConnectionInfo();
 
             }
             KeyGenerator writeLoadPattern=ndBenchDriver.getWriteLoadPattern();

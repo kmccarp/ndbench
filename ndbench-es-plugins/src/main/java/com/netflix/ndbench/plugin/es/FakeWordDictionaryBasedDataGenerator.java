@@ -40,8 +40,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 class FakeWordDictionaryBasedDataGenerator implements DataGenerator {
     private static final Logger logger = LoggerFactory.getLogger(FakeWordDictionaryBasedDataGenerator.class);
 
-    final static int MAX_PAD_CHARS = 10;
-    final static int DEFAULT_PAD_CHARS = 4;
+    static final int MAX_PAD_CHARS = 10;
+    static final int DEFAULT_PAD_CHARS = 4;
 
     private final char firstValidChar;
     private final char lastValidChar;
@@ -52,9 +52,9 @@ class FakeWordDictionaryBasedDataGenerator implements DataGenerator {
     /**
      * Constants that help define the domain of generated fake word values.
      */
-    private final static String DEFAULT_PREFIX = "nflx";
-    private final static char DEFAULT_FIRST_VALID_CHAR = 'a';
-    private final static char DEFAULT_LAST_VALID_CHAR = 'j';
+    private static final String DEFAULT_PREFIX = "nflx";
+    private static final char DEFAULT_FIRST_VALID_CHAR = 'a';
+    private static final char DEFAULT_LAST_VALID_CHAR = 'j';
 
     /**
      * A counter to index into the next dictionary word to use when requesting a value.

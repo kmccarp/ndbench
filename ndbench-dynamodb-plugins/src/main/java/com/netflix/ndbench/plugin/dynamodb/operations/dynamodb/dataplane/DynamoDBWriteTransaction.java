@@ -48,8 +48,8 @@ public class DynamoDBWriteTransaction extends AbstractDynamoDBDataPlaneOperation
     private static final Logger logger = LoggerFactory.getLogger(DynamoDBWriteTransaction.class);
     private static final String ResultOK = "Ok";
     private static final String ResultFailed = "Failed";
-    private String childTableNamePrefix;
-    private int mainTableColsPerRow;
+    private final String childTableNamePrefix;
+    private final int mainTableColsPerRow;
     public DynamoDBWriteTransaction(DataGenerator dataGenerator, AmazonDynamoDB dynamoDB, String tableName,
                                     String partitionKeyName, String childTableNamePrefix, int mainTableColsPerRow,
                                     ReturnConsumedCapacity returnConsumedCapacity) {

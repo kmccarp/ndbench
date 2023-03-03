@@ -82,9 +82,10 @@ public class AwsAsgDiscovery implements IClusterDiscovery {
             for (AutoScalingGroup asg : res.getAutoScalingGroups())
             {
                 for (com.amazonaws.services.autoscaling.model.Instance ins : asg.getInstances())
-                    if (!(ins.getLifecycleState().equalsIgnoreCase("Terminating") || ins.getLifecycleState().equalsIgnoreCase("shutting-down") || ins.getLifecycleState()
-                            .equalsIgnoreCase("Terminated")))
+                    if (!("Terminating".equalsIgnoreCase(ins.getLifecycleState()) || "shutting-down".equalsIgnoreCase(ins.getLifecycleState()) || "Terminated"
+                    .equalsIgnoreCase(ins.getLifecycleState()))) {
                         instanceIds.add(ins.getInstanceId());
+                    }
             }
             logger.info(String.format("Querying Amazon returned following instance in the ASG: %s --> %s", myAsgName, StringUtils.join(instanceIds, ",")));
 
@@ -104,10 +105,12 @@ public class AwsAsgDiscovery implements IClusterDiscovery {
         }
         finally
         {
-            if (client != null)
+            if (client != null) {
                 client.shutdown();
-            if(ec2Client !=null)
+            }
+            if (ec2Client != null) {
                 ec2Client.shutdown();
+            }
         }
     }
 
@@ -122,8 +125,7 @@ public class AwsAsgDiscovery implements IClusterDiscovery {
     }
 
     protected AmazonAutoScaling getAutoScalingClient() {
-        AmazonAutoScaling client = AmazonAutoScalingClientBuilder.standard().build();
-        return client;
+        return AmazonAutoScalingClientBuilder.standard().build();
     }
 
 

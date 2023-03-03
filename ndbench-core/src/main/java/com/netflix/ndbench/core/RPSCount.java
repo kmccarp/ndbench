@@ -68,7 +68,7 @@ public class RPSCount {
         long readRps = (totalReads - reads.get()) / secondsFreq;
         long writeRps = (totalWrites - writes.get()) / secondsFreq;
 
-        long sRatio = (totalOps > 0) ? (totalSuccess * 100L / (totalOps)) : 0;
+        long sRatio = (totalOps > 0) ? (totalSuccess * 100L / totalOps) : 0;
 
         reads.set(totalReads);
         writes.set(totalWrites);
