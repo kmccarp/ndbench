@@ -49,7 +49,7 @@ import static org.libex.logging.log4j.LoggingEventsEx.toMessage;
  */
 @NotThreadSafe
 @ParametersAreNonnullByDefault
-public class Log4jCapturer implements TestRule {
+public final class Log4jCapturer implements TestRule {
 
     private static final String DEFAULT_LAYOUT = "%d{DATE} %5p %C{1}.%M(),%L - %m%n";
     private static final String APPENDER_NAME = "Log4jCapturerAppender";
