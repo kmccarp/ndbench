@@ -20,7 +20,7 @@ public class AbstractPluginTest {
     private static final String DEFAULT_DOC_TYPE = "default";
 
     static class MockServiceDiscoverer implements IClusterDiscovery {
-        private int port;
+        private final int port;
 
         MockServiceDiscoverer(int port) {
             this.port = port;

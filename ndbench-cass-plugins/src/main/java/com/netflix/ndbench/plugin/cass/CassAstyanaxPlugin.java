@@ -63,7 +63,7 @@ public class CassAstyanaxPlugin implements NdBenchClient {
 
     private volatile DataGenerator dataGenerator;
 
-    private volatile ColumnFamily<String, Integer> CF;
+    private volatile ColumnFamily<String, Integer> cf;
     private volatile Keyspace keyspace;
     private volatile Cluster cluster;
 
@@ -90,7 +90,7 @@ public class CassAstyanaxPlugin implements NdBenchClient {
             aci.setDefaultReadConsistencyLevel(ConsistencyLevel.valueOf(config.getReadConsistencyLevel()))
                .setDefaultWriteConsistencyLevel(ConsistencyLevel.valueOf(config.getWriteConsistencyLevel()));
 
-            CF = new ColumnFamily<>(config.getCfname(), StringSerializer.get(), IntegerSerializer.get(), StringSerializer.get());
+            cf = new ColumnFamily<>(config.getCfname(), StringSerializer.get(), IntegerSerializer.get(), StringSerializer.get());
 
             if (config.getCreateSchema())
             {
@@ -118,7 +118,7 @@ public class CassAstyanaxPlugin implements NdBenchClient {
     @Override
     public String readSingle(String key) throws Exception {
 
-        ColumnList<Integer> result = keyspace.prepareQuery(this.CF)
+        ColumnList<Integer> result = keyspace.prepareQuery(this.cf)
                 .setConsistencyLevel(ConsistencyLevel.valueOf(config.getReadConsistencyLevel()))
                 .getRow(key)
                 .execute().getResult();
@@ -166,7 +166,7 @@ public class CassAstyanaxPlugin implements NdBenchClient {
     public String writeSingle(String key) throws Exception {
         MutationBatch m = keyspace.prepareMutationBatch().withConsistencyLevel(ConsistencyLevel.valueOf(config.getWriteConsistencyLevel()));
 
-        ColumnListMutation<Integer> colsMutation = m.withRow(this.CF, key);
+        ColumnListMutation<Integer> colsMutation = m.withRow(this.cf, key);
 
         for (int i = 0; i < config.getColsPerRow(); i++) {
             colsMutation.putColumn(i, dataGenerator.getRandomValue());
@@ -207,7 +207,8 @@ public class CassAstyanaxPlugin implements NdBenchClient {
     }
 
     protected void upsertKeyspace(String keyspaceName) throws Exception {
-        boolean keyspaceExist = false, cfExist = false;
+        boolean keyspaceExist = false;
+        boolean cfExist = false;
         for (KeyspaceDefinition ks : cluster.describeKeyspaces()) {
             if (ks.getName().equalsIgnoreCase(keyspaceName)) {
                 keyspaceExist = true;
@@ -219,7 +220,7 @@ public class CassAstyanaxPlugin implements NdBenchClient {
             KeyspaceDefinition ksDef = cluster.makeKeyspaceDefinition();
             ksDef.setName(keyspaceName);
             ksDef.setStrategyClass("SimpleStrategy");
-            Map<String, String> options = new HashMap<String, String>();
+            Map<String, String> options = new HashMap<>();
             options.put("replication_factor", "1");
             ksDef.setStrategyOptions(options);
             cluster.addKeyspace(ksDef);

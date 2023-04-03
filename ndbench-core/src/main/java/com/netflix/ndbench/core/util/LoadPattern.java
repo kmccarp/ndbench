@@ -24,7 +24,7 @@ public enum LoadPattern {
     SLIDING_WINDOW("sliding_window"),
     SLIDING_WINDOW_FLIP("sliding_window_flip"),
     ZIPFIAN("zipfian");
-    private String text;
+    private final String text;
 
     LoadPattern(String text) {
         this.text = text;

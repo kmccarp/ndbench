@@ -39,15 +39,15 @@ public class CfClusterDiscovery implements IClusterDiscovery {
     }
 
     private String getVmRouteName() {
-        String vcap_application = System.getenv("VCAP_APPLICATION");
+        String vcapApplication = System.getenv("VCAP_APPLICATION");
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, List<String>> vcap_map = new HashMap<>();
+        Map<String, List<String>> vcapMap = new HashMap<>();
         try {
-            vcap_map = mapper.readValue(vcap_application.getBytes(), HashMap.class);
+            vcapMap = mapper.readValue(vcapApplication.getBytes(), HashMap.class);
         } catch (IOException e) {
             logger.error("Exception while reading vcap_application to Map" + e);
         }
-        List<String> uris = vcap_map.get("uris");
+        List<String> uris = vcapMap.get("uris");
 
         return uris.get(0);
     }
