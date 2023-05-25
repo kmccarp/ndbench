@@ -149,7 +149,7 @@ class EsWriter {
 
     private String getBulkWriteEntry(String key, String doc, String indexName, String docType) {
         String bulkWriteEntry = String.format(
-                "{\"index\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}\n%s\n",
+                "{\"index\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}%n%s%n",
                 indexName, docType, key, doc);
         logger.trace("Bulk write entry for one doc: {}", bulkWriteEntry);
         return bulkWriteEntry;

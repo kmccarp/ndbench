@@ -125,15 +125,12 @@ public class RPSCountTest extends TestBase {
         when(monitor.getReadFailure()).thenReturn(readFailure);
         when(monitor.getWriteSuccess()).thenReturn(writeSuccess);
         when(monitor.getWriteFailure()).thenReturn(writeFailure);
-
-        RPSCount counter =
-                new RPSCount(
+        return new RPSCount(
                         new AtomicBoolean(readsStarted),
                         new AtomicBoolean(writesStarted),
                         new AtomicReference(RateLimiter.create(readRate)),
                         new AtomicReference(RateLimiter.create(writeRate)),
                         config,
                         monitor);
-        return counter;
     }
 }
