@@ -14,17 +14,18 @@ import java.util.List;
 
 @Provider
 public class CorsResponseFilter implements ContainerResponseFilter {
-  public static final Logger LOGGER = LoggerFactory.getLogger(CorsResponseFilter.class);
-  @Inject IConfiguration config;
+    public static final Logger LOGGER = LoggerFactory.getLogger(CorsResponseFilter.class);
+    @Inject
+    IConfiguration config;
 
-  @Override
-  public ContainerResponse filter(ContainerRequest request, ContainerResponse response) {
-    List<String> allowedOrigins = Arrays.asList(config.getAllowedOrigins().split(";"));
-    String origin = request.getRequestHeaders().getFirst("Origin");
-    if (allowedOrigins.contains(origin)) {
-      response.getHttpHeaders().add("Access-Control-Allow-Origin", origin);
-      response.getHttpHeaders().add("Vary", "Origin");
+    @Override
+    public ContainerResponse filter(ContainerRequest request, ContainerResponse response) {
+        List<String> allowedOrigins = Arrays.asList(config.getAllowedOrigins().split(";"));
+        String origin = request.getRequestHeaders().getFirst("Origin");
+        if (allowedOrigins.contains(origin)) {
+            response.getHttpHeaders().add("Access-Control-Allow-Origin", origin);
+            response.getHttpHeaders().add("Vary", "Origin");
+        }
+        return response;
     }
-    return response;
-  }
 }

@@ -30,25 +30,31 @@ public class RestUtil {
     public static Response sendResult(Response.Status status, Result result, IConfiguration config) {
         return sendResponse(status, result, config);
     }
+
     public static Response sendResult(Result result, IConfiguration config) {
-        return sendResult(result.isSuccess?Response.Status.OK:Response.Status.INTERNAL_SERVER_ERROR,result, config);
+        return sendResult(result.isSuccess ? Response.Status.OK : Response.Status.INTERNAL_SERVER_ERROR, result, config);
     }
+
     public static Response sendErrorResponse(String errorMessage, Exception exception, IConfiguration config)
     {
         return sendResponse(Response.Status.INTERNAL_SERVER_ERROR, new ErrorResponse(errorMessage, exception), config);
     }
+
     public static Response sendErrorResponse(String errorMessage, IConfiguration config)
     {
         return sendResponse(Response.Status.INTERNAL_SERVER_ERROR, new ErrorResponse(errorMessage), config);
     }
+
     public static Response sendSuccessResponse(String returnMessage, IConfiguration config)
     {
         return sendResponse(Response.Status.OK, new SuccessResponse(returnMessage), config);
     }
+
     public static Response sendErrorResponse(IConfiguration config)
     {
         return sendResponse(Response.Status.INTERNAL_SERVER_ERROR, new ErrorResponse("Unknown error occurred."), config);
     }
+
     static <T> Response sendResponse(Response.Status status, T object, IConfiguration config)
     {
         Response.ResponseBuilder builder = Response.status(status).type(javax.ws.rs.core.MediaType.APPLICATION_JSON).entity(object);
@@ -59,6 +65,7 @@ public class RestUtil {
     {
         return sendResponse(Response.Status.OK, object, config);
     }
+
     public static class ErrorResponse extends Result
     {
         public String detailedMessage = "NA";
@@ -66,7 +73,7 @@ public class RestUtil {
         public ErrorResponse(String errorMessage)
         {
 
-            super(false,errorMessage);
+            super(false, errorMessage);
         }
 
         public ErrorResponse(String errorMessage, Exception e)
@@ -86,15 +93,16 @@ public class RestUtil {
             }
         }
     }
+
     public static class SuccessResponse extends Result
     {
         public SuccessResponse(String successMessage)
         {
-            super(true,successMessage);
+            super(true, successMessage);
         }
     }
 
-   public static class Result
+    public static class Result
     {
         public boolean isSuccess;
         public String message;
@@ -102,13 +110,13 @@ public class RestUtil {
         Result(boolean result, String resultMessage)
         {
             this.isSuccess = result;
-            this.message=resultMessage;
+            this.message = resultMessage;
         }
 
         public Result(boolean result)
         {
             this.isSuccess = result;
-            this.message="NA";
+            this.message = "NA";
         }
     }
 

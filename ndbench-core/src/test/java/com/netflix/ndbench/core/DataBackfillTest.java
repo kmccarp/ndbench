@@ -21,7 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(GovernatorJunit4ClassRunner.class)
-@ModulesForTesting({ NdBenchGuiceModule.class, ArchaiusModule.class})
+@ModulesForTesting({NdBenchGuiceModule.class, ArchaiusModule.class})
 public class DataBackfillTest
 {
     @Inject

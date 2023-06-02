@@ -13,7 +13,9 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(CassJavaDriverManagerImpl.class)
 public interface CassJavaDriverManager {
     Cluster registerCluster(String clName, String contactPoint, int connections, int port, boolean allowBetaProtocol, String username, String password);
+
     Cluster registerCluster(String clName, String contactPoint, int connections, int port);
+
     Session getSession(Cluster cluster);
 
     void shutDown();

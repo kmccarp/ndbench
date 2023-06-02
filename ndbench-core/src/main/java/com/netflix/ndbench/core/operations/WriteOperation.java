@@ -44,10 +44,10 @@ public class WriteOperation<W> implements NdBenchDriver.NdBenchOperation {
 
     @Override
     public boolean process(NdBenchDriver driver,
-                           NdBenchMonitor stats,
-                           List<String> keys,
-                           AtomicReference<RateLimiter> rateLimiter,
-                           boolean isAutoTuneEnabled) {
+                                          NdBenchMonitor stats,
+                                          List<String> keys,
+                                          AtomicReference<RateLimiter> rateLimiter,
+                                          boolean isAutoTuneEnabled) {
         try {
             Long startTime = System.nanoTime();
             List<W> result;
@@ -59,13 +59,13 @@ public class WriteOperation<W> implements NdBenchDriver.NdBenchOperation {
                 result = new ArrayList<>(1);
                 result.add(client.writeSingle(keys.get(0)));
             }
-            stats.recordWriteLatency((System.nanoTime() - startTime)/1000);
+            stats.recordWriteLatency((System.nanoTime() - startTime) / 1000);
 
             if (isAutoTuneEnabled) {
                 Double newRateLimit;
                 double currentRate = rateLimiter.get().getRate();
                 if ((newRateLimit = client.autoTuneWriteRateLimit(currentRate, result, stats)) > 0
-                        && newRateLimit != currentRate) {
+                && newRateLimit != currentRate) {
                     driver.updateWriteRateLimit(newRateLimit);
                 }
             }

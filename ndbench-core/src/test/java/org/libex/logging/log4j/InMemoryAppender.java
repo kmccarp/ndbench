@@ -23,7 +23,7 @@ public class InMemoryAppender extends AppenderSkeleton {
     private final Lock writeLock = rwLock.writeLock();
 
     private volatile ImmutableList.Builder<LoggingEvent> eventListBuilder = ImmutableList
-            .builder();
+    .builder();
 
     @Override
     public void close() {

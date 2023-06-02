@@ -69,13 +69,13 @@ public class DaxKeyValue extends DynamoDBKeyValueBase<DaxConfiguration> implemen
         //data plane
         boolean consistentRead = config.consistentRead();
         this.singleRead = new DynamoDBReadSingle(dataGenerator, dynamoDB, tableName, partitionKeyName, consistentRead,
-                returnConsumedCapacity);
+        returnConsumedCapacity);
         this.bulkRead = new DynamoDBReadBulk(dataGenerator, dynamoDB, tableName, partitionKeyName, consistentRead,
-                returnConsumedCapacity);
+        returnConsumedCapacity);
         this.singleWrite = new DynamoDBWriteSingle(dataGenerator, dynamoDB, tableName, partitionKeyName,
-                returnConsumedCapacity);
+        returnConsumedCapacity);
         this.bulkWrite = new DynamoDBWriteBulk(dataGenerator, dynamoDB, tableName, partitionKeyName,
-                returnConsumedCapacity);
+        returnConsumedCapacity);
 
         logger.info("DynamoDB Plugin initialized");
     }

@@ -66,7 +66,7 @@ public class DeleteTableTest {
         try {
             deleteDynamoDBTable.delete();
             fail();
-        } catch(IllegalStateException e) {
+        } catch (IllegalStateException e) {
             //verify exception
             assertTrue(e.getCause() instanceof IllegalArgumentException);
         }

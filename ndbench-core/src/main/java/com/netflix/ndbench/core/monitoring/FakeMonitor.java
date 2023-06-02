@@ -59,19 +59,21 @@ public class FakeMonitor implements NdBenchMonitor {
         this.config = config;
         checkAndInitTimer();
     }
+
     @Override
     public void initialize() {
 
     }
+
     private void checkAndInitTimer() {
         /** CODE TO PERIODICALLY RESET Histograms */
         ScheduledExecutorService timer = timerRef.get();
         if (timer == null) {
             timer = Executors.newScheduledThreadPool(1);
             logger.info(String.format("Initializing NdBenchMonitor with timing counter reset frequency %d seconds",
-                    config.getStatsResetFreqSeconds()));
+            config.getStatsResetFreqSeconds()));
             timer.scheduleAtFixedRate(this::setReadWriteHistograms, 1, config.getStatsResetFreqSeconds(),
-                    TimeUnit.SECONDS);
+            TimeUnit.SECONDS);
             timerRef.set(timer);
         }
     }
@@ -183,7 +185,7 @@ public class FakeMonitor implements NdBenchMonitor {
 
     @Override
     public long getWriteLatP50() {
-            return longValueOfDouble(writeHistogram.get().getSnapshot().getMedian());
+        return longValueOfDouble(writeHistogram.get().getSnapshot().getMedian());
     }
 
     @Override
@@ -249,6 +251,7 @@ public class FakeMonitor implements NdBenchMonitor {
         setReadWriteHistograms();
 
     }
+
     private float getCacheHitRatio() {
         long hits = cacheHits.get();
         long miss = cacheMiss.get();

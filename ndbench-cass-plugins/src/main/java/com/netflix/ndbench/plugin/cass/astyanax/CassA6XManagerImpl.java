@@ -30,19 +30,19 @@ public class CassA6XManagerImpl implements CassA6XManager
     public synchronized Cluster registerCluster(String clusterName, String contactPoint, int port)
     {
         logger.info("Connected Cassandra Cluster: " + clusterName);
-        if(clusterContext == null)
+        if (clusterContext == null)
         {
             clusterContext = new AstyanaxContext.Builder().forCluster(clusterName)
-                                                          .withAstyanaxConfiguration(new AstyanaxConfigurationImpl()
-                                                                                     .setDiscoveryType(NodeDiscoveryType.RING_DESCRIBE)
-                                                          )
-                                                          .withConnectionPoolConfiguration(new ConnectionPoolConfigurationImpl("MyConnectionPool")
-                                                                                           .setPort(port)
-                                                                                           .setMaxConnsPerHost(1)
-                                                                                           .setSeeds(contactPoint)
-                                                          )
-                                                          .withConnectionPoolMonitor(new CountingConnectionPoolMonitor())
-                                                          .buildCluster(ThriftFamilyFactory.getInstance());
+            .withAstyanaxConfiguration(new AstyanaxConfigurationImpl()
+            .setDiscoveryType(NodeDiscoveryType.RING_DESCRIBE)
+            )
+            .withConnectionPoolConfiguration(new ConnectionPoolConfigurationImpl("MyConnectionPool")
+            .setPort(port)
+            .setMaxConnsPerHost(1)
+            .setSeeds(contactPoint)
+            )
+            .withConnectionPoolMonitor(new CountingConnectionPoolMonitor())
+            .buildCluster(ThriftFamilyFactory.getInstance());
             clusterContext.start();
         }
         logger.warn("Cluster already registered");
@@ -52,21 +52,21 @@ public class CassA6XManagerImpl implements CassA6XManager
     public synchronized Keyspace registerKeyspace(String clusterName, String ksName, String contactPoint, int port)
     {
         logger.info("Cassandra  Cluster: " + clusterName);
-        if(keyspaceContext == null)
+        if (keyspaceContext == null)
         {
             keyspaceContext = new AstyanaxContext.Builder()
-                              .forCluster(clusterName)
-                              .forKeyspace(ksName)
-                              .withAstyanaxConfiguration(new AstyanaxConfigurationImpl()
-                                                         .setDiscoveryType(NodeDiscoveryType.RING_DESCRIBE)
-                              )
-                              .withConnectionPoolConfiguration(new ConnectionPoolConfigurationImpl("MyConnectionPool")
-                                                               .setPort(port)
-                                                               .setMaxConnsPerHost(1)
-                                                               .setSeeds(contactPoint)
-                              )
-                              .withConnectionPoolMonitor(new CountingConnectionPoolMonitor())
-                              .buildKeyspace(ThriftFamilyFactory.getInstance());
+            .forCluster(clusterName)
+            .forKeyspace(ksName)
+            .withAstyanaxConfiguration(new AstyanaxConfigurationImpl()
+            .setDiscoveryType(NodeDiscoveryType.RING_DESCRIBE)
+            )
+            .withConnectionPoolConfiguration(new ConnectionPoolConfigurationImpl("MyConnectionPool")
+            .setPort(port)
+            .setMaxConnsPerHost(1)
+            .setSeeds(contactPoint)
+            )
+            .withConnectionPoolMonitor(new CountingConnectionPoolMonitor())
+            .buildKeyspace(ThriftFamilyFactory.getInstance());
             keyspaceContext.start();
         }
         logger.warn("Keyspace already registered");

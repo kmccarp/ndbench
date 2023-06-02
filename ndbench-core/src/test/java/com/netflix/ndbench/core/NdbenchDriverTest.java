@@ -47,8 +47,8 @@ public class NdbenchDriverTest {
         NdBenchClient mockClientPlugin = mock(NdBenchClient.class);
         when(mockClientPlugin.writeSingle(anyString())).thenReturn("foo");
         when(mockClientPlugin.
-                autoTuneWriteRateLimit(anyDouble(), Collections.singletonList(anyString()), any(NdBenchMonitor.class))).
-                thenReturn(500D);
+        autoTuneWriteRateLimit(anyDouble(), Collections.singletonList(anyString()), any(NdBenchMonitor.class))).
+        thenReturn(500D);
 
         NdBenchMonitor  mockMonitor = mock(NdBenchMonitor .class);
         doNothing().when(mockMonitor).recordReadLatency(anyLong());
@@ -60,12 +60,12 @@ public class NdbenchDriverTest {
         WriteOperation writeOperation = new WriteOperation(mockClientPlugin);
 
         writeOperation.
-                process(driver, mockMonitor, Collections.singletonList("some-key"), new AtomicReference<>(RateLimiter.create(100)), true);
+        process(driver, mockMonitor, Collections.singletonList("some-key"), new AtomicReference<>(RateLimiter.create(100)), true);
 
         int rateFromSettableConfig = settableConfig.getInteger(NdBenchConstants.WRITE_RATE_LIMIT_FULL_NAME);
 
 
-        assertEquals(rateFromSettableConfig , 500D, .001);
+        assertEquals(rateFromSettableConfig, 500D, .001);
 
         // Next check won't work unless we figure out how to configure Property Listener to kick in during the test run
         //double rateFromDriverRateLimiter = driver.getWriteLimiter().get().getRate();
@@ -77,8 +77,8 @@ public class NdbenchDriverTest {
         NdBenchClient mockClientPlugin = mock(NdBenchClient.class);
         when(mockClientPlugin.writeSingle(anyString())).thenReturn("foo");
         when(mockClientPlugin.
-                autoTuneWriteRateLimit(anyDouble(), Collections.singletonList(anyString()), any(NdBenchMonitor.class))).
-                thenReturn(500D);
+        autoTuneWriteRateLimit(anyDouble(), Collections.singletonList(anyString()), any(NdBenchMonitor.class))).
+        thenReturn(500D);
 
         NdBenchMonitor  mockMonitor = mock(NdBenchMonitor .class);
         doNothing().when(mockMonitor).recordReadLatency(anyLong());
@@ -96,12 +96,12 @@ public class NdbenchDriverTest {
         }
 
         writeOperation.
-                process(driver, mockMonitor, keys, new AtomicReference<>(RateLimiter.create(100)), true);
+        process(driver, mockMonitor, keys, new AtomicReference<>(RateLimiter.create(100)), true);
 
         int rateFromSettableConfig = settableConfig.getInteger(NdBenchConstants.WRITE_RATE_LIMIT_FULL_NAME);
 
 
-        assertEquals(rateFromSettableConfig , 500D, .001);
+        assertEquals(rateFromSettableConfig, 500D, .001);
     }
 
 

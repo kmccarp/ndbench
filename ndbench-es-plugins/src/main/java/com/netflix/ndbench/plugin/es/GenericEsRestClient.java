@@ -52,16 +52,16 @@ public class GenericEsRestClient implements EsRestClient {
         this.hosts = new ArrayList<>(hosts);
 
         RequestConfig requestConfig =
-                RequestConfig.custom()
-                        .setConnectTimeout(config.getConnectTimeoutSeconds() * 1000)
-                        .setSocketTimeout(config.getSocketTimeoutSeconds() * 1000)
-                        .setConnectionRequestTimeout(config.getConnectionRequestTimeoutSeconds() * 1000)
-                        .build();
+        RequestConfig.custom()
+        .setConnectTimeout(config.getConnectTimeoutSeconds() * 1000)
+        .setSocketTimeout(config.getSocketTimeoutSeconds() * 1000)
+        .setConnectionRequestTimeout(config.getConnectionRequestTimeoutSeconds() * 1000)
+        .build();
 
         HttpClientBuilder httpClientBuilder =
-                HttpClients.custom()
-                        .setDefaultRequestConfig(requestConfig)
-                        .setRetryHandler(new DefaultHttpRequestRetryHandler(0, false));
+        HttpClients.custom()
+        .setDefaultRequestConfig(requestConfig)
+        .setRetryHandler(new DefaultHttpRequestRetryHandler(0, false));
 
         customizeHttpClientBuilder(httpClientBuilder, config);
 

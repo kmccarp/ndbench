@@ -10,7 +10,7 @@ public class QueryUtil {
     public static String upsertCFQuery(Integer colsPerRow, String keyspaceName, String tableName) {
         String createTblQuery = "CREATE TABLE IF NOT EXISTS %s.%s (key text, column1 int, %s, PRIMARY KEY ((key), column1)) WITH compression = {'sstable_compression': ''}";
 
-        String values = IntStream.range(0, colsPerRow).mapToObj(i -> "value"+i+" text").collect(Collectors.joining(", "));
+        String values = IntStream.range(0, colsPerRow).mapToObj(i -> "value" + i + " text").collect(Collectors.joining(", "));
         return String.format(createTblQuery, keyspaceName, tableName, values);
     }
 }

@@ -15,6 +15,8 @@ import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 public interface CassA6XManager
 {
     Cluster registerCluster(String clName, String contactPoint, int port) throws ConnectionException;
+
     Keyspace registerKeyspace(String clusterName, String ksName, String contactPoint, int port) throws ConnectionException;
+
     void shutDown() throws Exception;
 }

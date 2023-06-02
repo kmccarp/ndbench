@@ -49,15 +49,15 @@ public class AutotuneTest extends AbstractPluginTest {
     }
 
     private List<Double> stepThroughRateIncreases(NdBenchMonitor m1,
-                                                  NdBenchMonitor m2,
-                                                  NdBenchMonitor m3) throws Exception {
+                                                   NdBenchMonitor m2,
+                                                   NdBenchMonitor m3) throws Exception {
         EsRestPlugin plugin =
-                new EsRestPlugin(
-                        getCoreConfig(1, true, 100, 10, 11, 0.01f),
-                        getConfig(9200, "netflix.com", "junkIndexName", true, 0.01f, 0),
-                        new MockServiceDiscoverer(9200),
-                        new GenericEsRestClient(),
-                        false);
+        new EsRestPlugin(
+        getCoreConfig(1, true, 100, 10, 11, 0.01f),
+        getConfig(9200, "netflix.com", "junkIndexName", true, 0.01f, 0),
+        new MockServiceDiscoverer(9200),
+        new GenericEsRestClient(),
+        false);
 
         plugin.init(null);
 

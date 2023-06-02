@@ -26,7 +26,7 @@ public abstract class AbstractAwsOperation {
 
     protected AmazonServiceException amazonServiceException(AmazonServiceException ase) {
         logger.error("Caught an AmazonServiceException, which means your request made it "
-                + "to AWS, but was rejected with an error response for some reason.");
+        + "to AWS, but was rejected with an error response for some reason.");
         logger.error("Error Message:    " + ase.getMessage());
         logger.error("HTTP Status Code: " + ase.getStatusCode());
         logger.error("AWS Error Code:   " + ase.getErrorCode());
@@ -37,8 +37,8 @@ public abstract class AbstractAwsOperation {
 
     protected AmazonClientException amazonClientException(AmazonClientException ace) {
         logger.error("Caught an AmazonClientException, which means the client encountered "
-                + "a serious internal problem while trying to communicate with AWS, "
-                + "such as not being able to access the network.");
+        + "a serious internal problem while trying to communicate with AWS, "
+        + "such as not being able to access the network.");
         logger.error("Error Message: " + ace.getMessage());
         return ace;
     }

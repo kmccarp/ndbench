@@ -26,7 +26,7 @@ import com.netflix.ndbench.api.plugin.common.NdBenchConstants;
  *
  * @author Sumanth Pasupuleti
  */
-@Configuration(prefix =  NdBenchConstants.PROP_NAMESPACE +  "cockroachdb")
+@Configuration(prefix = NdBenchConstants.PROP_NAMESPACE +  "cockroachdb")
 public interface CockroachDBConfiguration {
     @DefaultValue("perftest")
     String getDBName();

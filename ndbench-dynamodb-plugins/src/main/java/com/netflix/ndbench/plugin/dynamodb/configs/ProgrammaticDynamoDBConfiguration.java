@@ -26,7 +26,7 @@ import com.netflix.ndbench.api.plugin.common.NdBenchConstants;
  * @author ipapapa
  * @author Alexander Patrikalakis
  */
-@Configuration(prefix =  NdBenchConstants.PROP_NAMESPACE +  "dynamodb")
+@Configuration(prefix = NdBenchConstants.PROP_NAMESPACE +  "dynamodb")
 public interface ProgrammaticDynamoDBConfiguration extends DynamoDBConfigurationBase {
     /*
      * Provisioned read capacity units to create the table with.

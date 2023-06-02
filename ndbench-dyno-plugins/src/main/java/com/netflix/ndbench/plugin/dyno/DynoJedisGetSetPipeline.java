@@ -84,7 +84,7 @@ public class DynoJedisGetSetPipeline implements NdBenchClient {
         };
 
         DynoJedisClient jClient = new DynoJedisClient.Builder().withApplicationName(ClusterName)
-                .withDynomiteClusterName(ClusterName).withHostSupplier(hSupplier).build();
+        .withDynomiteClusterName(ClusterName).withHostSupplier(hSupplier).build();
 
         jedisClient.set(jClient);
 

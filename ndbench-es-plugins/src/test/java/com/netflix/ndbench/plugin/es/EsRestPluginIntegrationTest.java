@@ -12,32 +12,32 @@ public class EsRestPluginIntegrationTest extends AbstractPluginIntegrationTest {
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidIndexRollSettingsGreaterThan1440() throws Exception {
         EsRestPlugin plugin = getPlugin(/* specify host and avoid discovery mechanism */"localhost",
-                "test_index_name",
-                false, 1441, 9200);
+        "test_index_name",
+        false, 1441, 9200);
         plugin.init(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidIndexRollSettingsLessThan0() throws Exception {
         EsRestPlugin plugin = getPlugin(/* specify host and avoid discovery mechanism */"localhost",
-                "test_index_name",
-                false, -1, 9200);
+        "test_index_name",
+        false, -1, 9200);
         plugin.init(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidIndexRollSettingsDoesntEvenlyDivide1440() throws Exception {
         EsRestPlugin plugin = getPlugin(/* specify host and avoid discovery mechanism */"localhost",
-                "test_index_name",
-                false, 7, 9200);
+        "test_index_name",
+        false, 7, 9200);
         plugin.init(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidHttpsAndPortSettings() throws Exception {
         EsRestPlugin plugin = getPlugin(/* specify host and avoid discovery mechanism */"localhost",
-                "test_index_name",
-                false, 0, 443);
+        "test_index_name",
+        false, 0, 443);
         plugin.init(null);
     }
 }

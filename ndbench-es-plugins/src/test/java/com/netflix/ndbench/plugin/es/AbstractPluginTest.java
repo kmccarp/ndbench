@@ -38,11 +38,11 @@ public class AbstractPluginTest {
     }
 
     protected static EsConfig getConfig(final int portNum,
-                                        @Nullable final String hostName,
-                                        final String indexName,
-                                        final boolean isBulkWrite,
-                                        final float maxAcceptableWriteFailures,
-                                        final int indexRollsPerHour) {
+                                         @Nullable final String hostName,
+                                         final String indexName,
+                                         final boolean isBulkWrite,
+                                         final float maxAcceptableWriteFailures,
+                                         final int indexRollsPerHour) {
         return new EsConfig() {
             @Override
             public String getCluster() {
@@ -65,7 +65,9 @@ public class AbstractPluginTest {
             }
 
             @Override
-            public String getDocumentType() { return DEFAULT_DOC_TYPE; }
+            public String getDocumentType() {
+                return DEFAULT_DOC_TYPE;
+            }
 
             @Override
             public Integer getRestClientPort() {
@@ -111,11 +113,11 @@ public class AbstractPluginTest {
     }
 
     protected static IConfiguration getCoreConfig(final int writeRateLimit,
-                                                  final boolean isAutoTuneEnabled,
-                                                  final int autoTuneRampPeriodMs,
-                                                  final int autoTuneIncrementIntervalMs,
-                                                  final int autoTuneFinalRate,
-                                                  float maxAcceptableWriteFailures) {
+                                                   final boolean isAutoTuneEnabled,
+                                                   final int autoTuneRampPeriodMs,
+                                                   final int autoTuneIncrementIntervalMs,
+                                                   final int autoTuneFinalRate,
+                                                   float maxAcceptableWriteFailures) {
         return new IConfiguration() {
             @Override
             public void initialize() {

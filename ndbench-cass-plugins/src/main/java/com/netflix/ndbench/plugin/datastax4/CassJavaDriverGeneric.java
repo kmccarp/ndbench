@@ -38,30 +38,34 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
         super(cassJavaDriverManager, ndbConfig, cassandraGenericConfiguration);
     }
 
-    @Override void prepStatements(CqlSession session) {
+    @Override
+    void prepStatements(CqlSession session) {
         int nCols = config.getColsPerRow();
-        String values = IntStream.range(0, nCols).mapToObj(i -> "value"+i).collect(Collectors.joining(", "));
+        String values = IntStream.range(0, nCols).mapToObj(i -> "value" + i).collect(Collectors.joining(", "));
         String bindValues = IntStream.range(0, nCols).mapToObj(i -> "?").collect(Collectors.joining(", "));
         writePstmt = session.prepare(String.format(QueryUtil.INSERT_QUERY, keyspaceName, tableName, values, bindValues));
         readPstmt = session.prepare(String.format(QueryUtil.READ_QUERY, keyspaceName, tableName));
     }
 
-    @Override void upsertKeyspace(CqlSession session) {
+    @Override
+    void upsertKeyspace(CqlSession session) {
         upsertGenericKeyspace(session);
     }
 
-    @Override void upsertCF(CqlSession session) {
+    @Override
+    void upsertCF(CqlSession session) {
         session.execute(QueryUtil.upsertCFQuery(config.getColsPerRow(), keyspaceName, tableName));
     }
 
-    @Override public String readSingle(String key) throws Exception {
+    @Override
+    public String readSingle(String key) throws Exception {
         int nRows = 0;
 
         BoundStatement bStmt = readPstmt.bind()
-                .setString("key", key)
-                .setConsistencyLevel(consistencyLevel(config.getReadConsistencyLevel()));
+        .setString("key", key)
+        .setConsistencyLevel(consistencyLevel(config.getReadConsistencyLevel()));
         ResultSet rs = session.execute(bStmt);
-        List<Row> result=rs.all();
+        List<Row> result = rs.all();
 
         if (!result.isEmpty())
         {
@@ -85,8 +89,7 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
                     }
                 }
             }
-        }
-        else {
+        }else {
             return CacheMiss;
         }
 
@@ -103,27 +106,27 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
         return DefaultConsistencyLevel.fromCode(code);
     }
 
-    @Override public String writeSingle(String key) {
-        if(config.getRowsPerPartition() > 1)
+    @Override
+    public String writeSingle(String key) {
+        if (config.getRowsPerPartition() > 1)
         {
             if (config.getUseBatchWrites()) {
                 BatchStatementBuilder builder = BatchStatement
-                        .builder(BatchType.UNLOGGED)
-                        .setConsistencyLevel(consistencyLevel(config.getWriteConsistencyLevel()));
+                .builder(BatchType.UNLOGGED)
+                .setConsistencyLevel(consistencyLevel(config.getWriteConsistencyLevel()));
                 for (int i = 0; i < config.getRowsPerPartition(); i++) {
                     builder.addStatement(getWriteBStmt(key, i));
                 }
                 session.execute(builder.build());
             } else {
                 session.execute(getWriteBStmt(key, dataGenerator.getRandomInteger() % config.getRowsPerPartition())
-                        .setConsistencyLevel(consistencyLevel(config.getWriteConsistencyLevel())));
+                .setConsistencyLevel(consistencyLevel(config.getWriteConsistencyLevel())));
 
             }
-        }
-        else
+        }else
         {
             session.execute(getWriteBStmt(key, 1)
-                    .setConsistencyLevel(consistencyLevel(config.getWriteConsistencyLevel())));
+            .setConsistencyLevel(consistencyLevel(config.getWriteConsistencyLevel())));
         }
         return ResultOK;
     }
@@ -138,20 +141,22 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
         return bStmt;
     }
 
-    @Override public void shutdown() throws Exception {
+    @Override
+    public void shutdown() throws Exception {
         session.close();
     }
 
-    @Override public String getConnectionInfo() {
-        int bytesPerCol=ndbConfig.getDataSize();
-        int numColsPerRow=config.getColsPerRow();
-        int numRowsPerPartition=config.getRowsPerPartition();
-        int numPartitions= ndbConfig.getNumKeys();
+    @Override
+    public String getConnectionInfo() {
+        int bytesPerCol = ndbConfig.getDataSize();
+        int numColsPerRow = config.getColsPerRow();
+        int numRowsPerPartition = config.getRowsPerPartition();
+        int numPartitions = ndbConfig.getNumKeys();
         int RF = 3;
         Long numNodes = session.getMetadata().getNodes().values()
-                .stream()
-                .collect(groupingBy(Node::getDatacenter,counting()))
-                .values().stream().findFirst().get();
+        .stream()
+        .collect(groupingBy(Node::getDatacenter, counting()))
+        .values().stream().findFirst().get();
 
 
         int partitionSizeInBytes = bytesPerCol * numColsPerRow * numRowsPerPartition;
@@ -159,14 +164,13 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
         long totalSizeInBytesPerNode = totalSizeInBytes / numNodes;
 
 
-
         return String.format("Cluster Name - %s : Keyspace Name - %s : CF Name - %s ::: ReadCL - %s : WriteCL - %s ::: " +
-                        "DataSize per Node: ~[%s], Total DataSize on Cluster: ~[%s], Num nodes in C* DC: %s, PartitionSize: %s",
-                sessionName, keyspaceName, tableName, config.getReadConsistencyLevel(), config.getWriteConsistencyLevel(),
-                humanReadableByteCount(totalSizeInBytesPerNode),
-                humanReadableByteCount(totalSizeInBytes),
-                numNodes,
-                humanReadableByteCount(partitionSizeInBytes));
+        "DataSize per Node: ~[%s], Total DataSize on Cluster: ~[%s], Num nodes in C* DC: %s, PartitionSize: %s",
+        sessionName, keyspaceName, tableName, config.getReadConsistencyLevel(), config.getWriteConsistencyLevel(),
+        humanReadableByteCount(totalSizeInBytesPerNode),
+        humanReadableByteCount(totalSizeInBytes),
+        numNodes,
+        humanReadableByteCount(partitionSizeInBytes));
     }
 
     private SimpleStatement SimpleStatement(String query) {

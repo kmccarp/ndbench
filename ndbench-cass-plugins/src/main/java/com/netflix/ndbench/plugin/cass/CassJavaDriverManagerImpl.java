@@ -20,23 +20,23 @@ public class CassJavaDriverManagerImpl implements CassJavaDriverManager {
 
     @Override
     public Cluster registerCluster(String clName, String contactPoint, int connections, int port) {
-        return registerCluster(clName,contactPoint,connections,port, false, null,null);
+        return registerCluster(clName, contactPoint, connections, port, false, null, null);
     }
 
     @Override
     public Cluster registerCluster(String clName, String contactPoint, int connections, int port, boolean allowBetaProtocol, String username, String password) {
-    
+
         PoolingOptions poolingOpts = new PoolingOptions()
-                                     .setConnectionsPerHost(HostDistance.LOCAL, connections, connections)
-                                     .setMaxRequestsPerConnection(HostDistance.LOCAL, 32768);
+        .setConnectionsPerHost(HostDistance.LOCAL, connections, connections)
+        .setMaxRequestsPerConnection(HostDistance.LOCAL, 32768);
 
 
         Cluster.Builder clusterBuilder = Cluster.builder()
-                .withClusterName(clName)
-                .addContactPoint(contactPoint)
-                .withPoolingOptions(poolingOpts)
-                .withPort(port)
-                .withLoadBalancingPolicy( new TokenAwarePolicy( new RoundRobinPolicy() ) );
+        .withClusterName(clName)
+        .addContactPoint(contactPoint)
+        .withPoolingOptions(poolingOpts)
+        .withPort(port)
+        .withLoadBalancingPolicy(new TokenAwarePolicy( new RoundRobinPolicy() ));
         if ((username != null) && (password != null)) {
             clusterBuilder = clusterBuilder.withCredentials(username, password);
         }
@@ -51,8 +51,8 @@ public class CassJavaDriverManagerImpl implements CassJavaDriverManager {
 
     @Override
     public Session getSession(Cluster cluster) {
-         session = cluster.connect();
-         return session;
+        session = cluster.connect();
+        return session;
     }
 
     @Override

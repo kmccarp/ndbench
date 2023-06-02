@@ -21,7 +21,7 @@ import com.netflix.archaius.api.annotations.DefaultValue;
 import com.netflix.archaius.api.annotations.PropertyName;
 import com.netflix.ndbench.api.plugin.common.NdBenchConstants;
 
-@Configuration(prefix =  NdBenchConstants.PROP_NAMESPACE +  "cass")
+@Configuration(prefix = NdBenchConstants.PROP_NAMESPACE +  "cass")
 public interface CassandraAstynaxConfiguration extends CassandraConfigurationBase {
 
     /**

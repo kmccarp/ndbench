@@ -32,7 +32,7 @@ public class EsIntegrationTest extends AbstractPluginIntegrationTest {
 
         String localRestEndpoint = "http://localhost:9200";
         String localRestResponse = EsUtils.httpGetWithRetries(
-                "http://localhost:9200", 100, 600);
+        "http://localhost:9200", 100, 600);
 
         if (StringUtils.isNotBlank(localRestResponse)) {
             logger.info("Connected to Elasticsearch at {}", localRestEndpoint);
@@ -59,17 +59,17 @@ public class EsIntegrationTest extends AbstractPluginIntegrationTest {
         }
 
         testVerifySingleWrite(
-                getPlugin("localhost",
-                        "test_index_name",
-                        false, 0, 9200));
+        getPlugin("localhost",
+        "test_index_name",
+        false, 0, 9200));
         testVerifySingleWrite(
-                getPlugin("localhost",
-                        "test_index_name",
-                        true, 0, 9200));
+        getPlugin("localhost",
+        "test_index_name",
+        true, 0, 9200));
         testVerifySingleWrite(
-                getPlugin(null,
-                        "test_index_name",
-                        false, 0, 9200));
+        getPlugin(null,
+        "test_index_name",
+        false, 0, 9200));
     }
 
     private void testVerifySingleWrite(EsRestPlugin plugin) throws Exception {

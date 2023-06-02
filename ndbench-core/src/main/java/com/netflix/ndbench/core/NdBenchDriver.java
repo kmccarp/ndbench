@@ -69,7 +69,6 @@ public class NdBenchDriver {
     private final AtomicBoolean clientInited = new AtomicBoolean(false);
 
 
-
     private final AtomicReference<RateLimiter> readLimiter;
     private final AtomicReference<RateLimiter> writeLimiter;
 
@@ -77,7 +76,7 @@ public class NdBenchDriver {
     private final RPSCount rpsCount;
 
     private final AtomicReference<NdBenchAbstractClient<?>> clientRef =
-            new AtomicReference<>(null);
+    new AtomicReference<>(null);
 
     private final AtomicReference<KeyGenerator> keyGeneratorWriteRef = new AtomicReference<>(null);
     private final AtomicReference<KeyGenerator> keyGeneratorReadRef = new AtomicReference<>(null);
@@ -90,9 +89,9 @@ public class NdBenchDriver {
 
     @Inject
     NdBenchDriver(IConfiguration config,
-                  NdBenchMonitor ndBenchMonitor,
-                  DataGenerator dataGenerator,
-                  @RuntimeLayer SettableConfig settableConfig) {
+                               NdBenchMonitor ndBenchMonitor,
+                               DataGenerator dataGenerator,
+                               @RuntimeLayer SettableConfig settableConfig) {
 
         this.config = config;
 
@@ -140,20 +139,20 @@ public class NdBenchDriver {
         KeyGeneratorFactory keyGeneratorFactory = new KeyGeneratorFactory();
 
         KeyGenerator<String> keyGenerator = keyGeneratorFactory.getKeyGenerator(loadPattern,
-                config.getNumKeys(), windowSize, windowDurationInSec, config.isPreloadKeys(), config.getZipfExponent());
+        config.getNumKeys(), windowSize, windowDurationInSec, config.isPreloadKeys(), config.getZipfExponent());
 
         keyGeneratorReadRef.set(keyGenerator);
 
         startOperation(
-                config.isReadEnabled(),
-                config.getNumReaders(),
-                readWorkers,
-                tpReadRef,
-                readLimiter,
-                operation,
-                keyGenerator,
-                config.isAutoTuneEnabled(),
-                bulkSize);
+        config.isReadEnabled(),
+        config.getNumReaders(),
+        readWorkers,
+        tpReadRef,
+        readLimiter,
+        operation,
+        keyGenerator,
+        config.isAutoTuneEnabled(),
+        bulkSize);
         readsStarted.set(true);
     }
 
@@ -175,19 +174,19 @@ public class NdBenchDriver {
         KeyGeneratorFactory keyGeneratorFactory = new KeyGeneratorFactory();
 
         KeyGenerator<String> keyGenerator = keyGeneratorFactory.getKeyGenerator(loadPattern,
-                config.getNumKeys(), windowSize, windowDurationInSec, config.isPreloadKeys(), config.getZipfExponent());
+        config.getNumKeys(), windowSize, windowDurationInSec, config.isPreloadKeys(), config.getZipfExponent());
 
         keyGeneratorWriteRef.set(keyGenerator);
 
         startOperation(config.isWriteEnabled(),
-                config.getNumWriters(),
-                writeWorkers,
-                tpWriteRef,
-                writeLimiter,
-                operation,
-                keyGenerator,
-                config.isAutoTuneEnabled(),
-                bulkSize);
+        config.getNumWriters(),
+        writeWorkers,
+        tpWriteRef,
+        writeLimiter,
+        operation,
+        keyGenerator,
+        config.isAutoTuneEnabled(),
+        bulkSize);
 
         writesStarted.set(true);
     }
@@ -206,14 +205,14 @@ public class NdBenchDriver {
     }
 
     private void startOperation(boolean operationEnabled,
-                                int numWorkersConfig,
-                                AtomicInteger numWorkers,
-                                AtomicReference<ExecutorService> tpRef,
-                                final AtomicReference<RateLimiter> rateLimiter,
-                                final NdBenchOperation operation,
-                                final KeyGenerator<String> keyGenerator,
-                                Boolean isAutoTuneEnabled,
-                                int bulkSize) {
+                                 int numWorkersConfig,
+                                 AtomicInteger numWorkers,
+                                 AtomicReference<ExecutorService> tpRef,
+                                 final AtomicReference<RateLimiter> rateLimiter,
+                                 final NdBenchOperation operation,
+                                 final KeyGenerator<String> keyGenerator,
+                                 Boolean isAutoTuneEnabled,
+                                 int bulkSize) {
 
         if (!operationEnabled) {
             logger.info("Operation : {} not enabled, ignoring", operation.getClass().getSimpleName());
@@ -221,8 +220,8 @@ public class NdBenchDriver {
         }
         keyGenerator.init();
         ThreadFactory threadFactory = new ThreadFactoryBuilder()
-                                      .setNameFormat("ndbench-"+operation.getClass().getSimpleName()+"-pool-%d")
-                                      .setDaemon(false).build();
+        .setNameFormat("ndbench-" + operation.getClass().getSimpleName() + "-pool-%d")
+        .setDaemon(false).build();
 
         ExecutorService threadPool = Executors.newFixedThreadPool(numWorkersConfig, threadFactory);
         boolean success = tpRef.compareAndSet(null, threadPool);
@@ -240,7 +239,7 @@ public class NdBenchDriver {
                     boolean noMoreKey = false;
 
                     if (((operation.isReadType() && readsStarted.get()) ||
-                            (operation.isWriteType() && writesStarted.get())) && rateLimiter.get().tryAcquire()) {
+                    (operation.isWriteType() && writesStarted.get())) && rateLimiter.get().tryAcquire()) {
                         final Set<String> keys = new HashSet<>(bulkSize * 2);
                         while (keys.size() < bulkSize) {
                             keys.add(keyGenerator.getNextKey());
@@ -251,11 +250,11 @@ public class NdBenchDriver {
                         } // eo keygens
 
                         operation.process(
-                                NdBenchDriver.this,
-                                ndBenchMonitor,
-                                new ArrayList<>(keys),
-                                rateLimiter,
-                                isAutoTuneEnabled);
+                        NdBenchDriver.this,
+                        ndBenchMonitor,
+                        new ArrayList<>(keys),
+                        rateLimiter,
+                        isAutoTuneEnabled);
                     } // eo if read or write
 
                     if (noMoreKey) {
@@ -412,8 +411,8 @@ public class NdBenchDriver {
         ExecutorService timer = timerRef.get();
         if (timer == null) {
             ThreadFactory threadFactory = new ThreadFactoryBuilder()
-                                          .setNameFormat("ndbench-updaterps-pool-%d")
-                                          .setDaemon(false).build();
+            .setNameFormat("ndbench-updaterps-pool-%d")
+            .setDaemon(false).build();
             timer = Executors.newFixedThreadPool(1, threadFactory);
             timer.submit(() -> {
                 while (!Thread.currentThread().isInterrupted()) {

@@ -44,12 +44,13 @@ public class NDBenchConfigResource {
 
     @Inject
     public NDBenchConfigResource(IConfiguration config,
-                                 @RuntimeLayer SettableConfig settableConfig
-                                 ) {
+                                              @RuntimeLayer SettableConfig settableConfig
+                                              ) {
         this.config = config;
         this.settableConfig = settableConfig;
 
     }
+
     @Path("/list")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -69,14 +70,14 @@ public class NDBenchConfigResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response setConfigOptions(Map<String,String> propsToSet) throws Exception {
+    public Response setConfigOptions(Map<String, String> propsToSet) throws Exception {
 
         logger.info("Setting Configuration list");
         try {
-            for (Map.Entry<String,String> entry: propsToSet.entrySet())
+            for (Map.Entry<String, String> entry : propsToSet.entrySet())
             {
-                if (entry.getKey()!=null && !entry.getKey().isEmpty()
-                        && entry.getValue()!=null && !entry.getValue().isEmpty()) {
+                if (entry.getKey() != null && !entry.getKey().isEmpty()
+                && entry.getValue() != null && !entry.getValue().isEmpty()) {
                     settableConfig.setProperty(NdBenchConstants.PROP_NAMESPACE + entry.getKey(), entry.getValue());
 
                 }
@@ -115,16 +116,16 @@ public class NDBenchConfigResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response setTunableOptions(Map<String,String> propsToSet) throws Exception {
+    public Response setTunableOptions(Map<String, String> propsToSet) throws Exception {
 
         logger.info("Setting Tunable Configuration list");
         try {
-            for (Map.Entry<String,String> entry: propsToSet.entrySet())
+            for (Map.Entry<String, String> entry : propsToSet.entrySet())
             {
-                if (entry.getKey()!=null && !entry.getKey().isEmpty()
-                        && entry.getValue()!=null && !entry.getValue().isEmpty()) {
+                if (entry.getKey() != null && !entry.getKey().isEmpty()
+                && entry.getValue() != null && !entry.getValue().isEmpty()) {
 
-                    settableConfig.setProperty(NdBenchConstants.PROP_NAMESPACE +entry.getKey(), entry.getValue());
+                    settableConfig.setProperty(NdBenchConstants.PROP_NAMESPACE + entry.getKey(), entry.getValue());
                 }
             }
             return sendSuccessResponse("Tunable Properties have been applied");

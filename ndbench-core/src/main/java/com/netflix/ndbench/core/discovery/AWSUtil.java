@@ -25,7 +25,7 @@ public class AWSUtil {
             return parseAwsMetadataByURL(urlPublic);
         }
         catch (Exception e) {
-            logger.error("Unable to get the public hostname name. Trying local...",e);
+            logger.error("Unable to get the public hostname name. Trying local...", e);
             return parseAwsMetadataByURL(urlLocal);
         }
     }
@@ -37,15 +37,15 @@ public class AWSUtil {
             return parseAwsMetadataByURL(instanceId);
         }
         catch (Exception e) {
-            logger.error("Unable to get the public hostname name. Trying local...",e);
+            logger.error("Unable to get the public hostname name. Trying local...", e);
         }
         return null;
     }
 
 
-    private static String parseAwsMetadataByURL(String urlPublic){
+    private static String parseAwsMetadataByURL(String urlPublic) {
         BufferedReader in = null;
-        try{
+        try {
             HttpURLConnection con = (HttpURLConnection) new URL(urlPublic).openConnection();
             con.setRequestMethod("GET");
 
@@ -56,9 +56,9 @@ public class AWSUtil {
                 response.append(inputLine);
             }
             return response.toString().trim();
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
-        }finally{
+        } finally {
             try {
                 in.close();
             } catch (IOException e) {

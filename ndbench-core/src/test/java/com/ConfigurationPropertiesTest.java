@@ -21,7 +21,7 @@ import javax.inject.Inject;
  */
 @RunWith(GovernatorJunit4ClassRunner.class)
 @ModulesForTesting({NdBenchGuiceModule.class, ArchaiusModule.class})
-@TestPropertyOverride(value={"ndbench.config.numKeys=777" })
+@TestPropertyOverride(value = {"ndbench.config.numKeys=777"})
 public class ConfigurationPropertiesTest {
 
     @Inject

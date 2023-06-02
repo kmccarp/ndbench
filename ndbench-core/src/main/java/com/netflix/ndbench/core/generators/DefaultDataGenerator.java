@@ -108,7 +108,7 @@ public class DefaultDataGenerator implements DataGenerator
         {
             return vvRandom.nextInt(
             Math.abs(config.getDataSizeUpperBound() - config.getDataSizeLowerBound()))
-                   + config.getDataSizeLowerBound();
+            + config.getDataSizeLowerBound();
         }
         return config.getDataSize();
     }

@@ -23,7 +23,7 @@ public class IsThrowable<T extends Throwable> extends BaseMatcher<Object> {
 
     public static IsThrowable<Throwable> isThrowableWithMessage(String message) {
         return new IsThrowable<>(Optional.empty(),
-                Optional.of(message));
+        Optional.of(message));
     }
 
     public static <T extends Throwable> IsThrowable<T> isThrowable(

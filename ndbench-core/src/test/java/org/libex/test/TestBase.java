@@ -46,9 +46,9 @@ public abstract class TestBase {
         expectedException.expectCause(sameInstance(cause));
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void expectException(final Class<? extends Throwable> type, @Nullable final String substring,
-            final Class<? extends Throwable> cause) {
+                                                                                        final Class<? extends Throwable> cause) {
         expectException(type, substring);
         expectedException.expectCause(instanceOf(cause));
     }

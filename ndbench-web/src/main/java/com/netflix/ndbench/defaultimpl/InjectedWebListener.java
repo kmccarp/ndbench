@@ -35,7 +35,7 @@ public class InjectedWebListener extends GuiceServletContextListener
     @Override
     protected Injector getInjector()
     {
-        return new GuiceInjectorProvider().getInjector( new JaxServletModule());
+        return new GuiceInjectorProvider().getInjector(new JaxServletModule());
     }
 
     public static class JaxServletModule extends ServletModule
@@ -45,11 +45,11 @@ public class InjectedWebListener extends GuiceServletContextListener
         {
             Map<String, String> params = new HashMap<>();
             String packages =
-                "com.netflix.ndbench.core.resources;" +
-                "com.netflix.ndbench.core.filters;";
+            "com.netflix.ndbench.core.resources;" +
+            "com.netflix.ndbench.core.filters;";
             params.put(PackagesResourceConfig.PROPERTY_PACKAGES, packages);
             params.put(PackagesResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS,
-                "com.netflix.ndbench.core.filters.CorsResponseFilter");
+            "com.netflix.ndbench.core.filters.CorsResponseFilter");
             params.put(ServletContainer.PROPERTY_FILTER_CONTEXT_PATH, "/REST");
             serve("/REST/*").with(GuiceContainer.class, params);
         }

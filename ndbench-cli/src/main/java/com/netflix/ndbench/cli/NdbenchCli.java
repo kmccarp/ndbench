@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public class NdbenchCli {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(NdbenchCli.class);
+
     public static void main(final String[] argv) {
         Injector injector = new GuiceInjectorProvider().getInjector(new CliModule());
         CliConfigs cliConfigs = injector.getInstance(CliConfigs.class);
@@ -43,17 +44,17 @@ public class NdbenchCli {
             long millisToWait = Integer.valueOf(cliConfigs.getCliTimeoutMillis());
 
             logger.info("Starting driver in CLI with loadPattern=" + cliConfigs.getLoadPattern()
-                    + ", windowSize=" + cliConfigs.getWindowSize()
-                    + ", windowDurationInSec=" + cliConfigs.getWindowDurationInSec()
-                    + ", bulkSize=" + cliConfigs.getBulkSize()
-                    + ", timeout(ms)=" + (millisToWait == 0L ? "no timeout" : cliConfigs.getCliTimeoutMillis())
+            + ", windowSize=" + cliConfigs.getWindowSize()
+            + ", windowDurationInSec=" + cliConfigs.getWindowDurationInSec()
+            + ", bulkSize=" + cliConfigs.getBulkSize()
+            + ", timeout(ms)=" + (millisToWait == 0L ? "no timeout" : cliConfigs.getCliTimeoutMillis())
 
-                    + ", clientName=" + cliConfigs.getClientName());
+            + ", clientName=" + cliConfigs.getClientName());
             driver.start(
-                    LoadPattern.fromString(cliConfigs.getLoadPattern()),
-                    Integer.valueOf(cliConfigs.getWindowSize()),
-                    Integer.valueOf(cliConfigs.getWindowDurationInSec()),
-                    Integer.valueOf(cliConfigs.getBulkSize())
+            LoadPattern.fromString(cliConfigs.getLoadPattern()),
+            Integer.valueOf(cliConfigs.getWindowSize()),
+            Integer.valueOf(cliConfigs.getWindowDurationInSec()),
+            Integer.valueOf(cliConfigs.getBulkSize())
             );
 
             if (millisToWait > 0) {
@@ -64,7 +65,7 @@ public class NdbenchCli {
                 logger.info("Stopped driver");
                 System.exit(0);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error("Encountered an exception when driving load", e);
             System.exit(-1);
         }

@@ -98,7 +98,7 @@ public interface IConfiguration {
 
 
     @DefaultValue("100")
-    @PropertyName(name= NdBenchConstants.WRITE_RATE_LIMIT)
+    @PropertyName(name = NdBenchConstants.WRITE_RATE_LIMIT)
     int getWriteRateLimit();
 
 

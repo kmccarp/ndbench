@@ -27,8 +27,8 @@ public abstract class AbstractDynamoDBReadOperation extends AbstractDynamoDBData
     protected final boolean consistentRead;
 
     protected AbstractDynamoDBReadOperation(DataGenerator dataGenerator, AmazonDynamoDB dynamoDB, String tableName,
-                                            String partitionKeyName, boolean consistentRead,
-                                            ReturnConsumedCapacity returnConsumedCapacity) {
+                                             String partitionKeyName, boolean consistentRead,
+                                             ReturnConsumedCapacity returnConsumedCapacity) {
         super(dynamoDB, tableName, partitionKeyName, dataGenerator, returnConsumedCapacity);
         this.consistentRead = consistentRead;
     }

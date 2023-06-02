@@ -60,8 +60,8 @@ public class SlidingWindowFlipStringKeyGenerator extends StringKeyGenerator {
         int max = min + this.windowSize;
 
         int nextKey = randomnum(min, max);
-        logger.debug("Current Window: "+currentWindow+"" + "| CurrentKeySet: [" +min +" - " +max+"] | getNextKey(): "+nextKey);
-        return "T"+nextKey;
+        logger.debug("Current Window: " + currentWindow + "" + "| CurrentKeySet: [" + min + " - " + max + "] | getNextKey(): " + nextKey);
+        return "T" + nextKey;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class SlidingWindowFlipStringKeyGenerator extends StringKeyGenerator {
     private int getCurrentWindowIndex()
     {
         long currentTime = System.currentTimeMillis();
-        long currentWindow =((currentTime - startTime) / windowDurationInMs);
-        return (int) currentWindow%(numKeys/windowSize);
+        long currentWindow = ((currentTime - startTime) / windowDurationInMs);
+        return (int) currentWindow % (numKeys / windowSize);
     }
 }

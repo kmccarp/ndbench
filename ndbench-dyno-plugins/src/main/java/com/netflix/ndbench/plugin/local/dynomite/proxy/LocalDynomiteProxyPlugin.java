@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Singleton
 @NdBenchClientPlugin("LocalDynomiteProxyPlugin")
-public class LocalDynomiteProxyPlugin implements NdBenchClient{
+public class LocalDynomiteProxyPlugin implements NdBenchClient {
     private static final Logger logger = LoggerFactory.getLogger(DynoJedis.class);
 
     private static final String ResultOK = "Ok";
@@ -74,15 +74,14 @@ public class LocalDynomiteProxyPlugin implements NdBenchClient{
         };
 
 
-
         DynoJedisClient jClient = new DynoJedisClient.Builder()
-                .withApplicationName(ClusterName)
-                .withDynomiteClusterName(ClusterName)
-                .withHostSupplier(hSupplier)
-                .withCPConfig(new ConnectionPoolConfigurationImpl("myCP")
-                .withTokenSupplier(new LocalHttpEndpointBasedTokenMapSupplier())
-                .setLoadBalancingStrategy(LoadBalancingStrategy.TokenAware))
-                .build();
+        .withApplicationName(ClusterName)
+        .withDynomiteClusterName(ClusterName)
+        .withHostSupplier(hSupplier)
+        .withCPConfig(new ConnectionPoolConfigurationImpl("myCP")
+        .withTokenSupplier(new LocalHttpEndpointBasedTokenMapSupplier())
+        .setLoadBalancingStrategy(LoadBalancingStrategy.TokenAware))
+        .build();
 
         jedisClient.set(jClient);
 
@@ -93,14 +92,13 @@ public class LocalDynomiteProxyPlugin implements NdBenchClient{
 
         String res = jedisClient.get().get(key);
 
-        if(res!=null)
+        if (res != null)
         {
-            if(res.isEmpty())
+            if (res.isEmpty())
             {
                 throw new Exception("Data retrieved is not ok ");
             }
-        }
-        else
+        }else
         {
             return CacheMiss;
         }

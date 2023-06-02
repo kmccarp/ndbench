@@ -21,7 +21,10 @@ package com.netflix.ndbench.api.plugin;
  */
 public interface DataGenerator {
     String getRandomString();
+
     String getRandomValue();
+
     Integer getRandomInteger();
+
     Integer getRandomIntegerValue();
 }

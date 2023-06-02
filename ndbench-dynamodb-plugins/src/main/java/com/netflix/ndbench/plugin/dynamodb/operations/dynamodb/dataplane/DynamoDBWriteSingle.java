@@ -33,7 +33,7 @@ import java.util.Optional;
  * @author ipapapa
  */
 public class DynamoDBWriteSingle extends AbstractDynamoDBDataPlaneOperation
-        implements CapacityConsumingFunction<PutItemResult, String, String> {
+implements CapacityConsumingFunction<PutItemResult, String, String> {
     public DynamoDBWriteSingle(DataGenerator dataGenerator, AmazonDynamoDB dynamoDB, String tableName,
                                String partitionKeyName, ReturnConsumedCapacity returnConsumedCapacity) {
         super(dynamoDB, tableName, partitionKeyName, dataGenerator, returnConsumedCapacity);
@@ -42,16 +42,16 @@ public class DynamoDBWriteSingle extends AbstractDynamoDBDataPlaneOperation
     @Override
     public String apply(String key) {
         PutItemRequest request = new PutItemRequest()
-                .withTableName(tableName)
-                .withReturnConsumedCapacity(returnConsumedCapacity)
-                .addItemEntry(partitionKeyName, new AttributeValue().withS(key))
-                .addItemEntry(ATTRIBUTE_NAME, new AttributeValue().withS(dataGenerator.getRandomValue()));
+        .withTableName(tableName)
+        .withReturnConsumedCapacity(returnConsumedCapacity)
+        .addItemEntry(partitionKeyName, new AttributeValue().withS(key))
+        .addItemEntry(ATTRIBUTE_NAME, new AttributeValue().withS(dataGenerator.getRandomValue()));
         try {
             // Write the item to the table
             return Optional.ofNullable(dynamoDB.putItem(request))
-                    .map(this::measureConsumedCapacity)
-                    .map(PutItemResult::toString)
-                    .orElse(null);
+            .map(this::measureConsumedCapacity)
+            .map(PutItemResult::toString)
+            .orElse(null);
         } catch (AmazonServiceException ase) {
             throw amazonServiceException(ase);
         } catch (AmazonClientException ace) {

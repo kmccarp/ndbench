@@ -67,7 +67,7 @@ public abstract class DynamoDBKeyValueBase<C extends DynamoDBConfigurationBase> 
      * @param configuration
      */
     protected DynamoDBKeyValueBase(AWSCredentialsProvider awsCredentialsProvider,
-                                   C configuration) {
+                                                                                                                                                                                     C configuration) {
         this.awsCredentialsProvider = awsCredentialsProvider;
         this.config = configuration;
     }
@@ -83,33 +83,33 @@ public abstract class DynamoDBKeyValueBase<C extends DynamoDBConfigurationBase> 
         //data plane
         boolean consistentRead = config.consistentRead();
         this.singleRead = new DynamoDBReadSingle(dataGenerator, dynamoDB, tableName, partitionKeyName, consistentRead,
-                returnConsumedCapacity);
+        returnConsumedCapacity);
         this.bulkRead = new DynamoDBReadBulk(dataGenerator, dynamoDB, tableName, partitionKeyName, consistentRead,
-                returnConsumedCapacity);
+        returnConsumedCapacity);
         this.singleWrite = new DynamoDBWriteSingle(dataGenerator, dynamoDB, tableName, partitionKeyName,
-                returnConsumedCapacity);
+        returnConsumedCapacity);
         this.bulkWrite = new DynamoDBWriteBulk(dataGenerator, dynamoDB, tableName, partitionKeyName,
-                returnConsumedCapacity);
+        returnConsumedCapacity);
         this.transactionWrite = new DynamoDBWriteTransaction(dataGenerator, dynamoDB, tableName, partitionKeyName,
-                                                             config.getChildTableNamePrefix(), config.getMainTableColsPerRow(), returnConsumedCapacity);
+        config.getChildTableNamePrefix(), config.getMainTableColsPerRow(), returnConsumedCapacity);
     }
 
     protected void createAndSetDynamoDBClient() {
         AmazonDynamoDBClientBuilder dynamoDbBuilder = AmazonDynamoDBClientBuilder.standard();
         dynamoDbBuilder.withClientConfiguration(new ClientConfiguration()
-                .withMaxConnections(config.getMaxConnections())
-                .withRequestTimeout(config.getMaxRequestTimeout()) //milliseconds
-                .withRetryPolicy(config.getMaxRetries() <= 0 ? NO_RETRY_POLICY : new RetryPolicy(DEFAULT_RETRY_CONDITION,
-                        DYNAMODB_DEFAULT_BACKOFF_STRATEGY,
-                        config.getMaxRetries(),
-                        DO_HONOR_MAX_ERROR_RETRY_IN_CLIENT_CONFIG))
-                .withGzip(config.isCompressing()));
+        .withMaxConnections(config.getMaxConnections())
+        .withRequestTimeout(config.getMaxRequestTimeout()) //milliseconds
+        .withRetryPolicy(config.getMaxRetries() <= 0 ? NO_RETRY_POLICY : new RetryPolicy(DEFAULT_RETRY_CONDITION,
+        DYNAMODB_DEFAULT_BACKOFF_STRATEGY,
+        config.getMaxRetries(),
+        DO_HONOR_MAX_ERROR_RETRY_IN_CLIENT_CONFIG))
+        .withGzip(config.isCompressing()));
         dynamoDbBuilder.withCredentials(awsCredentialsProvider);
         if (StringUtils.isNotEmpty(this.config.getEndpoint())) {
             Preconditions.checkState(StringUtils.isNotEmpty(config.getRegion()),
-                    "If you set the endpoint you must set the region");
+            "If you set the endpoint you must set the region");
             dynamoDbBuilder.withEndpointConfiguration(
-                    new AwsClientBuilder.EndpointConfiguration(config.getEndpoint(), config.getRegion()));
+            new AwsClientBuilder.EndpointConfiguration(config.getEndpoint(), config.getRegion()));
         }
         this.dynamoDB = dynamoDbBuilder.build();
     }
@@ -118,7 +118,7 @@ public abstract class DynamoDBKeyValueBase<C extends DynamoDBConfigurationBase> 
     public abstract void init(DataGenerator dataGenerator);
 
     @Override
-    public String readSingle(String key){
+    public String readSingle(String key) {
         return singleRead.apply(key);
     }
 
@@ -145,9 +145,9 @@ public abstract class DynamoDBKeyValueBase<C extends DynamoDBConfigurationBase> 
     @Override
     public String getConnectionInfo() {
         return String.format("Table Name - %s : Attribute Name - %s : Consistent Read - %b",
-                this.config.getTableName(),
-                this.config.getAttributeName(),
-                this.config.consistentRead());
+        this.config.getTableName(),
+        this.config.getAttributeName(),
+        this.config.consistentRead());
     }
 
     @Override

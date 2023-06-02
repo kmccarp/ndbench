@@ -30,51 +30,73 @@ package com.netflix.ndbench.api.plugin;
  */
 public interface NdBenchMonitor {
     void initialize();
+
     void incReadSuccess();
+
     long getReadSuccess();
 
     void incReadFailure();
+
     long getReadFailure();
 
     void incWriteSuccess();
+
     long getWriteSuccess();
 
     void incWriteFailure();
+
     long getWriteFailure();
 
     void incCacheHit();
+
     long getCacheHits();
 
     void incCacheMiss();
+
     long getCacheMiss();
 
     void recordReadLatency(long duration);
+
     long getReadLatAvg();
+
     long getReadLatP50();
+
     long getReadLatP95();
+
     long getReadLatP99();
+
     long getReadLatP995();
+
     long getReadLatP999();
 
     long getWriteLatAvg();
+
     long getWriteLatP50();
+
     long getWriteLatP95();
+
     long getWriteLatP99();
+
     long getWriteLatP995();
+
     long getWriteLatP999();
 
     long getWriteRPS();
+
     long getReadRPS();
+
     void setWriteRPS(long writeRPS);
+
     void setReadRPS(long readRPS);
 
 
     void recordWriteLatency(long duration);
+
     int getCacheHitRatioInt();
 
-     void resetStats();
+    void resetStats();
 
-     default String getDocumentation() {
-         return "sublcasses should supply documentation for various fields of this class";
-     }
+    default String getDocumentation() {
+        return "sublcasses should supply documentation for various fields of this class";
+    }
 }

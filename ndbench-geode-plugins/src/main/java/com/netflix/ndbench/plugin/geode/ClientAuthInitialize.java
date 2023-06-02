@@ -14,28 +14,28 @@ import java.util.Properties;
 @SuppressWarnings("unused")
 public class ClientAuthInitialize implements AuthInitialize {
 
-  public static final String USER_NAME = "security-username";
-  public static final String PASSWORD = "security-password";
+    public static final String USER_NAME = "security-username";
+    public static final String PASSWORD = "security-password";
 
-  public static AuthInitialize create() {
-    return new ClientAuthInitialize();
-  }
+    public static AuthInitialize create() {
+        return new ClientAuthInitialize();
+    }
 
-  @Override
-  public void close() {
-  }
+    @Override
+    public void close() {
+    }
 
-  @Override
-  public Properties getCredentials(Properties arg0, DistributedMember arg1,
-                                   boolean arg2) throws AuthenticationFailedException {
-    Properties props = new Properties();
-    props.put(USER_NAME, arg0.getProperty(USER_NAME));
-    props.put(PASSWORD, arg0.getProperty(PASSWORD));
-    return props;
-  }
+    @Override
+    public Properties getCredentials(Properties arg0, DistributedMember arg1,
+                                                boolean arg2) throws AuthenticationFailedException {
+        Properties props = new Properties();
+        props.put(USER_NAME, arg0.getProperty(USER_NAME));
+        props.put(PASSWORD, arg0.getProperty(PASSWORD));
+        return props;
+    }
 
-  @Override
-  public void init(LogWriter arg0, LogWriter arg1)
-      throws AuthenticationFailedException {
-  }
+    @Override
+    public void init(LogWriter arg0, LogWriter arg1)
+    throws AuthenticationFailedException {
+    }
 }

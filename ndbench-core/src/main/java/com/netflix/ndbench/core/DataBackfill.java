@@ -56,6 +56,7 @@ public class DataBackfill {
     private final Random random = new Random();
 
     private final AtomicReference<Future<Void>> futureRef = new AtomicReference<>(null);
+
     @Inject
     public DataBackfill(IConfiguration config) {
         this.config = config;
@@ -97,8 +98,8 @@ public class DataBackfill {
         initThreadPool(numThreads);
 
         List<Pair<Integer, Integer>> keyRanges = getKeyRangesPerThread(numThreads,
-                                                                       config.getBackfillKeySlots(),
-                                                                       config.getNumKeys());
+        config.getBackfillKeySlots(),
+        config.getNumKeys());
 
         final CountDownLatch latch = new CountDownLatch(numThreads);
 
@@ -169,8 +170,8 @@ public class DataBackfill {
 
         @Override
         public String process(NdBenchAbstractClient<?> client, String key) throws Exception {
-            Object result =  client.writeSingle(key);
-            return result == null ? "<null>"  : result.toString();
+            Object result = client.writeSingle(key);
+            return result == null ? "<null>" : result.toString();
         }
     }
 
@@ -181,8 +182,8 @@ public class DataBackfill {
             String result = client.readSingle(key);
             if (result == null) {
                 missCount.incrementAndGet();
-                Object writeResult =  client.writeSingle(key);
-                return writeResult == null ? "<null>"  : writeResult.toString();
+                Object writeResult = client.writeSingle(key);
+                return writeResult == null ? "<null>" : writeResult.toString();
             }
             return "done";
         }
@@ -192,13 +193,13 @@ public class DataBackfill {
 
         @Override
         public String process(NdBenchAbstractClient<?> client, String key) throws Exception {
-            Object result =  client.writeSingle(key);
+            Object result = client.writeSingle(key);
             String value = client.readSingle(key);
             if (value == null) {
                 missCount.incrementAndGet();
                 return "backfill miss: " + result;
             } else {
-                return result == null ? "<null>"  : result.toString();
+                return result == null ? "<null>" : result.toString();
             }
         }
     }
@@ -209,8 +210,8 @@ public class DataBackfill {
             throw new RuntimeException("Backfill already started");
         }
         ThreadFactory threadFactory = new ThreadFactoryBuilder()
-                                      .setNameFormat("ndbench-backfill-pool-%d")
-                                      .setDaemon(false).build();
+        .setNameFormat("ndbench-backfill-pool-%d")
+        .setDaemon(false).build();
         ExecutorService newPool = Executors.newFixedThreadPool(numThreads + 1, threadFactory);
         boolean success = threadPool.compareAndSet(null, newPool);
         if (!success) {
@@ -260,7 +261,7 @@ public class DataBackfill {
 
         logger.info("Num keys (KEYSPACE): {}, Num threads: {}, Num slots: {}", numKeys, numThreads, keySlots);
         logger.info("MyNode: Num keys to be processed: {}, Num keys per thread: {}, My key slot: {}",
-                    numKeysToProcess, numKeysPerThread, randomSlot);
+        numKeysToProcess, numKeysPerThread, randomSlot);
         for (int i = 0; i < numThreads; i++)
         {
             int startKeyPerThread = startKey + (i * numKeysPerThread);

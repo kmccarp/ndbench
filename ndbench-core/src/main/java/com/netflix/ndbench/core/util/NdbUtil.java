@@ -9,7 +9,7 @@ package com.netflix.ndbench.core.util;
  */
 public class NdbUtil
 {
-    private static final String[] BINARY_UNITS = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB" };
+    private static final String[] BINARY_UNITS = {"bytes", "KB", "MB", "GB", "TB", "PB", "EB"};
 
     /**
      * FileUtils.byteCountToDisplaySize rounds down the size, hence using this for more precision.

@@ -61,7 +61,7 @@ public class JanusGraphPluginCQL extends JanusGraphBasePlugin implements NdBench
     @Inject
     public JanusGraphPluginCQL(IJanusGraphConfig config, JanusGraphBuilderCQLProvider builderProvider) {
         super(BACKEND, Optional.ofNullable(config.getStorageHostname()).orElse(Inet4Address.getLoopbackAddress().getHostAddress()),
-                config.getStoragePort());
+        config.getStoragePort());
         this.graphBuilder = builderProvider.getGraphBuilder();
         this.useJanusgraphTransaction = config.useJanusgraphTransaction();
     }
@@ -106,8 +106,7 @@ public class JanusGraphPluginCQL extends JanusGraphBasePlugin implements NdBench
             List<Vertex> results = traversalSource.V().has(PROP_CUSTOM_ID_KEY, key).toList();
 
             if (results == null)
-                throw new Exception("Internal error when reading data with key" + key + " using TinkerPop API");
-            else if (results.size() == 0)
+                throw new Exception("Internal error when reading data with key" + key + " using TinkerPop API");else if (results.size() == 0)
                 response = CACHE_MISS;
         }
 
@@ -117,12 +116,12 @@ public class JanusGraphPluginCQL extends JanusGraphBasePlugin implements NdBench
     @Override
     public String writeSingle(String key) throws Exception {
         if (useJanusgraphTransaction) {
-                graph.addVertex(T.label, VERTEX_LABEL_LEVEL_1, PROP_CUSTOM_ID_KEY, key, PROP_METADATA_KEY,
-                        dataGenerator.getRandomValue()); //Automatically opens a new transaction
-                graph.tx().commit();
+            graph.addVertex(T.label, VERTEX_LABEL_LEVEL_1, PROP_CUSTOM_ID_KEY, key, PROP_METADATA_KEY,
+            dataGenerator.getRandomValue()); //Automatically opens a new transaction
+            graph.tx().commit();
         } else {
             traversalSource.getGraph().addVertex(T.label, VERTEX_LABEL_LEVEL_1, PROP_CUSTOM_ID_KEY, key,
-                    PROP_METADATA_KEY, dataGenerator.getRandomValue());
+            PROP_METADATA_KEY, dataGenerator.getRandomValue());
             traversalSource.getGraph().tx().commit();
         }
 

@@ -61,12 +61,12 @@ public class NdBenchResource {
 
     @Inject
     public NdBenchResource(NdBenchClientFactory cFactory, NdBenchDriver ndBenchDriver,
-                           DataBackfill dataBackfill, IConfiguration config, NdBenchMonitor ndBenchMonitor) {
+                                        DataBackfill dataBackfill, IConfiguration config, NdBenchMonitor ndBenchMonitor) {
         this.clientFactory = cFactory;
         this.ndBenchDriver = ndBenchDriver;
         this.dataBackfill = dataBackfill;
         this.config = config;
-        this.ndBenchMonitor  = ndBenchMonitor;
+        this.ndBenchMonitor = ndBenchMonitor;
     }
 
 
@@ -121,7 +121,7 @@ public class NdBenchResource {
         try {
             NdBenchAbstractClient<?> client = ndBenchDriver.getClient();
             dataBackfill.backfillAsync(client);
-            return sendSuccessResponse( "Async data fill started !");
+            return sendSuccessResponse("Async data fill started !");
         } catch (Exception e) {
             logger.error("Error starting datafill", e);
             return  sendErrorResponse("Async dataFill failed to start!", e);
@@ -171,13 +171,12 @@ public class NdBenchResource {
         logger.info("Stop NdBench data fill");
         try {
             dataBackfill.stopBackfill();
-            return sendSuccessResponse("data fill stop!" );
+            return sendSuccessResponse("data fill stop!");
         } catch (Exception e) {
             logger.error("Error stop datafill", e);
             return sendErrorResponse("dataFill failed!", e);
         }
     }
-
 
 
     @Path("/shutdownDataFill")
@@ -189,7 +188,7 @@ public class NdBenchResource {
         logger.info("Shutdown NdBench data fill");
         try {
             dataBackfill.shutdown();
-            return sendSuccessResponse("data fill stop!" );
+            return sendSuccessResponse("data fill stop!");
         } catch (Exception e) {
             logger.error("Error shutdown datafill", e);
             return sendErrorResponse("dataFill failed!", e);
@@ -207,7 +206,7 @@ public class NdBenchResource {
 
             return sendSuccessResponse("NdBench client initiated!");
         } catch (Exception e) {
-            logger.error("Error initializing the client - "+clientName, e);
+            logger.error("Error initializing the client - " + clientName, e);
             return sendErrorResponse("Client initialization failed!", e);
         }
     }
@@ -217,9 +216,9 @@ public class NdBenchResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response start(@DefaultValue("random") @QueryParam("loadPattern") String loadPattern,
-                          @DefaultValue("-1")  @QueryParam("windowSize") int windowSize,
-                          @DefaultValue("-1") @QueryParam("durationInSec") long durationInSec,
-                          @DefaultValue("1") @QueryParam("bulkSize") int bulkSize) throws Exception {
+                                                                                                                                            @DefaultValue("-1")  @QueryParam("windowSize") int windowSize,
+                                                                                                                                            @DefaultValue("-1") @QueryParam("durationInSec") long durationInSec,
+                                                                                                                                            @DefaultValue("1") @QueryParam("bulkSize") int bulkSize) throws Exception {
         try {
             LoadPattern loadPatternType = LoadPattern.fromString(loadPattern);
             Result validationResult = validateLoadPatternParams(loadPatternType, windowSize, durationInSec);
@@ -242,9 +241,9 @@ public class NdBenchResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response startReads(@DefaultValue("random") @QueryParam("loadPattern") String loadPattern,
-                               @DefaultValue("-1")  @QueryParam("windowSize") int windowSize,
-                               @DefaultValue("-1") @QueryParam("durationInSec") long durationInSec,
-                               @DefaultValue("1") @QueryParam("bulkSize") int bulkSize) throws Exception {
+                                                                                                                                                      @DefaultValue("-1")  @QueryParam("windowSize") int windowSize,
+                                                                                                                                                      @DefaultValue("-1") @QueryParam("durationInSec") long durationInSec,
+                                                                                                                                                      @DefaultValue("1") @QueryParam("bulkSize") int bulkSize) throws Exception {
         try {
             LoadPattern loadPatternType = LoadPattern.fromString(loadPattern);
             Result validationResult = validateLoadPatternParams(loadPatternType, windowSize, durationInSec);
@@ -261,6 +260,7 @@ public class NdBenchResource {
             return sendErrorResponse("NdBench startReads failed! ", e);
         }
     }
+
     @Path("/stopReads")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -282,9 +282,9 @@ public class NdBenchResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response startWrites(@DefaultValue("random") @QueryParam("loadPattern") String loadPattern,
-                                @DefaultValue("-1")  @QueryParam("windowSize") int windowSize,
-                                @DefaultValue("-1") @QueryParam("durationInSec") long durationInSec,
-                                @DefaultValue("1")  @QueryParam("bulkSize") int bulkSize) throws Exception {
+                                                                                                                                                        @DefaultValue("-1")  @QueryParam("windowSize") int windowSize,
+                                                                                                                                                        @DefaultValue("-1") @QueryParam("durationInSec") long durationInSec,
+                                                                                                                                                        @DefaultValue("1")  @QueryParam("bulkSize") int bulkSize) throws Exception {
 
         try {
             LoadPattern loadPatternType = LoadPattern.fromString(loadPattern);
@@ -302,6 +302,7 @@ public class NdBenchResource {
             return sendErrorResponse("NdBench startWrites failed! ", e);
         }
     }
+
     @Path("/stopWrites")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -389,7 +390,7 @@ public class NdBenchResource {
         try {
             if (ndBenchDriver.getIsReadRunning())
                 return sendSuccessResponse("Read process running");
-            else return sendSuccessResponse( "No Read process is running");
+            else return sendSuccessResponse("No Read process is running");
         } catch (Exception e) {
             logger.error("Error getting NdBench getReadStatus", e);
             return sendErrorResponse("NdBench getReadStatus failed! ", e);
@@ -405,12 +406,13 @@ public class NdBenchResource {
         try {
             if (ndBenchDriver.getIsWriteRunning())
                 return sendSuccessResponse("Writes process running");
-            else  return sendSuccessResponse("No Write process is running");
+            else return sendSuccessResponse("No Write process is running");
         } catch (Exception e) {
             logger.error("Error getting NdBench getWriteStatus", e);
             return sendErrorResponse("NdBench getWriteStatus failed! ", e);
         }
     }
+
     @Path("/shutdownclient")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -442,6 +444,7 @@ public class NdBenchResource {
             return sendErrorResponse("NdBench getDrivers failed! ", e);
         }
     }
+
     @Path("/getserverstatus")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -451,46 +454,45 @@ public class NdBenchResource {
         try {
             Map<String, Object> serverStatusJson = new HashMap<>();
 
-            serverStatusJson.put("ClientDrivers",clientFactory.getClientDrivers());
+            serverStatusJson.put("ClientDrivers", clientFactory.getClientDrivers());
             serverStatusJson.put("LoadPatterns", Arrays.asList(LoadPattern.values()));
-            String currentRunningDriver="NA",connectionInfo="NA", currentWriteLoadPattern="NA", currentReadLoadPattern="NA";
+            String currentRunningDriver = "NA",connectionInfo = "NA", currentWriteLoadPattern = "NA", currentReadLoadPattern = "NA";
 
-            NdBenchAbstractClient<?> NdBenchClient= ndBenchDriver.getClient();
+            NdBenchAbstractClient<?> NdBenchClient = ndBenchDriver.getClient();
 
-            if(NdBenchClient!=null)
+            if (NdBenchClient != null)
             {
-                if(NdBenchClient.getClass().getAnnotation(NdBenchClientPlugin.class)!=null)
+                if (NdBenchClient.getClass().getAnnotation(NdBenchClientPlugin.class) != null)
                 {
-                    currentRunningDriver=NdBenchClient.getClass().getAnnotation(NdBenchClientPlugin.class).value();
-                }
-                else
+                    currentRunningDriver = NdBenchClient.getClass().getAnnotation(NdBenchClientPlugin.class).value();
+                }else
                 {
-                    currentRunningDriver=NdBenchClient.getClass().getSimpleName();
+                    currentRunningDriver = NdBenchClient.getClass().getSimpleName();
                 }
 
-                connectionInfo=NdBenchClient.getConnectionInfo();
+                connectionInfo = NdBenchClient.getConnectionInfo();
 
             }
-            KeyGenerator writeLoadPattern=ndBenchDriver.getWriteLoadPattern();
-            if(null!=writeLoadPattern)
+            KeyGenerator writeLoadPattern = ndBenchDriver.getWriteLoadPattern();
+            if (null != writeLoadPattern)
             {
-                currentWriteLoadPattern= writeLoadPattern.getClass().getSimpleName();
+                currentWriteLoadPattern = writeLoadPattern.getClass().getSimpleName();
             }
 
-            KeyGenerator readLoadPattern=ndBenchDriver.getReadLoadPattern();
-            if(null!=readLoadPattern)
+            KeyGenerator readLoadPattern = ndBenchDriver.getReadLoadPattern();
+            if (null != readLoadPattern)
             {
-                currentReadLoadPattern= readLoadPattern.getClass().getSimpleName();
+                currentReadLoadPattern = readLoadPattern.getClass().getSimpleName();
             }
-            serverStatusJson.put("RunningDriver",currentRunningDriver);
-            serverStatusJson.put("RunningWriteLoadPattern",currentWriteLoadPattern);
-            serverStatusJson.put("RunningReadLoadPattern",currentReadLoadPattern);
-            serverStatusJson.put("ConnectionInfo",connectionInfo);
+            serverStatusJson.put("RunningDriver", currentRunningDriver);
+            serverStatusJson.put("RunningWriteLoadPattern", currentWriteLoadPattern);
+            serverStatusJson.put("RunningReadLoadPattern", currentReadLoadPattern);
+            serverStatusJson.put("ConnectionInfo", connectionInfo);
             serverStatusJson.put("IsReadsRunning", ndBenchDriver.getIsReadRunning());
             serverStatusJson.put("IsWritesRunning", ndBenchDriver.getIsWriteRunning());
-            serverStatusJson.put("Stats",ndBenchMonitor);
-            serverStatusJson.put("DriverConfig",config);
-            serverStatusJson.put("IsBackfillRunning",dataBackfill.getIsBackfillRunning());
+            serverStatusJson.put("Stats", ndBenchMonitor);
+            serverStatusJson.put("DriverConfig", config);
+            serverStatusJson.put("IsBackfillRunning", dataBackfill.getIsBackfillRunning());
 
 
             return sendJson(serverStatusJson);
@@ -520,14 +522,14 @@ public class NdBenchResource {
     private Result validateLoadPatternParams(LoadPattern loadPattern, long windowSize, long durationInSec)
     {
         String returnMsg = "Input validation Failure:";
-        if(loadPattern==null)
+        if (loadPattern == null)
         {
-            returnMsg+="loadpattern parameter is not available";
+            returnMsg += "loadpattern parameter is not available";
             logger.error(returnMsg);
             return new ErrorResponse(returnMsg);
         }
-        if(loadPattern.equals(LoadPattern.SLIDING_WINDOW) && (windowSize < 1 || durationInSec < 1)) {
-            returnMsg += "WindowSize and DurationInSeconds can not be less than 1, provided: windowSize: "+windowSize+", durationInSec: "+durationInSec;
+        if (loadPattern.equals(LoadPattern.SLIDING_WINDOW) && (windowSize < 1 || durationInSec < 1)) {
+            returnMsg += "WindowSize and DurationInSeconds can not be less than 1, provided: windowSize: " + windowSize + ", durationInSec: " + durationInSec;
             logger.error(returnMsg);
             return new ErrorResponse(returnMsg);
         }

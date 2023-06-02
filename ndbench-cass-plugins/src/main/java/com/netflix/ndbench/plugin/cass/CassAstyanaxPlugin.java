@@ -88,7 +88,7 @@ public class CassAstyanaxPlugin implements NdBenchClient {
 
             AstyanaxConfigurationImpl aci = (AstyanaxConfigurationImpl) this.keyspace.getConfig();
             aci.setDefaultReadConsistencyLevel(ConsistencyLevel.valueOf(config.getReadConsistencyLevel()))
-               .setDefaultWriteConsistencyLevel(ConsistencyLevel.valueOf(config.getWriteConsistencyLevel()));
+            .setDefaultWriteConsistencyLevel(ConsistencyLevel.valueOf(config.getWriteConsistencyLevel()));
 
             CF = new ColumnFamily<>(config.getCfname(), StringSerializer.get(), IntegerSerializer.get(), StringSerializer.get());
 
@@ -119,9 +119,9 @@ public class CassAstyanaxPlugin implements NdBenchClient {
     public String readSingle(String key) throws Exception {
 
         ColumnList<Integer> result = keyspace.prepareQuery(this.CF)
-                .setConsistencyLevel(ConsistencyLevel.valueOf(config.getReadConsistencyLevel()))
-                .getRow(key)
-                .execute().getResult();
+        .setConsistencyLevel(ConsistencyLevel.valueOf(config.getReadConsistencyLevel()))
+        .getRow(key)
+        .execute().getResult();
 
         if (!result.isEmpty()) {
             if (result.size() < (config.getColsPerRow())) {
@@ -234,18 +234,18 @@ public class CassAstyanaxPlugin implements NdBenchClient {
             ColumnFamilyDefinition cfDef = cluster.makeColumnFamilyDefinition();
 
             cfDef.setComment("CF Created from NdBench")
-                 .setKeyspace(keyspaceName)
-                 .setName(cfName)
-                 .setComparatorType("Int32Type")
-                 .setKeyValidationClass("UTF8Type")
-                 .setDefaultValidationClass("UTF8Type")
-                 .setLocalReadRepairChance(Double.parseDouble("0"))
-                 .setReadRepairChance(Double.parseDouble("0"))
-                 .setCompactionStrategy("SizeTieredCompactionStrategy")
-                 .setFieldValue("MEMTABLE_FLUSH_PERIOD_IN_MS", 60000)
-                 .setFieldValue("INDEX_INTERVAL", 256)
-                 .setFieldValue("SPECULATIVE_RETRY", "NONE")
-                 .setCompressionOptions(ImmutableMap.<String, String>builder().put("sstable_compression", "").build());
+            .setKeyspace(keyspaceName)
+            .setName(cfName)
+            .setComparatorType("Int32Type")
+            .setKeyValidationClass("UTF8Type")
+            .setDefaultValidationClass("UTF8Type")
+            .setLocalReadRepairChance(Double.parseDouble("0"))
+            .setReadRepairChance(Double.parseDouble("0"))
+            .setCompactionStrategy("SizeTieredCompactionStrategy")
+            .setFieldValue("MEMTABLE_FLUSH_PERIOD_IN_MS", 60000)
+            .setFieldValue("INDEX_INTERVAL", 256)
+            .setFieldValue("SPECULATIVE_RETRY", "NONE")
+            .setCompressionOptions(ImmutableMap.<String, String>builder().put("sstable_compression", "").build());
 
             cluster.addColumnFamily(cfDef);
             logger.info("Created ColumnFamily ->  Name : " + cfName + " Definition: " + cfDef.toString());

@@ -13,6 +13,7 @@ import com.netflix.ndbench.plugin.configs.CassandraGenericConfiguration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Random;
+
 /**
  * @author vchella
  */
@@ -35,9 +36,9 @@ public class CassJavaDriverBatch extends CJavaDriverBasePlugin<CassandraGenericC
     @Override
     void prepStatements(Session session) {
 
-        readPstmt = session.prepare(" SELECT cyclist_name, expense_id, amount, description, paid FROM " + tableName + " WHERE cyclist_name = ?" );
+        readPstmt = session.prepare(" SELECT cyclist_name, expense_id, amount, description, paid FROM " + tableName + " WHERE cyclist_name = ?");
         writePstmt = session.prepare("INSERT INTO " + tableName + " (cyclist_name, expense_id, amount, description, paid) VALUES (?, ?, ?, ?, ?)");
-        writePstmt2 = session.prepare("INSERT INTO "+TableName2+" (expense_id, cyclist_name) VALUES (?, ?)");
+        writePstmt2 = session.prepare("INSERT INTO " + TableName2 + " (expense_id, cyclist_name) VALUES (?, ?)");
     }
 
     @Override
@@ -48,7 +49,7 @@ public class CassJavaDriverBatch extends CJavaDriverBasePlugin<CassandraGenericC
     @Override
     void upsertCF(Session session) {
         session.execute("CREATE TABLE IF NOT EXISTS " + tableName + " (cyclist_name text, balance float STATIC, expense_id int, amount float, description text, paid boolean, PRIMARY KEY (cyclist_name, expense_id) ) WITH compression = {'sstable_compression': ''}");
-        session.execute("CREATE TABLE IF NOT EXISTS "+TableName2+" (expense_id int, cyclist_name text, PRIMARY KEY (expense_id, cyclist_name)) WITH compression = {'sstable_compression': ''}");
+        session.execute("CREATE TABLE IF NOT EXISTS " + TableName2 + " (expense_id int, cyclist_name text, PRIMARY KEY (expense_id, cyclist_name)) WITH compression = {'sstable_compression': ''}");
     }
 
     @Override
@@ -84,18 +85,16 @@ public class CassJavaDriverBatch extends CJavaDriverBasePlugin<CassandraGenericC
         for (int i = 0; i < config.getBatchSize(); i++) {
 
             BoundStatement bStmt;
-            if(config.getUseMultiPartition())
+            if (config.getUseMultiPartition())
             {
-                if(randomObj.nextBoolean())
+                if (randomObj.nextBoolean())
                 {
-                 bStmt = getBStmtTable1(key);
-                }
-                else
+                    bStmt = getBStmtTable1(key);
+                }else
                 {
                     bStmt = getBStmtTable2(key);
                 }
-            }
-            else
+            }else
             {
                 bStmt = getBStmtTable1(key);
             }
@@ -103,8 +102,8 @@ public class CassJavaDriverBatch extends CJavaDriverBasePlugin<CassandraGenericC
             bStmt.setConsistencyLevel(ConsistencyLevel.valueOf(config.getWriteConsistencyLevel()));
             batch.add(bStmt);
         }
-        if(config.getUseTimestamp()) {
-            batch.setDefaultTimestamp(Instant.now().toEpochMilli()*1000);
+        if (config.getUseTimestamp()) {
+            batch.setDefaultTimestamp(Instant.now().toEpochMilli() * 1000);
         }
         session.execute(batch);
         batch.clear();

@@ -41,7 +41,7 @@ public class FakeWordDictionaryBasedDataGeneratorTest {
     @Test
     public void testRandomValues() {
         FakeWordDictionaryBasedDataGenerator generator =
-                new FakeWordDictionaryBasedDataGenerator(null, 13, 2, 'a', 'c');
+        new FakeWordDictionaryBasedDataGenerator(null, 13, 2, 'a', 'c');
 
         assertEquals("nflxaa nflxab", generator.getRandomValue());
         assertEquals("nflxac nflxba", generator.getRandomValue());

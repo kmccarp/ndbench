@@ -67,9 +67,9 @@ public abstract class CJavaDriverBasePlugin<Config extends CassandraConfiguratio
         logger.info("Cassandra  Cluster: " + sessionName);
 
         this.session = cassJavaDriverManager.getSession(sessionName, sessionContactPoint, connections, port,
-                username, password);
+        username, password);
 
-        if(config.getCreateSchema())
+        if (config.getCreateSchema())
         {
             logger.info("Trying to upsert schema");
             upsertKeyspace(this.session);
@@ -78,7 +78,9 @@ public abstract class CJavaDriverBasePlugin<Config extends CassandraConfiguratio
     }
 
     abstract void prepStatements(CqlSession session);
+
     abstract void upsertKeyspace(CqlSession session);
+
     abstract void upsertCF(CqlSession session);
 
     /**
@@ -107,12 +109,12 @@ public abstract class CJavaDriverBasePlugin<Config extends CassandraConfiguratio
     protected void upsertGenericKeyspace(CqlSession session) {
         Collection<Node> hosts = session.getMetadata().getNodes().values();
         Set<String> dcs = hosts.stream()
-                .map(Node::getDatacenter).map(this::toReplication)
-                .collect(Collectors.toSet());
+        .map(Node::getDatacenter).map(this::toReplication)
+        .collect(Collectors.toSet());
 
         String rf = "{'class': 'SimpleStrategy','replication_factor': '1'}";
 
-        if(hosts.size() > 1)
+        if (hosts.size() > 1)
         {
             rf = String.format("{'class': 'NetworkTopologyStrategy', %s}", String.join(", ", dcs));
         }

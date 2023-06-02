@@ -107,10 +107,10 @@ class FakeWordDictionaryBasedDataGenerator implements DataGenerator {
     }
 
     FakeWordDictionaryBasedDataGenerator(DataGenerator dataGenerator,
-                                         int expectedSizeOfRandomValues,
-                                         int numPadChars,
-                                         char firstValidChar,
-                                         char lastValidChar) {
+                                          int expectedSizeOfRandomValues,
+                                          int numPadChars,
+                                          char firstValidChar,
+                                          char lastValidChar) {
         this.dataGeneratorDelegate = dataGenerator;
         this.firstValidChar = firstValidChar;
         this.lastValidChar = lastValidChar;
@@ -142,7 +142,7 @@ class FakeWordDictionaryBasedDataGenerator implements DataGenerator {
 
     private String getNextWord() {
         return this.words[this.wordIndexBaseCounter.getAndUpdate(
-                currentValue -> (currentValue + 1) % this.words.length)];
+        currentValue -> (currentValue + 1) % this.words.length)];
     }
 
     @Override

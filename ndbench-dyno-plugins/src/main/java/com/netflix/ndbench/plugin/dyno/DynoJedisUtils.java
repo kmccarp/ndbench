@@ -100,7 +100,7 @@ public class DynoJedisUtils {
 
                 if (!isValidResponse(key, resp.get())) {
                     throw new Exception(String.format(
-                            "DynoJedisPipeline: pipeline read: value %s does not contain key %s", resp.get(), key));
+                    "DynoJedisPipeline: pipeline read: value %s does not contain key %s", resp.get(), key));
 
                 }
 
@@ -179,7 +179,7 @@ public class DynoJedisUtils {
      * @return "key_n"
      */
     public String pipelineWrite(String key, DataGenerator dataGenerator, int max_pipe_keys, int min_pipe_keys)
-            throws Exception {
+    throws Exception {
         // Create a random key between [0,MAX_PIPE_KEYS]
         int pipe_keys = randomGenerator.nextInt(max_pipe_keys);
 
@@ -236,7 +236,7 @@ public class DynoJedisUtils {
      * @throws Exception
      */
     public String nonPipelineZADD(String key, DataGenerator dataGenerator, String z_key_prefix, int max_score)
-            throws Exception {
+    throws Exception {
 
         String zKey = z_key_prefix + key;
         int success = 0;

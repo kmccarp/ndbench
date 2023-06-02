@@ -54,7 +54,7 @@ public class DynamoDBProgrammaticKeyValueTest {
     @Test
     public void testCreateDynamoDbFromDataGenerator_withoutInit_protectedSetupMethodsNotCalled() {
         DynamoDBProgrammaticKeyValue sut = spy(new DynamoDBProgrammaticKeyValue(awsCredentialsProvider,
-                configuration, dynamoDBAutoscalingConfigurer));
+        configuration, dynamoDBAutoscalingConfigurer));
         assertNotNull(sut);
         verify(sut, times(0)).init(any());
         verify(sut, times(0)).createAndSetDynamoDBClient();
@@ -62,12 +62,12 @@ public class DynamoDBProgrammaticKeyValueTest {
     }
 
     @TestPropertyOverride({"ndbench.config.dynamodb.autoscaling=false",
-            "ndbench.config.dynamodb.endpoint=http://localhost:4567",
-            "ndbench.config.dynamodb.region=us-east-1"})
+    "ndbench.config.dynamodb.endpoint=http://localhost:4567",
+    "ndbench.config.dynamodb.region=us-east-1"})
     @Test
     public void testCreateDynamoDbFromDataGenerator_withInit_andNoAutoscaling_protectedSetupMethodsCalled() {
         DynamoDBProgrammaticKeyValue sut = spy(new DynamoDBProgrammaticKeyValue(awsCredentialsProvider,
-                configuration, dynamoDBAutoscalingConfigurer));
+        configuration, dynamoDBAutoscalingConfigurer));
         assertNotNull(sut);
         assertNotNull(sut);
         sut.init(dataGenerator);
@@ -77,11 +77,11 @@ public class DynamoDBProgrammaticKeyValueTest {
     }
 
     @TestPropertyOverride({"ndbench.config.dynamodb.endpoint=http://localhost:4567",
-            "ndbench.config.dynamodb.region=us-east-1"})
+    "ndbench.config.dynamodb.region=us-east-1"})
     @Test
     public void testCreateDynamoDbFromDataGenerator_withInit_andAutoscaling_protectedSetupMethodsCalled() {
         DynamoDBProgrammaticKeyValue sut = spy(new DynamoDBProgrammaticKeyValue(awsCredentialsProvider,
-                configuration, dynamoDBAutoscalingConfigurer));
+        configuration, dynamoDBAutoscalingConfigurer));
         assertNotNull(sut);
         sut.init(dataGenerator);
         verify(dynamoDBAutoscalingConfigurer, times(1)).setupAutoscaling(any(), any(), any(), any(), any(), any());

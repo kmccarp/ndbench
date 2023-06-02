@@ -40,7 +40,7 @@ import java.util.List;
  */
 @Singleton
 @NdBenchClientPlugin("ElassandraCassJavaDriverPlugin")
-public class ElassandraCassJavaDriverPlugin implements NdBenchClient{
+public class ElassandraCassJavaDriverPlugin implements NdBenchClient {
     private static final Logger logger = LoggerFactory.getLogger(ElassandraCassJavaDriverPlugin.class);
     private static final String ResultOK = "Ok";
     private static final String CacheMiss = null;
@@ -79,16 +79,16 @@ public class ElassandraCassJavaDriverPlugin implements NdBenchClient{
         this.ReadConsistencyLevel = ConsistencyLevel.valueOf(configs.getReadConsistencyLevel());
 
         cluster = Cluster.builder()
-                .withClusterName(ClusterName)
-                .addContactPoint(ClusterContactPoint)
-                .build();
+        .withClusterName(ClusterName)
+        .addContactPoint(ClusterContactPoint)
+        .build();
         session = cluster.connect();
 
         upsertKeyspace(this.session);
         upsertCF(this.session);
 
-        writePstmt = session.prepare("INSERT INTO "+ TableName +" (\"_id\", name) VALUES (?, ?)");
-        readPstmt = session.prepare("SELECT * From "+ TableName +" Where \"_id\" = ?");
+        writePstmt = session.prepare("INSERT INTO " + TableName + " (\"_id\", name) VALUES (?, ?)");
+        readPstmt = session.prepare("SELECT * From " + TableName + " Where \"_id\" = ?");
 
         logger.info("Initialized ElassandraCassJavaDriverPlugin");
     }
@@ -107,14 +107,13 @@ public class ElassandraCassJavaDriverPlugin implements NdBenchClient{
         bStmt.setConsistencyLevel(this.ReadConsistencyLevel);
         ResultSet rs = session.execute(bStmt);
 
-        List<Row> result=rs.all();
+        List<Row> result = rs.all();
         if (!result.isEmpty())
         {
             if (result.size() != 1) {
                 throw new Exception("Num Cols returned not ok " + result.size());
             }
-        }
-        else {
+        }else {
             return CacheMiss;
         }
 
@@ -167,25 +166,25 @@ public class ElassandraCassJavaDriverPlugin implements NdBenchClient{
     }
 
     void upsertKeyspace(Session session) {
-        session.execute("CREATE KEYSPACE IF NOT EXISTS " + KeyspaceName +" WITH replication = {'class': 'NetworkTopologyStrategy', 'dc1': '1'}  AND durable_writes = true;");
+        session.execute("CREATE KEYSPACE IF NOT EXISTS " + KeyspaceName + " WITH replication = {'class': 'NetworkTopologyStrategy', 'dc1': '1'}  AND durable_writes = true;");
         //session.execute("CREATE KEYSPACE IF NOT EXISTS " + keyspaceName +" WITH replication = {'class':'SimpleStrategy','replication_factor': 2};");
         session.execute("Use " + KeyspaceName);
     }
-    
+
     void upsertCF(Session session) {
-        session.execute("CREATE TABLE IF NOT EXISTS "+ TableName +" (\"_id\" text PRIMARY KEY, name list<text>) WITH bloom_filter_fp_chance = 0.01 " + 
-                       " AND caching = '{\"keys\":\"ALL\", \"rows_per_partition\":\"NONE\"}'" +
-                       " AND comment = 'Auto-created by Elassandra' " +
-                       " AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy'} " +
-                       " AND compression = {'sstable_compression': 'org.apache.cassandra.io.compress.LZ4Compressor'} " +
-                       " AND dclocal_read_repair_chance = 0.1  " +
-                       " AND default_time_to_live = 0 " +
-                       " AND gc_grace_seconds = 864000 " +
-                       " AND max_index_interval = 2048 " +
-                       " AND memtable_flush_period_in_ms = 0 " +
-                       " AND min_index_interval = 128 " +
-                       " AND read_repair_chance = 0.0 " +
-                       " AND speculative_retry = '99.0PERCENTILE'; ");
+        session.execute("CREATE TABLE IF NOT EXISTS " + TableName + " (\"_id\" text PRIMARY KEY, name list<text>) WITH bloom_filter_fp_chance = 0.01 " +
+        " AND caching = '{\"keys\":\"ALL\", \"rows_per_partition\":\"NONE\"}'" +
+        " AND comment = 'Auto-created by Elassandra' " +
+        " AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy'} " +
+        " AND compression = {'sstable_compression': 'org.apache.cassandra.io.compress.LZ4Compressor'} " +
+        " AND dclocal_read_repair_chance = 0.1  " +
+        " AND default_time_to_live = 0 " +
+        " AND gc_grace_seconds = 864000 " +
+        " AND max_index_interval = 2048 " +
+        " AND memtable_flush_period_in_ms = 0 " +
+        " AND min_index_interval = 128 " +
+        " AND read_repair_chance = 0.0 " +
+        " AND speculative_retry = '99.0PERCENTILE'; ");
         session.execute("CREATE CUSTOM INDEX IF NOT EXISTS elastic_external_name_idx ON customer.external (name) USING 'org.elasticsearch.cassandra.index.ExtendedElasticSecondaryIndex';");
     }
 }

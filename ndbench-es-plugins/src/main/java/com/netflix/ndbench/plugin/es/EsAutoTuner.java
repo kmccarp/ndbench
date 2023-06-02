@@ -36,22 +36,22 @@ class EsAutoTuner {
     private volatile boolean crossedAllowedFailureThreshold = false;
 
     EsAutoTuner(Integer rampPeriodMs,
-                Integer incrementIntervalMs,
-                Integer initRate,
-                Integer finalRate,
-                Float autoTuneFailureRatioThreshold) {
+                 Integer incrementIntervalMs,
+                 Integer initRate,
+                 Integer finalRate,
+                 Float autoTuneFailureRatioThreshold) {
 
         if (autoTuneFailureRatioThreshold <= 0 || autoTuneFailureRatioThreshold >= 1.0) {
             throw new IllegalArgumentException(
-                    "autoTuneFailureRatioThreshold must be > 0 and < 1. Actual was " + autoTuneFailureRatioThreshold);
+            "autoTuneFailureRatioThreshold must be > 0 and < 1. Actual was " + autoTuneFailureRatioThreshold);
         }
 
         this.autoTuneFailureRatioThreshold = autoTuneFailureRatioThreshold;
         this.rateIncreaser = new ConstantStepWiseRateIncreaser(
-                rampPeriodMs,
-                incrementIntervalMs,
-                initRate,
-                finalRate);
+        rampPeriodMs,
+        incrementIntervalMs,
+        initRate,
+        finalRate);
     }
 
     /**
@@ -82,8 +82,8 @@ class EsAutoTuner {
             if (calculatedFailureRatio >= autoTuneFailureRatioThreshold) {
                 crossedAllowedFailureThreshold = true;
                 logger.info(
-                        "Not considering increase of write rate limit. calculatedFailureRatio={}. threshold={}",
-                        calculatedFailureRatio, autoTuneFailureRatioThreshold);
+                "Not considering increase of write rate limit. calculatedFailureRatio={}. threshold={}",
+                calculatedFailureRatio, autoTuneFailureRatioThreshold);
                 return currentRateLimit;
             } else {
                 // by forgetting we crossed threshold and resetting timeOfFirstAutoTuneRequest we allow the

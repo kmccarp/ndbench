@@ -59,9 +59,9 @@ public abstract class JanusGraphBasePlugin {
     protected String getConnectionInfo(JanusGraph graph) {
         String status = graph.isOpen() ? "opened" : "closed";
         return String.format("Backend: %s, Host: %s, Port: %s, Graph Status: %s",
-                storageBackend,
-                storageHost,
-                storagePort,
-                status);
+        storageBackend,
+        storageHost,
+        storagePort,
+        status);
     }
 }

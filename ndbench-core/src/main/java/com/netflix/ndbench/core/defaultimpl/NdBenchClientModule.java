@@ -101,8 +101,8 @@ public class NdBenchClientModule extends AbstractModule {
             object = moduleClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(
-                    "Failed to invoke no argument constructor of Guice binding module class " +
-                            moduleClass.getCanonicalName());
+            "Failed to invoke no argument constructor of Guice binding module class " +
+            moduleClass.getCanonicalName());
         }
         return (AbstractModule) object;
     }

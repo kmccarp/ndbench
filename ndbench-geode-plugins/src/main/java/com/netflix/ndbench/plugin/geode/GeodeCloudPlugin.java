@@ -39,38 +39,38 @@ import java.util.Properties;
 
 @Singleton
 @NdBenchClientPlugin("GeodeCloudPlugin")
-public class GeodeCloudPlugin implements NdBenchClient{
+public class GeodeCloudPlugin implements NdBenchClient {
 
-  private static final Logger logger = LoggerFactory.getLogger(GeodeCloudPlugin.class);
-  private final PropertyFactory propertyFactory;
+    private static final Logger logger = LoggerFactory.getLogger(GeodeCloudPlugin.class);
+    private final PropertyFactory propertyFactory;
 
-  private static final String ResultOK = "Ok";
-  private static final String REGION = "ndbench";
-  private static final String USER_NAME = "security-username";
-  private static final String PASSWORD = "security-password";
+    private static final String ResultOK = "Ok";
+    private static final String REGION = "ndbench";
+    private static final String USER_NAME = "security-username";
+    private static final String PASSWORD = "security-password";
 
-  private static final String CacheMiss = null;
-  private EnvParser envParser;
+    private static final String CacheMiss = null;
+    private EnvParser envParser;
 
-  private DataGenerator dataGenerator;
+    private DataGenerator dataGenerator;
 
-  private ClientCache clientCache;
+    private ClientCache clientCache;
 
-  private Region<String, String> sampleRegion;
+    private Region<String, String> sampleRegion;
 
 
-  @Inject
-  public GeodeCloudPlugin(PropertyFactory propertyFactory, EnvParser envParser){
-      this.propertyFactory = propertyFactory;
-      this.envParser = envParser;
-  }
+    @Inject
+    public GeodeCloudPlugin(PropertyFactory propertyFactory, EnvParser envParser) {
+        this.propertyFactory = propertyFactory;
+        this.envParser = envParser;
+    }
 
-  @Override
-  public void init(final DataGenerator dataGenerator) throws Exception {
+    @Override
+    public void init(final DataGenerator dataGenerator) throws Exception {
         this.dataGenerator = dataGenerator;
         logger.info("Initializing Geode Region");
         EnvParser envParser = this.envParser;
-        if(this.propertyFactory.getProperty(NdBenchConstants.DISCOVERY_ENV).asString("").get().equals(NdBenchConstants.DISCOVERY_ENV_CF)) {
+        if (this.propertyFactory.getProperty(NdBenchConstants.DISCOVERY_ENV).asString("").get().equals(NdBenchConstants.DISCOVERY_ENV_CF)) {
             Properties props = new Properties();
             props.setProperty(USER_NAME, envParser.getUsername());
             props.setProperty(PASSWORD, envParser.getPasssword());
@@ -82,32 +82,31 @@ public class GeodeCloudPlugin implements NdBenchClient{
                 ccf.addPoolLocator(locator.getHost(), locator.getPort());
             }
             clientCache = ccf.create();
-        }else{
+        } else {
             clientCache = new ClientCacheFactory()
-                    .addPoolLocator(Inet4Address.getLoopbackAddress().getHostAddress(),55221)
-                    .create();
+            .addPoolLocator(Inet4Address.getLoopbackAddress().getHostAddress(), 55221)
+            .create();
         }
         sampleRegion = clientCache.<String, String>createClientRegionFactory(ClientRegionShortcut.PROXY).create(REGION);
-  }
-
-  public String readSingle(final String key) throws Exception {
-    String result = sampleRegion.get(key);
-    if (null != result){
-      if (result.isEmpty()){
-        throw new Exception("Data retrieved is not NULL but empty string ! ");
-      }
     }
-    else {
-      return CacheMiss;
+
+    public String readSingle(final String key) throws Exception {
+        String result = sampleRegion.get(key);
+        if (null != result) {
+            if (result.isEmpty()) {
+                throw new Exception("Data retrieved is not NULL but empty string ! ");
+            }
+        }else {
+            return CacheMiss;
+        }
+        return ResultOK;
     }
-    return ResultOK;
-  }
 
-  public String writeSingle(final String key) throws Exception {
-    String result = sampleRegion.put(key, dataGenerator.getRandomValue());
+    public String writeSingle(final String key) throws Exception {
+        String result = sampleRegion.put(key, dataGenerator.getRandomValue());
 
-    return result;
-  }
+        return result;
+    }
 
     /**
      * Perform a bulk read operation
@@ -127,17 +126,17 @@ public class GeodeCloudPlugin implements NdBenchClient{
         throw new UnsupportedOperationException("bulk operation is not supported");
     }
 
-  public void shutdown() throws Exception {
-    if (!clientCache.isClosed()){
-      clientCache.close();
+    public void shutdown() throws Exception {
+        if (!clientCache.isClosed()) {
+            clientCache.close();
+        }
     }
-  }
 
-  public String getConnectionInfo() throws Exception {
-    return clientCache.getDefaultPool().getLocators().toString();
-  }
+    public String getConnectionInfo() throws Exception {
+        return clientCache.getDefaultPool().getLocators().toString();
+    }
 
-  public String runWorkFlow() throws Exception {
-    return null;
-  }
+    public String runWorkFlow() throws Exception {
+        return null;
+    }
 }

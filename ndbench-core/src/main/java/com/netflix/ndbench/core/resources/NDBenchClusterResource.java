@@ -49,6 +49,7 @@ public class NDBenchClusterResource {
         this.config = config;
 
     }
+
     @Path("/list")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -63,17 +64,18 @@ public class NDBenchClusterResource {
             return  sendErrorResponse("get cluster/list failed!");
         }
     }
+
     @Path("/{appname}/list")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getApps(@PathParam("appname") String appname) throws Exception {
 
-        logger.info("Getting nodes list for app: "+appname+", default Port used: "+ request.getServerPort());
+        logger.info("Getting nodes list for app: " + appname + ", default Port used: " + request.getServerPort());
         try {
             return sendJson(clusterManager.getEndpoints(appname, request.getServerPort()));
         } catch (Exception e) {
-            logger.error("Error getting Host list from ClusterManager for app: "+appname, e);
+            logger.error("Error getting Host list from ClusterManager for app: " + appname, e);
             return  sendErrorResponse("get cluster host list failed!");
         }
     }

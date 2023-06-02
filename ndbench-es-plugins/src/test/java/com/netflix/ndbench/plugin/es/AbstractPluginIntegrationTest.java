@@ -67,10 +67,10 @@ public class AbstractPluginIntegrationTest extends AbstractPluginTest {
         }
 
         return DockerComposeRule.builder()
-                .file("src/test/resources/docker-compose-elasticsearch.yml")
-                .projectName(ProjectName.random())
-                .waitingForService(ELASTICSEARCH, HealthChecks.toHaveAllPortsOpen())
-                .build();
+        .file("src/test/resources/docker-compose-elasticsearch.yml")
+        .projectName(ProjectName.random())
+        .waitingForService(ELASTICSEARCH, HealthChecks.toHaveAllPortsOpen())
+        .build();
     }
 
     protected static DataGenerator alwaysSameValueGenerator = new DataGenerator() {
@@ -96,16 +96,16 @@ public class AbstractPluginIntegrationTest extends AbstractPluginTest {
     };
 
     static EsRestPlugin getPlugin(String hostName,
-                                  String indexName,
-                                  boolean isBulkWrite,
-                                  int indexRollsPerDay,
-                                  int portNum) throws Exception {
+                                   String indexName,
+                                   boolean isBulkWrite,
+                                   int indexRollsPerDay,
+                                   int portNum) throws Exception {
         EsRestPlugin plugin = new EsRestPlugin(
-                getCoreConfig(0, false, 60, 10, 10, 0.01f),
-                getConfig(portNum, hostName, indexName, isBulkWrite, 0f, indexRollsPerDay),
-                new MockServiceDiscoverer(9200),
-                new GenericEsRestClient(),
-                false);
+        getCoreConfig(0, false, 60, 10, 10, 0.01f),
+        getConfig(portNum, hostName, indexName, isBulkWrite, 0f, indexRollsPerDay),
+        new MockServiceDiscoverer(9200),
+        new GenericEsRestClient(),
+        false);
 
         plugin.init(alwaysSameValueGenerator);
 

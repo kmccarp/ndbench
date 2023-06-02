@@ -235,15 +235,15 @@ public class Log4jCapturer implements TestRule {
 
         List<LoggingEvent> logs = appender.getLoggingEvents();
 
-        if (assertion.times <=1 ) {
+        if (assertion.times <= 1) {
             LoggingEvent event = logs.stream().filter(assertion.criteria()).findFirst().orElse(null);
             Matcher<Object> matcher = (assertion.logged) ? notNullValue()
-                    : nullValue();
+            : nullValue();
             MatcherAssert.assertThat(assertion.toString(), event, matcher);
         } else {
             MatcherAssert.assertThat(assertion.toString(),
-                    logs.stream().filter(assertion.criteria()).collect(Collectors.toList()),
-                    IsIterableWithSize.iterableWithSize(assertion.times));
+            logs.stream().filter(assertion.criteria()).collect(Collectors.toList()),
+            IsIterableWithSize.iterableWithSize(assertion.times));
         }
 
     }
@@ -258,9 +258,9 @@ public class Log4jCapturer implements TestRule {
      */
     public void assertRenderedMessageLogged(final Level level, final String substring) {
         assertThat(LogAssertion.newLogAssertion()
-                .isLogged()
-                .withLevel(level)
-                .withRenderedMessage(substring));
+        .isLogged()
+        .withLevel(level)
+        .withRenderedMessage(substring));
     }
 
     /**
@@ -419,8 +419,8 @@ public class Log4jCapturer implements TestRule {
         @SuppressWarnings("unchecked")
         private Predicate<LoggingEvent> criteria() {
             return LoggingEventsEx.withLevel(level)
-                    .and(LoggingEventsEx.withRenderedMessage(message))
-                    .and(LoggingEventsEx.withThrowable(exception));
+            .and(LoggingEventsEx.withRenderedMessage(message))
+            .and(LoggingEventsEx.withThrowable(exception));
         }
 
         @Override

@@ -27,7 +27,7 @@ import com.netflix.ndbench.api.plugin.common.NdBenchConstants;
  *
  * @author Alexander Patrikalakis
  */
-@Configuration(prefix =  NdBenchConstants.PROP_NAMESPACE +  "cli")
+@Configuration(prefix = NdBenchConstants.PROP_NAMESPACE +  "cli")
 public interface CliConfigs {
     @PropertyName(name = "bulkSize")
     @DefaultValue("1")

@@ -20,7 +20,7 @@ import com.netflix.archaius.api.annotations.Configuration;
 import com.netflix.ndbench.api.plugin.common.NdBenchConstants;
 
 @Deprecated
-@Configuration(prefix =  NdBenchConstants.PROP_NAMESPACE +  "aws")
+@Configuration(prefix = NdBenchConstants.PROP_NAMESPACE +  "aws")
 public interface CredentialsConfiguration {
     /**
      * The AWS access key to use to connect to AWS services (e.g., DynamoDB). Prefer using the default credentials provider chain.

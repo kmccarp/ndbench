@@ -16,8 +16,8 @@ public class Log4jConfigurationTest {
             temp.deleteOnExit();
             FileUtils.writeStringToFile(temp, "log4j.logger.com.test=TRACE");
             System.setProperty(
-                    "log4j.configuration",
-                    "file:///" + temp.getAbsolutePath());
+            "log4j.configuration",
+            "file:///" + temp.getAbsolutePath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -26,7 +26,7 @@ public class Log4jConfigurationTest {
     @Test
     public void verifyLog4jPropertiesConfigurationWorksAsExpected() throws Exception {
         final Logger logger = LoggerFactory.getLogger(Log4jConfigurationTest .class);
-        if (! logger.isTraceEnabled()) {
+        if (!logger.isTraceEnabled()) {
             throw new RuntimeException("slf4j seems not to be bound to a log4j implementation. check depdendencies!");
         }
     }

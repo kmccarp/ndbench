@@ -44,15 +44,16 @@ import com.netflix.ndbench.api.plugin.DataGenerator;
  * @author Sumanth Pasupuleti
  */
 public class DynamoDBWriteTransaction extends AbstractDynamoDBDataPlaneOperation
-        implements CapacityConsumingFunction<PutItemResult, String, String> {
+implements CapacityConsumingFunction<PutItemResult, String, String> {
     private static final Logger logger = LoggerFactory.getLogger(DynamoDBWriteTransaction.class);
     private static final String ResultOK = "Ok";
     private static final String ResultFailed = "Failed";
     private String childTableNamePrefix;
     private int mainTableColsPerRow;
+
     public DynamoDBWriteTransaction(DataGenerator dataGenerator, AmazonDynamoDB dynamoDB, String tableName,
-                                    String partitionKeyName, String childTableNamePrefix, int mainTableColsPerRow,
-                                    ReturnConsumedCapacity returnConsumedCapacity) {
+                                     String partitionKeyName, String childTableNamePrefix, int mainTableColsPerRow,
+                                     ReturnConsumedCapacity returnConsumedCapacity) {
         super(dynamoDB, tableName, partitionKeyName, dataGenerator, returnConsumedCapacity);
         this.childTableNamePrefix = childTableNamePrefix;
         this.mainTableColsPerRow = mainTableColsPerRow;
@@ -76,21 +77,21 @@ public class DynamoDBWriteTransaction extends AbstractDynamoDBDataPlaneOperation
             HashMap<String, AttributeValue> childTableItem = new HashMap<>();
             childTableItem.put(partitionKeyName, new AttributeValue(value));
             Put childTableEntry = new Put()
-                                  .withTableName(childTableNamePrefix + i)
-                                  .withItem(childTableItem)
-                                  .withReturnValuesOnConditionCheckFailure(ReturnValuesOnConditionCheckFailure.ALL_OLD);
+            .withTableName(childTableNamePrefix + i)
+            .withItem(childTableItem)
+            .withReturnValuesOnConditionCheckFailure(ReturnValuesOnConditionCheckFailure.ALL_OLD);
             writes.add(new TransactWriteItem().withPut(childTableEntry));
         }
 
         Put mainTableEntry = new Put()
-                             .withTableName(tableName)
-                             .withItem(mainTableItem)
-                             .withReturnValuesOnConditionCheckFailure(ReturnValuesOnConditionCheckFailure.ALL_OLD);
+        .withTableName(tableName)
+        .withItem(mainTableItem)
+        .withReturnValuesOnConditionCheckFailure(ReturnValuesOnConditionCheckFailure.ALL_OLD);
 
         writes.add(new TransactWriteItem().withPut(mainTableEntry));
         TransactWriteItemsRequest placeWriteTransaction = new TransactWriteItemsRequest()
-                                                          .withTransactItems(writes)
-                                                          .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL);
+        .withTransactItems(writes)
+        .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL);
 
         try
         {

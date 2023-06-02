@@ -47,15 +47,15 @@ public class ConfigFileDiscovery implements IClusterDiscovery {
         JsonParser parser = new JsonParser();
 
         JsonElement jsonElement = parser.parse(strClusterData);
-        if(jsonElement!=null)
+        if (jsonElement != null)
         {
-            for (Map.Entry<String, JsonElement> entry: jsonElement.getAsJsonObject().entrySet())
+            for (Map.Entry<String, JsonElement> entry : jsonElement.getAsJsonObject().entrySet())
             {
-                if(!entry.getKey().isEmpty()) {
+                if (!entry.getKey().isEmpty()) {
                     List<String> lstEndpoints = new LinkedList<>();
                     JsonArray jsonArray = entry.getValue().getAsJsonArray();
                     for (JsonElement ele : jsonArray) {
-                        if(!ele.getAsString().isEmpty())
+                        if (!ele.getAsString().isEmpty())
                         {
                             lstEndpoints.add(ele.getAsString());
                         }
@@ -66,6 +66,7 @@ public class ConfigFileDiscovery implements IClusterDiscovery {
         }
 
     }
+
     @Override
     public List<String> getApps() {
         LinkedList<String> returnLst = new LinkedList<>();

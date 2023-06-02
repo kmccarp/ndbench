@@ -41,11 +41,11 @@ public class RPSCount {
     private final AtomicBoolean writesStarted;
 
     RPSCount(AtomicBoolean readsStarted,
-             AtomicBoolean writesStarted,
-             AtomicReference<RateLimiter> readLimiter,
-             AtomicReference<RateLimiter> writeLimiter,
-             IConfiguration config,
-             NdBenchMonitor ndBenchMonitor) {
+              AtomicBoolean writesStarted,
+              AtomicReference<RateLimiter> readLimiter,
+              AtomicReference<RateLimiter> writeLimiter,
+              IConfiguration config,
+              NdBenchMonitor ndBenchMonitor) {
 
         this.readsStarted = readsStarted;
         this.writesStarted = writesStarted;
@@ -76,19 +76,19 @@ public class RPSCount {
         ndBenchMonitor.setReadRPS(readRps);
 
         logger.info("Read avg: "  + (double) ndBenchMonitor.getReadLatAvg() / 1000.0  + "ms, Read RPS: "  + readRps
-                + ", Write avg: " + (double) ndBenchMonitor.getWriteLatAvg() / 1000.0 + "ms, Write RPS: " + writeRps
-                + ", total RPS: " + (readRps + writeRps) + ", Success Ratio: " + sRatio + "%");
+        + ", Write avg: " + (double) ndBenchMonitor.getWriteLatAvg() / 1000.0 + "ms, Write RPS: " + writeRps
+        + ", total RPS: " + (readRps + writeRps) + ", Success Ratio: " + sRatio + "%");
         long expectedReadRate = (long) this.readLimiter.get().getRate();
         long expectedwriteRate = (long) this.writeLimiter.get().getRate();
         String bottleneckMsg = "If this occurs consistently the benchmark client could be the bottleneck.";
 
         if (this.config.isReadEnabled() && readsStarted.get() && readRps < expectedReadRate) {
             logger.warn("Observed Read RPS ({}) less than expected read rate + ({}).\n{}",
-                    readRps, expectedReadRate, bottleneckMsg);
+            readRps, expectedReadRate, bottleneckMsg);
         }
         if (this.config.isWriteEnabled() && writesStarted.get() && writeRps < expectedwriteRate) {
             logger.warn("Observed Write RPS ({}) less than expected write rate + ({}).\n{}",
-                    writeRps, expectedwriteRate, bottleneckMsg);
+            writeRps, expectedwriteRate, bottleneckMsg);
         }
     }
 }

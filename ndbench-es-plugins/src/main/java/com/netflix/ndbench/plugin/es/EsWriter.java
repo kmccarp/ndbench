@@ -75,18 +75,18 @@ class EsWriter {
      * @param dataGenerator      - data generator used to inject random values into documents written to Elasticsearch.
      */
     EsWriter(String indexName,
-             String docType,
-             boolean isBulkWrite,
-             int indexRollsPerDay,
-             int bulkWriteBatchSize,
-             DataGenerator dataGenerator) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              String docType,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              boolean isBulkWrite,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              int indexRollsPerDay,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              int bulkWriteBatchSize,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              DataGenerator dataGenerator) {
         if (bulkWriteBatchSize < 0) {
             throw new IllegalArgumentException("bulkWriteBatchSize cannot be less than to zero");
         }
 
         if (!isBulkWrite && indexRollsPerDay > 0) {
             throw new IllegalArgumentException(
-                    "getIndexRollsPerDay fast property only makes sense to be set when isBulkWrite is set");
+            "getIndexRollsPerDay fast property only makes sense to be set when isBulkWrite is set");
         }
 
         this.docType = docType;
@@ -118,7 +118,7 @@ class EsWriter {
         StatusLine response = restClient.writeSingleDocument(this.indexName, this.docType, randomizedKey, doc);
 
         logger.debug("Writing document id=[{}] to index [{}], response=[{}]",
-                randomizedKey, indexName, response);
+        randomizedKey, indexName, response);
 
         int responseCode = response.getStatusCode();
         if (responseCode != 200 && responseCode != 201) {
@@ -149,8 +149,8 @@ class EsWriter {
 
     private String getBulkWriteEntry(String key, String doc, String indexName, String docType) {
         String bulkWriteEntry = String.format(
-                "{\"index\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}\n%s\n",
-                indexName, docType, key, doc);
+        "{\"index\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}\n%s\n",
+        indexName, docType, key, doc);
         logger.trace("Bulk write entry for one doc: {}", bulkWriteEntry);
         return bulkWriteEntry;
     }

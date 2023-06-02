@@ -25,67 +25,71 @@ abstract class DummyProxy {
      * other if the {@link DummyProxy} instance that created the proxies are equal.
      */
     final <T> T newProxy(TypeToken<T> interfaceType) {
-      Set<Class<?>> interfaceClasses = Sets.newLinkedHashSet();
-      interfaceClasses.addAll(interfaceType.getTypes().interfaces().rawTypes());
-      // Make the proxy serializable to work with SerializableTester
-      interfaceClasses.add(Serializable.class);
-      Object dummy = Proxy.newProxyInstance(
-          interfaceClasses.iterator().next().getClassLoader(),
-          interfaceClasses.toArray(new Class<?>[interfaceClasses.size()]),
-          new DummyHandler(interfaceType));
-      @SuppressWarnings("unchecked") // interfaceType is T
-      T result = (T) dummy;
-      return result;
+        Set<Class<?>> interfaceClasses = Sets.newLinkedHashSet();
+        interfaceClasses.addAll(interfaceType.getTypes().interfaces().rawTypes());
+        // Make the proxy serializable to work with SerializableTester
+        interfaceClasses.add(Serializable.class);
+        Object dummy = Proxy.newProxyInstance(
+        interfaceClasses.iterator().next().getClassLoader(),
+        interfaceClasses.toArray(new Class<?>[interfaceClasses.size()]),
+        new DummyHandler(interfaceType));
+        @SuppressWarnings("unchecked") // interfaceType is T
+        T result = (T) dummy;
+        return result;
     }
 
     /** Returns the dummy return value for {@code returnType}. */
     abstract <R> R dummyReturnValue(TypeToken<R> returnType);
 
     private class DummyHandler extends AbstractInvocationHandler implements Serializable {
-      private final TypeToken<?> interfaceType;
+        private final TypeToken<?> interfaceType;
 
-      DummyHandler(TypeToken<?> interfaceType) {
-        this.interfaceType = interfaceType;
-      }
+        DummyHandler(TypeToken<?> interfaceType) {
+            this.interfaceType = interfaceType;
+        }
 
-      @Override protected Object handleInvocation(
+        @Override
+        protected Object handleInvocation(
           Object proxy, Method method, Object[] args) {
-        Invokable<?, ?> invokable = interfaceType.method(method);
-        ImmutableList<Parameter> params = invokable.getParameters();
-        for (int i = 0; i < args.length; i++) {
-          Parameter param = params.get(i);
-          if (!param.isAnnotationPresent(Nullable.class)) {
-            checkNotNull(args[i]);
-          }
+            Invokable<?, ?> invokable = interfaceType.method(method);
+            ImmutableList<Parameter> params = invokable.getParameters();
+            for (int i = 0; i < args.length; i++) {
+                Parameter param = params.get(i);
+                if (!param.isAnnotationPresent(Nullable.class)) {
+                    checkNotNull(args[i]);
+                }
+            }
+            return dummyReturnValue(interfaceType.resolveType(method.getGenericReturnType()));
         }
-        return dummyReturnValue(interfaceType.resolveType(method.getGenericReturnType()));
-      }
 
-      @Override public int hashCode() {
-        return identity().hashCode();
-      }
-
-      @Override public boolean equals(Object obj) {
-        if (obj instanceof DummyHandler) {
-          DummyHandler that = (DummyHandler) obj;
-          return identity().equals(that.identity());
-        } else {
-          return false;
+        @Override
+        public int hashCode() {
+            return identity().hashCode();
         }
-      }
 
-      private DummyProxy identity() {
-        return DummyProxy.this;
-      }
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof DummyHandler) {
+                DummyHandler that = (DummyHandler) obj;
+                return identity().equals(that.identity());
+            } else {
+                return false;
+            }
+        }
 
-      @Override public String toString() {
-        return "Dummy proxy for " + interfaceType;
-      }
+        private DummyProxy identity() {
+            return DummyProxy.this;
+        }
 
-      // Since type variables aren't serializable, reduce the type down to raw type before
-      // serialization.
-      private Object writeReplace() {
-        return new DummyHandler(TypeToken.of(interfaceType.getRawType()));
-      }
+        @Override
+        public String toString() {
+            return "Dummy proxy for " + interfaceType;
+        }
+
+        // Since type variables aren't serializable, reduce the type down to raw type before
+        // serialization.
+        private Object writeReplace() {
+            return new DummyHandler(TypeToken.of(interfaceType.getRawType()));
+        }
     }
 }

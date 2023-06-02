@@ -53,8 +53,7 @@ public class NdBenchGuiceModule extends AbstractModule {
             bind(IClusterDiscovery.class).to(AwsAsgDiscovery.class);
         } else if (discoveryEnv != null && discoveryEnv.equals(NdBenchConstants.DISCOVERY_ENV_AWS_CONFIG_FILE)) {
             bind(IClusterDiscovery.class).to(ConfigFileDiscovery.class);
-        }
-          else {
+        }else {
             bind(IClusterDiscovery.class).to(LocalClusterDiscovery.class);
         }
         bind(DataGenerator.class).to(DefaultDataGenerator.class);

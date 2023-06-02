@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @author ipapapa
  */
 public class DynamoDBReadBulk extends AbstractDynamoDBReadOperation
-        implements CapacityConsumingFunction<BatchGetItemResult, List<String>, List<String>> {
+implements CapacityConsumingFunction<BatchGetItemResult, List<String>, List<String>> {
     public DynamoDBReadBulk(DataGenerator dataGenerator, AmazonDynamoDB dynamoDB, String tableName,
                             String partitionKeyName, boolean consistentRead,
                             ReturnConsumedCapacity returnConsumedCapacity) {
@@ -52,8 +52,8 @@ public class DynamoDBReadBulk extends AbstractDynamoDBReadOperation
         try {
             readUntilDone(keysAndAttributes);
             return keysAndAttributes.getKeys().stream()
-                    .map(Map::toString)
-                    .collect(Collectors.toList());
+            .map(Map::toString)
+            .collect(Collectors.toList());
         } catch (AmazonServiceException ase) {
             throw amazonServiceException(ase);
         } catch (AmazonClientException ace) {
@@ -63,10 +63,10 @@ public class DynamoDBReadBulk extends AbstractDynamoDBReadOperation
 
     private KeysAndAttributes generateReadRequests(List<String> keys) {
         return new KeysAndAttributes()
-                .withKeys(keys.stream()
-                        .map(key -> ImmutableMap.of("id", new AttributeValue(key)))
-                        .collect(Collectors.toList()))
-                .withConsistentRead(consistentRead);
+        .withKeys(keys.stream()
+        .map(key -> ImmutableMap.of("id", new AttributeValue(key)))
+        .collect(Collectors.toList()))
+        .withConsistentRead(consistentRead);
     }
 
     private void readUntilDone(KeysAndAttributes keysAndAttributes) {
@@ -82,8 +82,8 @@ public class DynamoDBReadBulk extends AbstractDynamoDBReadOperation
     private BatchGetItemResult runBatchGetRequest(KeysAndAttributes keysAndAttributes) {
         //TODO self throttle and estimate size of requests
         return measureConsumedCapacity(dynamoDB.batchGetItem(new BatchGetItemRequest()
-                .withRequestItems(ImmutableMap.of(tableName, keysAndAttributes))
-                .withReturnConsumedCapacity(returnConsumedCapacity)));
+        .withRequestItems(ImmutableMap.of(tableName, keysAndAttributes))
+        .withReturnConsumedCapacity(returnConsumedCapacity)));
     }
 
     @Override

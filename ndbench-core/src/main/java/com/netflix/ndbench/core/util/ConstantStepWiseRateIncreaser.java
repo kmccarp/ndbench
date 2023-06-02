@@ -46,9 +46,9 @@ public class ConstantStepWiseRateIncreaser {
      * no remainder). At each step the rate will increase constantly by (finalRate - initRate)  / number-of-steps.
      */
     public ConstantStepWiseRateIncreaser(int rampPeriodMillisecs,
-                                  int incrementIntervalMillisecs,
-                                  int initRate,
-                                  int finalRate) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       int incrementIntervalMillisecs,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       int initRate,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       int finalRate) {
         if (!(initRate >= 0)) {
             throw new IllegalArgumentException("initRate must be >= 0");
         }
@@ -66,11 +66,11 @@ public class ConstantStepWiseRateIncreaser {
         }
         if (rampPeriodMillisecs % incrementIntervalMillisecs != 0) {
             throw new IllegalArgumentException(
-                    "rampPeriodMillisecs should be evenly divisible by incrementIntervalMillisecs");
+            "rampPeriodMillisecs should be evenly divisible by incrementIntervalMillisecs");
         }
         if (rampPeriodMillisecs / incrementIntervalMillisecs > MAX_STEPS) {
             throw new IllegalArgumentException(
-                    "rampPeriodMillisecs / incrementIntervalMillisecs should not exceed MAX_STEPS (" + MAX_STEPS + ")");
+            "rampPeriodMillisecs / incrementIntervalMillisecs should not exceed MAX_STEPS (" + MAX_STEPS + ")");
         }
 
         int numSteps = rampPeriodMillisecs / incrementIntervalMillisecs;
@@ -85,13 +85,13 @@ public class ConstantStepWiseRateIncreaser {
     public double getRateForGivenClockTime(long baseReferenceTime, long clockTime) {
         if (baseReferenceTime > clockTime) {
             throw new IllegalArgumentException(
-                    "specified baseReferenceTime ("
-                            + baseReferenceTime + ") is greater than clockTime (" + clockTime + ")");
+            "specified baseReferenceTime ("
+            + baseReferenceTime + ") is greater than clockTime (" + clockTime + ")");
         }
 
         long desiredClockTimeRelativizedToTimeZero = clockTime - baseReferenceTime;
         return Math.min(
-                initRate + desiredClockTimeRelativizedToTimeZero / incrementIntervalMillisecs * rateIncrementPerStep,
-                this.finalRate);
+        initRate + desiredClockTimeRelativizedToTimeZero / incrementIntervalMillisecs * rateIncrementPerStep,
+        this.finalRate);
     }
 }

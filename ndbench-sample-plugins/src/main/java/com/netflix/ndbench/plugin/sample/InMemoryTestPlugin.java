@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @Singleton
 @NdBenchClientPlugin("InMemoryTest")
-public class InMemoryTestPlugin implements NdBenchClient{
+public class InMemoryTestPlugin implements NdBenchClient {
     private static final Logger logger = LoggerFactory.getLogger(InMemoryTestPlugin.class);
 
     private final Map<String, String> data = Maps.newConcurrentMap();
@@ -43,7 +43,6 @@ public class InMemoryTestPlugin implements NdBenchClient{
     private static final String CacheMiss = null;
 
 
-
     /**
      * Initialize the client
      *
@@ -51,7 +50,7 @@ public class InMemoryTestPlugin implements NdBenchClient{
      */
     @Override
     public void init(DataGenerator dataGenerator) throws Exception {
-    this.dataGenerator = dataGenerator;
+        this.dataGenerator = dataGenerator;
         logger.info("Initialized InMemoryTestPlugin");
     }
 
@@ -65,14 +64,13 @@ public class InMemoryTestPlugin implements NdBenchClient{
     @Override
     public String readSingle(String key) throws Exception {
         String res = data.get(key);
-        if(res!=null)
+        if (res != null)
         {
-            if(res.isEmpty())
+            if (res.isEmpty())
             {
                 throw new Exception("Data retrieved is not ok ");
             }
-        }
-        else
+        }else
         {
             return CacheMiss;
         }
@@ -125,7 +123,7 @@ public class InMemoryTestPlugin implements NdBenchClient{
      */
     @Override
     public String getConnectionInfo() throws Exception {
-        return String.format("InMemoryTestPlugin - ConnectionInfo :: InMemoryMap Key Count: "+data.size());
+        return String.format("InMemoryTestPlugin - ConnectionInfo :: InMemoryMap Key Count: " + data.size());
     }
 
     /**

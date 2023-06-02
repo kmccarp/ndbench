@@ -61,12 +61,12 @@ public class EsRestPlugin implements NdBenchAbstractClient<WriteResult> {
 
     @Inject
     public EsRestPlugin(IConfiguration coreConfig, EsConfig config,
-                        IClusterDiscovery discoverer, EsRestClient restClient) {
+                                     IClusterDiscovery discoverer, EsRestClient restClient) {
         this(coreConfig, config, discoverer, restClient, true);
     }
 
     EsRestPlugin(IConfiguration coreConfig, EsConfig config,
-                 IClusterDiscovery discoverer, EsRestClient restClient, Boolean randomizeKeys) {
+                  IClusterDiscovery discoverer, EsRestClient restClient, Boolean randomizeKeys) {
         this.config = config;
         this.coreConfig = coreConfig;
         this.discoverer = discoverer;
@@ -99,13 +99,13 @@ public class EsRestPlugin implements NdBenchAbstractClient<WriteResult> {
     public synchronized void init(DataGenerator dataGenerator) throws Exception {
         if (config.getRestClientPort() == 443 && !config.isHttps()) {
             throw new IllegalArgumentException(
-                    "You must set the configuration property \"https\" to true if you use the https default port");
+            "You must set the configuration property \"https\" to true if you use the https default port");
         }
 
         Integer indexRollsPerHour = config.getIndexRollsPerDay();
         if (indexRollsPerHour < 0 || indexRollsPerHour > MAX_INDEX_ROLLS_PER_HOUR) {
             throw new IllegalArgumentException(
-                    "The configuration property \"indexRollsPerHour\" must be > 0 and <= " + MAX_INDEX_ROLLS_PER_HOUR);
+            "The configuration property \"indexRollsPerHour\" must be > 0 and <= " + MAX_INDEX_ROLLS_PER_HOUR);
         }
 
         if (indexRollsPerHour > 0 && 60 % indexRollsPerHour != 0) {
@@ -120,24 +120,24 @@ public class EsRestPlugin implements NdBenchAbstractClient<WriteResult> {
 
         this.esHostPort = hosts.get(0).toString();
         this.connectionInfo = String.format(
-                "Cluster: %s\ntest index URL: %s/%s/%s",
-                this.getClusterOrHostName(), esHostPort, config.getIndexName(), config.getDocumentType());
+        "Cluster: %s\ntest index URL: %s/%s/%s",
+        this.getClusterOrHostName(), esHostPort, config.getIndexName(), config.getDocumentType());
 
         writer = new EsWriter(
-                config.getIndexName(),
-                config.getDocumentType(),
-                config.getBulkWriteBatchSize() > 0,
-                indexRollsPerHour,
-                config.getBulkWriteBatchSize(),
-                config.isRandomizeStrings() ? dataGenerator : new FakeWordDictionaryBasedDataGenerator(dataGenerator, coreConfig.getDataSize()));
+        config.getIndexName(),
+        config.getDocumentType(),
+        config.getBulkWriteBatchSize() > 0,
+        indexRollsPerHour,
+        config.getBulkWriteBatchSize(),
+        config.isRandomizeStrings() ? dataGenerator : new FakeWordDictionaryBasedDataGenerator(dataGenerator, coreConfig.getDataSize()));
 
         if (coreConfig.isAutoTuneEnabled()) {
             this.autoTuner = new EsAutoTuner(
-                    coreConfig.getAutoTuneRampPeriodMillisecs(),
-                    coreConfig.getAutoTuneIncrementIntervalMillisecs(),
-                    coreConfig.getWriteRateLimit(),
-                    coreConfig.getAutoTuneFinalWriteRate(),
-                    coreConfig.getAutoTuneWriteFailureRatioThreshold());
+            coreConfig.getAutoTuneRampPeriodMillisecs(),
+            coreConfig.getAutoTuneIncrementIntervalMillisecs(),
+            coreConfig.getWriteRateLimit(),
+            coreConfig.getAutoTuneFinalWriteRate(),
+            coreConfig.getAutoTuneWriteFailureRatioThreshold());
         } else {
             // OK if it is null because it will never be used if !isAutoTuneEnabled
             // In fact if we initialized it when autotune is not enabled, then we would
@@ -244,33 +244,33 @@ public class EsRestPlugin implements NdBenchAbstractClient<WriteResult> {
 
             try {
                 hosts = Collections.singletonList(
-                        new URI(String.format("%s://%s:%d",
-                                getScheme(),
-                                this.config.getHostName(),
-                                this.config.getRestClientPort())));
+                new URI(String.format("%s://%s:%d",
+                getScheme(),
+                this.config.getHostName(),
+                this.config.getRestClientPort())));
 
             } catch (URISyntaxException e) {
                 logger.warn("Failed to parse hostname [{}] port [{}]",
-                        this.config.getHostName(),
-                        this.config.getRestClientPort());
+                this.config.getHostName(),
+                this.config.getRestClientPort());
             }
         } else {
             logger.debug("Discovering endpoints for cluster [{}]", this.config.getCluster());
 
             hosts = this.discoverer.getEndpoints(this.config.getCluster(), this.config.getRestClientPort())
-                    .stream().map(endpoint -> {
-                        try {
-                            return new URI(String.format("%s://%s", getScheme(), endpoint));
-                        } catch (URISyntaxException e) {
-                            logger.warn("Failed to parse endpoint [{}]", endpoint);
-                            return null;
-                        }
-                    }).filter(Objects::nonNull).collect(Collectors.toList());
+            .stream().map(endpoint -> {
+                try {
+                    return new URI(String.format("%s://%s", getScheme(), endpoint));
+                } catch (URISyntaxException e) {
+                    logger.warn("Failed to parse endpoint [{}]", endpoint);
+                    return null;
+                }
+            }).filter(Objects::nonNull).collect(Collectors.toList());
         }
 
         if (hosts.isEmpty()) {
             throw new IllegalArgumentException(
-                    "Failed to discover any endpoints or hostnames for " + this.config.getCluster());
+            "Failed to discover any endpoints or hostnames for " + this.config.getCluster());
         }
 
         return hosts;

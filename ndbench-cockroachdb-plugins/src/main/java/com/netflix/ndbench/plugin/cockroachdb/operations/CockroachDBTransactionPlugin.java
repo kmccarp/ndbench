@@ -139,14 +139,12 @@ public class CockroachDBTransactionPlugin extends CockroachDBPluginBase
                     {
                         // Signal the database that we will attempt a retry.
                         connection.rollback(sp);
-                    }
-                    else if (releaseAttempted)
+                    }else if (releaseAttempted)
                     {
                         connection.close();
                         // ResultAmbiguous;
                         throw e;
-                    }
-                    else
+                    }else
                     {
                         connection.close();
                         // ResultFailed;

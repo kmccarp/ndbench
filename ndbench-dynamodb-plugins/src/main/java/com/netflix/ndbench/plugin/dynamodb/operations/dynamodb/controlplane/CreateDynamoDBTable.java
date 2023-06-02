@@ -42,8 +42,9 @@ public class CreateDynamoDBTable extends AbstractDynamoDBOperation implements Su
     private static final Logger logger = LoggerFactory.getLogger(CreateDynamoDBTable.class);
     private final long readCapacityUnits;
     private final long writeCapacityUnits;
+
     public CreateDynamoDBTable(AmazonDynamoDB dynamoDB, String tableName, String partitionKeyName,
-                               long readCapacityUnits, long writeCapacityUnits) {
+                                long readCapacityUnits, long writeCapacityUnits) {
         super(dynamoDB, tableName, partitionKeyName);
         Preconditions.checkArgument(readCapacityUnits > 0);
         Preconditions.checkArgument(writeCapacityUnits > 0);
@@ -68,15 +69,15 @@ public class CreateDynamoDBTable extends AbstractDynamoDBOperation implements Su
         // Attribute definitions
         ArrayList<AttributeDefinition> attributeDefinitions = new ArrayList<>();
         attributeDefinitions.add(new AttributeDefinition().withAttributeName(partitionKeyName)
-                .withAttributeType(ScalarAttributeType.S));
+        .withAttributeType(ScalarAttributeType.S));
         /*
          * constructing the table request: Schema + Attributed definitions + Provisioned
          * throughput
          */
         CreateTableRequest request = new CreateTableRequest().withTableName(tableName)
-                .withKeySchema(keySchema).withAttributeDefinitions(attributeDefinitions)
-                .withProvisionedThroughput(new ProvisionedThroughput().withReadCapacityUnits(readCapacityUnits)
-                        .withWriteCapacityUnits(writeCapacityUnits));
+        .withKeySchema(keySchema).withAttributeDefinitions(attributeDefinitions)
+        .withProvisionedThroughput(new ProvisionedThroughput().withReadCapacityUnits(readCapacityUnits)
+        .withWriteCapacityUnits(writeCapacityUnits));
 
         logger.info("Creating Table: " + tableName);
 

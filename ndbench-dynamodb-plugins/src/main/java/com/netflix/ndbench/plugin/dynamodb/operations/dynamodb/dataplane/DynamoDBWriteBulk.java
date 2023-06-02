@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @author ipapapa
  */
 public class DynamoDBWriteBulk extends AbstractDynamoDBDataPlaneOperation
-        implements CapacityConsumingFunction<BatchWriteItemResult, List<String>, List<String>> {
+implements CapacityConsumingFunction<BatchWriteItemResult, List<String>, List<String>> {
     public DynamoDBWriteBulk(DataGenerator dataGenerator, AmazonDynamoDB dynamoDB, String tableName,
                              String partitionKeyName, ReturnConsumedCapacity returnConsumedCapacity) {
         super(dynamoDB, tableName, partitionKeyName, dataGenerator, returnConsumedCapacity);
@@ -51,9 +51,9 @@ public class DynamoDBWriteBulk extends AbstractDynamoDBDataPlaneOperation
         try {
             writeUntilDone(writeRequests);
             return writeRequests.stream()
-                    .map(WriteRequest::getPutRequest)
-                    .map(PutRequest::toString)
-                    .collect(Collectors.toList());
+            .map(WriteRequest::getPutRequest)
+            .map(PutRequest::toString)
+            .collect(Collectors.toList());
         } catch (AmazonServiceException ase) {
             throw amazonServiceException(ase);
         } catch (AmazonClientException ace) {
@@ -63,11 +63,11 @@ public class DynamoDBWriteBulk extends AbstractDynamoDBDataPlaneOperation
 
     private List<WriteRequest> generateWriteRequests(List<String> keys) {
         return keys.stream()
-                .map(key -> ImmutableMap.of(partitionKeyName, new AttributeValue(key),
-                        ATTRIBUTE_NAME, new AttributeValue(this.dataGenerator.getRandomValue())))
-                .map(item -> new PutRequest().withItem(item))
-                .map(put -> new WriteRequest().withPutRequest(put))
-                .collect(Collectors.toList());
+        .map(key -> ImmutableMap.of(partitionKeyName, new AttributeValue(key),
+        ATTRIBUTE_NAME, new AttributeValue(this.dataGenerator.getRandomValue())))
+        .map(item -> new PutRequest().withItem(item))
+        .map(put -> new WriteRequest().withPutRequest(put))
+        .collect(Collectors.toList());
     }
 
     private void writeUntilDone(List<WriteRequest> requests) {
@@ -76,14 +76,14 @@ public class DynamoDBWriteBulk extends AbstractDynamoDBDataPlaneOperation
         do {
             result = runBatchWriteRequest(remainingRequests);
             remainingRequests = result.getUnprocessedItems().get(tableName);
-        } while (remainingRequests!= null && remainingRequests.isEmpty());
+        } while (remainingRequests != null && remainingRequests.isEmpty());
     }
 
     private BatchWriteItemResult runBatchWriteRequest(List<WriteRequest> writeRequests) {
         //todo self throttle
         return measureConsumedCapacity(dynamoDB.batchWriteItem(new BatchWriteItemRequest()
-                .withRequestItems(ImmutableMap.of(tableName, writeRequests))
-                .withReturnConsumedCapacity(returnConsumedCapacity)));
+        .withRequestItems(ImmutableMap.of(tableName, writeRequests))
+        .withReturnConsumedCapacity(returnConsumedCapacity)));
     }
 
     @Override

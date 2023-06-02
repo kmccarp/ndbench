@@ -22,8 +22,12 @@ package com.netflix.ndbench.core.generators;
 public interface KeyGenerator<T> {
 
     void init();
+
     T getNextKey();
+
     boolean hasNextKey();
+
     boolean isPreLoadKeys();
+
     int getNumKeys();
 }

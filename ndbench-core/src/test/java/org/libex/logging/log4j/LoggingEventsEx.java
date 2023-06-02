@@ -65,7 +65,7 @@ public final class LoggingEventsEx {
     public static Predicate<LoggingEvent> withRenderedMessage(
             final Matcher<? super String> matcher) {
         return event -> event != null
-                && matcher.matches(event.getRenderedMessage());
+        && matcher.matches(event.getRenderedMessage());
     }
 
     public static Predicate<LoggingEvent> withThrowable(
@@ -79,10 +79,10 @@ public final class LoggingEventsEx {
             final Matcher<?> matcher)
     {
         return event -> event != null
-                && matcher
-                        .matches((event.getThrowableInformation() == null) ? null
-                                : event.getThrowableInformation()
-                                        .getThrowable());
+        && matcher
+        .matches((event.getThrowableInformation() == null) ? null
+        : event.getThrowableInformation()
+        .getThrowable());
     }
 
 

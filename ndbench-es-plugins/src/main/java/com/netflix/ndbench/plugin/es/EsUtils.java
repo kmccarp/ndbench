@@ -40,20 +40,20 @@ public class EsUtils {
         HttpGet get = new HttpGet(url);
 
         try (CloseableHttpClient httpClient =
-                     HttpClients.custom().setRetryHandler((exception, executionCount, context) -> {
-                         if (executionCount > maxRetries) {
-                             return false;
-                         } else {
-                             try {
-                                 if (delayBetweenRetriesMs > 0) {
-                                     Thread.sleep(delayBetweenRetriesMs);
-                                 }
-                             } catch (InterruptedException e) {
-                                 logger.warn("Exception waiting for the next retry", e);
-                             }
-                             return true;
-                         }
-                     }).build();
+        HttpClients.custom().setRetryHandler((exception, executionCount, context) -> {
+            if (executionCount > maxRetries) {
+                return false;
+            } else {
+                try {
+                    if (delayBetweenRetriesMs > 0) {
+                        Thread.sleep(delayBetweenRetriesMs);
+                    }
+                } catch (InterruptedException e) {
+                    logger.warn("Exception waiting for the next retry", e);
+                }
+                return true;
+            }
+        }).build();
              CloseableHttpResponse response = httpClient.execute(get)) {
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != 200 && statusCode != 201) {

@@ -35,8 +35,8 @@ public class AbstractDynamoDBDataPlaneOperation extends AbstractDynamoDBOperatio
     protected final ReturnConsumedCapacity returnConsumedCapacity;
 
     protected AbstractDynamoDBDataPlaneOperation(AmazonDynamoDB dynamoDB, String tableName, String partitionKeyName,
-                                                 DataGenerator dataGenerator,
-                                                 ReturnConsumedCapacity returnConsumedCapacity) {
+                                                  DataGenerator dataGenerator,
+                                                  ReturnConsumedCapacity returnConsumedCapacity) {
         super(dynamoDB, tableName, partitionKeyName);
         this.dataGenerator = dataGenerator;
         this.returnConsumedCapacity = returnConsumedCapacity;
@@ -45,10 +45,10 @@ public class AbstractDynamoDBDataPlaneOperation extends AbstractDynamoDBOperatio
     protected double getConsumedCapacityForTable(List<ConsumedCapacity> consumedCapacities) {
         Preconditions.checkNotNull(consumedCapacities);
         return consumedCapacities.stream()
-                .filter(c -> tableName.equals(c.getTableName()))
-                .map(ConsumedCapacity::getCapacityUnits)
-                .findFirst()
-                .orElse(0.0);
+        .filter(c -> tableName.equals(c.getTableName()))
+        .map(ConsumedCapacity::getCapacityUnits)
+        .findFirst()
+        .orElse(0.0);
     }
 
     public double getAndResetConsumed() {

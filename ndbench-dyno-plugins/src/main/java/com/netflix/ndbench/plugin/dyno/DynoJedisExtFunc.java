@@ -176,12 +176,12 @@ public class DynoJedisExtFunc extends NdBenchBaseClient {
         };
 
         DynoJedisClient jClient = new DynoJedisClient.Builder().withApplicationName(ClusterName)
-                .withDynomiteClusterName(ClusterName).withHostSupplier(hSupplier).build();
+        .withDynomiteClusterName(ClusterName).withHostSupplier(hSupplier).build();
 
         jedisClient.set(jClient);
 
     }
-    
+
     @Override
     public String runWorkFlow() throws Exception {
         return null;

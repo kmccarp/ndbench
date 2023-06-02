@@ -102,10 +102,10 @@ public abstract class CockroachDBPluginBase implements NdBenchClient
     {
         Connection connection = ds.getConnection();
 
-        String info =  String.format("Connected to database: %s using driver: %s as user :%s",
-                             connection.getMetaData().getDatabaseProductName(),
-                             connection.getMetaData().getDriverName(),
-                             connection.getMetaData().getUserName());
+        String info = String.format("Connected to database: %s using driver: %s as user :%s",
+        connection.getMetaData().getDatabaseProductName(),
+        connection.getMetaData().getDriverName(),
+        connection.getMetaData().getUserName());
 
         connection.close();
 

@@ -35,7 +35,7 @@ import java.util.Optional;
  * @author ipapapa
  */
 public class DynamoDBReadSingle extends AbstractDynamoDBReadOperation
-        implements CapacityConsumingFunction<GetItemResult, String, String> {
+implements CapacityConsumingFunction<GetItemResult, String, String> {
     public DynamoDBReadSingle(DataGenerator dataGenerator, AmazonDynamoDB dynamoDB, String tableName,
                               String partitionKeyName, boolean consistentRead,
                               ReturnConsumedCapacity returnConsumedCapacity) {
@@ -45,16 +45,16 @@ public class DynamoDBReadSingle extends AbstractDynamoDBReadOperation
     @Override
     public String apply(String key) {
         final GetItemRequest request = new GetItemRequest()
-                .withTableName(tableName)
-                .withKey(ImmutableMap.of(partitionKeyName, new AttributeValue(key)))
-                .withReturnConsumedCapacity(returnConsumedCapacity)
-                .withConsistentRead(consistentRead);
+        .withTableName(tableName)
+        .withKey(ImmutableMap.of(partitionKeyName, new AttributeValue(key)))
+        .withReturnConsumedCapacity(returnConsumedCapacity)
+        .withConsistentRead(consistentRead);
         try {
             return Optional.ofNullable(dynamoDB.getItem(request))
-                    .map(this::measureConsumedCapacity)
-                    .map(GetItemResult::getItem)
-                    .map(Map::toString)
-                    .orElse(null);
+            .map(this::measureConsumedCapacity)
+            .map(GetItemResult::getItem)
+            .map(Map::toString)
+            .orElse(null);
         } catch (AmazonServiceException ase) {
             throw amazonServiceException(ase);
         } catch (AmazonClientException ace) {

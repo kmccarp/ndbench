@@ -18,6 +18,6 @@ package com.netflix.ndbench.plugin.configs;
 import com.netflix.archaius.api.annotations.Configuration;
 import com.netflix.ndbench.api.plugin.common.NdBenchConstants;
 
-@Configuration(prefix =  NdBenchConstants.PROP_NAMESPACE +  "cass")
+@Configuration(prefix = NdBenchConstants.PROP_NAMESPACE +  "cass")
 public interface ElassandraConfiguration extends CassandraConfigurationBase {
 }

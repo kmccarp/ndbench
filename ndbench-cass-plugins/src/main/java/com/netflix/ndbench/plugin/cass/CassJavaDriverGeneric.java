@@ -63,7 +63,7 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
         bStmt.setString("key", key);
         bStmt.setConsistencyLevel(ConsistencyLevel.valueOf(config.getReadConsistencyLevel()));
         ResultSet rs = session.execute(bStmt);
-        List<Row> result=rs.all();
+        List<Row> result = rs.all();
 
         if (!result.isEmpty())
         {
@@ -87,8 +87,7 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
                     }
                 }
             }
-        }
-        else {
+        }else {
             return CacheMiss;
         }
 
@@ -98,7 +97,7 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
     @Override
     public String writeSingle(String key)
     {
-        if(config.getRowsPerPartition() > 1)
+        if (config.getRowsPerPartition() > 1)
         {
             if (config.getUseBatchWrites()) {
                 BatchStatement batch = new BatchStatement(BatchStatement.Type.UNLOGGED);
@@ -110,14 +109,13 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
                 batch.clear();
             } else {
                 session.execute(getWriteBStmt(key, dataGenerator.getRandomInteger() % config.getRowsPerPartition())
-                        .setConsistencyLevel(ConsistencyLevel.valueOf(config.getWriteConsistencyLevel())));
+                .setConsistencyLevel(ConsistencyLevel.valueOf(config.getWriteConsistencyLevel())));
 
             }
-        }
-        else
+        }else
         {
             session.execute(getWriteBStmt(key, 1)
-                            .setConsistencyLevel(ConsistencyLevel.valueOf(config.getWriteConsistencyLevel())));
+            .setConsistencyLevel(ConsistencyLevel.valueOf(config.getWriteConsistencyLevel())));
         }
         return ResultOK;
     }
@@ -141,7 +139,7 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
 
     @Override
     void upsertKeyspace(Session session) {
-       upsertGenereicKeyspace(session);
+        upsertGenereicKeyspace(session);
     }
 
     @Override
@@ -154,7 +152,7 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
 
         int nCols = config.getColsPerRow();
 
-        String values = IntStream.range(0, nCols).mapToObj(i -> "value"+i).collect(Collectors.joining(", "));
+        String values = IntStream.range(0, nCols).mapToObj(i -> "value" + i).collect(Collectors.joining(", "));
         String bindValues = IntStream.range(0, nCols).mapToObj(i -> "?").collect(Collectors.joining(", "));
 
         writePstmt = session.prepare(String.format(QueryUtil.INSERT_QUERY, keyspaceName, tableName, values, bindValues));
@@ -163,15 +161,15 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
 
     @Override
     public String getConnectionInfo() {
-        int bytesPerCol=coreConfig.getDataSize();
-        int numColsPerRow=config.getColsPerRow();
-        int numRowsPerPartition=config.getRowsPerPartition();
-        int numPartitions= coreConfig.getNumKeys();
+        int bytesPerCol = coreConfig.getDataSize();
+        int numColsPerRow = config.getColsPerRow();
+        int numRowsPerPartition = config.getRowsPerPartition();
+        int numPartitions = coreConfig.getNumKeys();
         int RF = 3;
         Long numNodes = cluster.getMetadata().getAllHosts()
-                               .stream()
-                               .collect(groupingBy(Host::getDatacenter,counting()))
-                               .values().stream().findFirst().get();
+        .stream()
+        .collect(groupingBy(Host::getDatacenter, counting()))
+        .values().stream().findFirst().get();
 
 
         int partitionSizeInBytes = bytesPerCol * numColsPerRow * numRowsPerPartition;
@@ -179,13 +177,12 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
         long totalSizeInBytesPerNode = totalSizeInBytes / numNodes;
 
 
-
         return String.format("Cluster Name - %s : Keyspace Name - %s : CF Name - %s ::: ReadCL - %s : WriteCL - %s ::: " +
-                             "DataSize per Node: ~[%s], Total DataSize on Cluster: ~[%s], Num nodes in C* DC: %s, PartitionSize: %s",
-                             clusterName, keyspaceName, tableName, config.getReadConsistencyLevel(), config.getWriteConsistencyLevel(),
-                             humanReadableByteCount(totalSizeInBytesPerNode),
-                             humanReadableByteCount(totalSizeInBytes),
-                             numNodes,
-                             humanReadableByteCount(partitionSizeInBytes));
+        "DataSize per Node: ~[%s], Total DataSize on Cluster: ~[%s], Num nodes in C* DC: %s, PartitionSize: %s",
+        clusterName, keyspaceName, tableName, config.getReadConsistencyLevel(), config.getWriteConsistencyLevel(),
+        humanReadableByteCount(totalSizeInBytesPerNode),
+        humanReadableByteCount(totalSizeInBytes),
+        numNodes,
+        humanReadableByteCount(partitionSizeInBytes));
     }
 }

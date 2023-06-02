@@ -34,8 +34,8 @@ public abstract class AbstractDynamoDBOperation extends AbstractAwsOperation {
     protected final String partitionKeyName;
 
     protected AbstractDynamoDBOperation(AmazonDynamoDB dynamoDB,
-                                        String tableName,
-                                        String partitionKeyName) {
+                                         String tableName,
+                                         String partitionKeyName) {
         Preconditions.checkNotNull(dynamoDB, "DynamoDB client must not be null");
         Preconditions.checkArgument(StringUtils.isNotEmpty(tableName), "Invalid table name");
         Preconditions.checkArgument(StringUtils.isNotEmpty(partitionKeyName), "Invalid partition key name");

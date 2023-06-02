@@ -65,9 +65,10 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
         randomWrites = config.getRandomWrites();
 
     }
+
     @Inject
     public CassUDTFrozen(CassJavaDriverManager javaDriverManager, IConfiguration coreConfig,
-                         CassandraUdtConfiguration cassUdtConfigs) {
+                                      CassandraUdtConfiguration cassUdtConfigs) {
         super(javaDriverManager, coreConfig, cassUdtConfigs);
     }
 
@@ -81,26 +82,26 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
     @Override
     void upsertCF(Session session) {
 
-        session.execute("CREATE TYPE  IF NOT EXISTS  "+ addressType +" (street text, city text, zip_code int, phones set<text>)");
+        session.execute("CREATE TYPE  IF NOT EXISTS  " + addressType + " (street text, city text, zip_code int, phones set<text>)");
 
-        session.execute("CREATE TYPE  IF NOT EXISTS  "+ fullnameType +" (firstname text, lastname text)");
+        session.execute("CREATE TYPE  IF NOT EXISTS  " + fullnameType + " (firstname text, lastname text)");
 
-        session.execute("CREATE TYPE IF NOT EXISTS  "+ emailType +" (fp text, domain text)");
+        session.execute("CREATE TYPE IF NOT EXISTS  " + emailType + " (fp text, domain text)");
 
         session.execute("CREATE TABLE IF NOT EXISTS  " + tableName + " ( id text PRIMARY KEY, name frozen <fullname_type>, emails set<frozen <email_type>>, billing_addresses map<text, frozen <address_type>>, account_type text) WITH compression = {'sstable_compression': ''}");
     }
 
     @Override
     void prepStatements(Session session) {
-        readPstmt1 = session.prepare(" SELECT * FROM " + tableName + " WHERE id = ?" );
-        readPstmt2 = session.prepare(" SELECT name.lastname FROM " + tableName + " WHERE id = ?" );
-        readPstmt3 = session.prepare(" SELECT emails, billing_addresses FROM " + tableName + " WHERE id = ?" );
+        readPstmt1 = session.prepare(" SELECT * FROM " + tableName + " WHERE id = ?");
+        readPstmt2 = session.prepare(" SELECT name.lastname FROM " + tableName + " WHERE id = ?");
+        readPstmt3 = session.prepare(" SELECT emails, billing_addresses FROM " + tableName + " WHERE id = ?");
 
         insertPstmt1 = session.prepare("INSERT INTO " + tableName + " (id, name, account_type) VALUES  (?, ?, ?)");
 
 
         updatePstmt1 = session.prepare("UPDATE " + tableName + " SET billing_addresses = billing_addresses + ? " +
-                                       ", emails = emails + ? WHERE id = ?");
+        ", emails = emails + ? WHERE id = ?");
 
 
         casPstmt1 = session.prepare("UPDATE " + tableName + " SET billing_addresses = billing_addresses + ? WHERE id = ?                   if account_type='Paid'");
@@ -110,21 +111,22 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
         updatePstmt2 = session.prepare("UPDATE " + tableName + " SET billing_addresses = billing_addresses - ? WHERE id = ?");
 
     }
+
     @Override
     void postInit() {
         cassAddressType = session.getCluster().
-                getMetadata().getKeyspace(keyspaceName).getUserType("address_type");
+        getMetadata().getKeyspace(keyspaceName).getUserType("address_type");
         cassFullnameType = session.getCluster().
-                getMetadata().getKeyspace(keyspaceName).getUserType("fullname_type");
+        getMetadata().getKeyspace(keyspaceName).getUserType("fullname_type");
         cassEmailType = session.getCluster().
-                getMetadata().getKeyspace(keyspaceName).getUserType("email_type");
+        getMetadata().getKeyspace(keyspaceName).getUserType("email_type");
     }
 
     @Override
     public String readSingle(String key) throws Exception {
 
         int option = -1;
-        if(randomReads) {
+        if (randomReads) {
             option = this.dataGenerator.getRandomInteger() % 3;
         }
 
@@ -137,9 +139,9 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
             case 2:
                 return readCollectionsByKey(key);
             default:
-                 if (readAllByKey(key) != CacheMiss && readUDTByKey(key) != CacheMiss && readCollectionsByKey(key) != CacheMiss)
+                if (readAllByKey(key) != CacheMiss && readUDTByKey(key) != CacheMiss && readCollectionsByKey(key) != CacheMiss)
                     return ResultOK;
-                 return CacheMiss;
+                return CacheMiss;
         }
 
 
@@ -177,7 +179,7 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
     public String writeSingle(String key) throws Exception {
 
         int option = -1;
-        if(randomWrites) {
+        if (randomWrites) {
             option = this.dataGenerator.getRandomInteger() % 3;
         }
         switch (option)
@@ -195,8 +197,6 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
         }
 
 
-
-
     }
 
     private String insertSimple(String key) {
@@ -205,13 +205,13 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
         name.setString("firstname", this.dataGenerator.getRandomValue());
         name.setString("lastname", this.dataGenerator.getRandomValue());
 
-        BoundStatement bStmt = insertPstmt1.bind(key,name,this.dataGenerator.getRandomInteger()%2==0?"Paid":"Free");
+        BoundStatement bStmt = insertPstmt1.bind(key, name, this.dataGenerator.getRandomInteger() % 2 == 0 ? "Paid" : "Free");
 
         bStmt.setConsistencyLevel(ConsistencyLevel.valueOf(config.getWriteConsistencyLevel()));
 
         ResultSet rs = session.execute(bStmt);
 
-        if (rs !=null)
+        if (rs != null)
             return ResultOK;
 
         return ResutlFailed;
@@ -222,7 +222,7 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
         Map<String, UDTValue> billing_addresses = new HashMap<>();
 
         HashSet<String> phones = new HashSet<>();
-        for (int i = 0; i < this.dataGenerator.getRandomInteger()%6+1; i++) {
+        for (int i = 0; i < this.dataGenerator.getRandomInteger() % 6 + 1; i++) {
             phones.add(RandomStringUtils.randomAlphanumeric(10));
         }
 
@@ -233,14 +233,14 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
         address.setInt("zip_code", this.dataGenerator.getRandomInteger());
         address.setSet("phones", phones);
 
-        billing_addresses.put(RandomStringUtils.randomAlphanumeric(8),address);
+        billing_addresses.put(RandomStringUtils.randomAlphanumeric(8), address);
 
 
         HashSet<UDTValue> emails = new HashSet<>();
-        for (int i = 0; i < this.dataGenerator.getRandomInteger()%5+1; i++) {
+        for (int i = 0; i < this.dataGenerator.getRandomInteger() % 5 + 1; i++) {
             UDTValue email = cassEmailType.newValue();
-            email.setString("fp",RandomStringUtils.randomAlphanumeric(15));
-            email.setString("domain",RandomStringUtils.randomAlphanumeric(10));
+            email.setString("fp", RandomStringUtils.randomAlphanumeric(15));
+            email.setString("domain", RandomStringUtils.randomAlphanumeric(10));
             emails.add(email);
         }
 
@@ -254,7 +254,7 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
 
         ResultSet rs = session.execute(bStmt);
 
-        if (rs !=null)
+        if (rs != null)
             return ResultOK;
 
         return ResutlFailed;
@@ -269,7 +269,7 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
         Map<String, UDTValue> billing_addresses = new HashMap<>();
 
         HashSet<String> phones = new HashSet<>();
-        for (int i = 0; i < this.dataGenerator.getRandomInteger()%6+1; i++) {
+        for (int i = 0; i < this.dataGenerator.getRandomInteger() % 6 + 1; i++) {
             phones.add(RandomStringUtils.randomAlphanumeric(10));
         }
 
@@ -280,7 +280,7 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
         address.setInt("zip_code", this.dataGenerator.getRandomInteger());
         address.setSet("phones", phones);
 
-        billing_addresses.put(RandomStringUtils.randomAlphanumeric(8),address);
+        billing_addresses.put(RandomStringUtils.randomAlphanumeric(8), address);
 
         BoundStatement bStmt1 = casPstmt1.bind();
 
@@ -292,10 +292,10 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
 
         //Simple CAS stmt with email '-' operation
         HashSet<UDTValue> emails = new HashSet<>();
-        for (int i = 0; i < this.dataGenerator.getRandomInteger()%2+1; i++) {
+        for (int i = 0; i < this.dataGenerator.getRandomInteger() % 2 + 1; i++) {
             UDTValue email = cassEmailType.newValue();
-            email.setString("fp",RandomStringUtils.randomAlphanumeric(15));
-            email.setString("domain",RandomStringUtils.randomAlphanumeric(10));
+            email.setString("fp", RandomStringUtils.randomAlphanumeric(15));
+            email.setString("domain", RandomStringUtils.randomAlphanumeric(10));
             emails.add(email);
         }
 
@@ -336,19 +336,21 @@ public class CassUDTFrozen extends CJavaDriverBasePlugin<CassandraUdtConfigurati
 //
 //        batch.add(bStmt3);
 
-        ResultSet rs =  session.execute(batch);
+        ResultSet rs = session.execute(batch);
 
         batch.clear();
 
-        if (rs !=null)
+        if (rs != null)
             return ResultOK;
 
         return ResutlFailed;
     }
+
     @Override
     public List<String> readBulk(List<String> keys) throws Exception {
         throw new UnsupportedOperationException("bulk operation is not supported");
     }
+
     @Override
     public List<String> writeBulk(List<String> keys) throws Exception {
         throw new UnsupportedOperationException("bulk operation is not supported");

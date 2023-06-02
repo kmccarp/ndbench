@@ -69,9 +69,9 @@ public class DynamoDBKeyValue extends DynamoDBKeyValueBase<DynamoDBConfiguration
     @Override
     public String getConnectionInfo() {
         return String.format("Table Name - %s : Attribute Name - %s : Consistent Read - %b",
-                this.config.getTableName(),
-                this.config.getAttributeName(),
-                this.config.consistentRead());
+        this.config.getTableName(),
+        this.config.getAttributeName(),
+        this.config.consistentRead());
     }
 
     AmazonDynamoDB getDynamoDB() {

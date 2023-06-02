@@ -7,5 +7,6 @@ import com.google.inject.ImplementedBy;
 public interface CassJavaDriverManager {
 
     CqlSession getSession(String sessionName, String contactPoint, int connections, int port, String username, String password);
+
     CqlSession getSession(String sessionName, String contactPoint, int connections, int port);
 }

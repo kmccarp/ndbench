@@ -46,11 +46,11 @@ public class DynamoDBAutoscalingConfigurer {
     @Inject
     public DynamoDBAutoscalingConfigurer(final AWSCredentialsProvider awsCredentialsProvider) {
         autoScalingClient = AWSApplicationAutoScalingClientBuilder.standard()
-                .withCredentials(awsCredentialsProvider)
-                .build();
+        .withCredentials(awsCredentialsProvider)
+        .build();
         securityTokenService = AWSSecurityTokenServiceClientBuilder.standard()
-                .withCredentials(awsCredentialsProvider)
-                .build();
+        .withCredentials(awsCredentialsProvider)
+        .build();
     }
 
     /**
@@ -64,64 +64,64 @@ public class DynamoDBAutoscalingConfigurer {
      * @param targetReadUtilization
      */
     public void setupAutoscaling(Long readCapacityUnits,
-                                  Long writeCapacityUnits,
-                                  String tableName,
-                                  DescribeLimitsResult limits,
-                                  Integer targetWriteUtilization,
-                                  Integer targetReadUtilization) {
+                                                                                                                                                                                                                                                                                                                                                                                          Long writeCapacityUnits,
+                                                                                                                                                                                                                                                                                                                                                                                          String tableName,
+                                                                                                                                                                                                                                                                                                                                                                                          DescribeLimitsResult limits,
+                                                                                                                                                                                                                                                                                                                                                                                          Integer targetWriteUtilization,
+                                                                                                                                                                                                                                                                                                                                                                                          Integer targetReadUtilization) {
         String resourceID = "table/" + tableName;
         String accountId = securityTokenService.getCallerIdentity(new GetCallerIdentityRequest()).getAccount();
         String serviceRoleArn = "arn:aws:iam::" + accountId
-                + ":role/aws-service-role/dynamodb.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_"
-                + tableName;
+        + ":role/aws-service-role/dynamodb.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_"
+        + tableName;
         createAndVerifyScalableTargetAndScalingPolicy(serviceRoleArn,
-                resourceID,
-                ScalableDimension.DynamodbTableWriteCapacityUnits,
-                MetricType.DynamoDBWriteCapacityUtilization,
-                writeCapacityUnits,
-                limits.getTableMaxWriteCapacityUnits().intValue(),
-                targetWriteUtilization);
+        resourceID,
+        ScalableDimension.DynamodbTableWriteCapacityUnits,
+        MetricType.DynamoDBWriteCapacityUtilization,
+        writeCapacityUnits,
+        limits.getTableMaxWriteCapacityUnits().intValue(),
+        targetWriteUtilization);
         createAndVerifyScalableTargetAndScalingPolicy(serviceRoleArn,
-                resourceID,
-                ScalableDimension.DynamodbTableReadCapacityUnits,
-                MetricType.DynamoDBReadCapacityUtilization,
-                readCapacityUnits,
-                limits.getTableMaxReadCapacityUnits().intValue(),
-                targetReadUtilization);
+        resourceID,
+        ScalableDimension.DynamodbTableReadCapacityUnits,
+        MetricType.DynamoDBReadCapacityUtilization,
+        readCapacityUnits,
+        limits.getTableMaxReadCapacityUnits().intValue(),
+        targetReadUtilization);
     }
 
     private void createAndVerifyScalableTargetAndScalingPolicy(String serviceRoleArn,
-                                                               String resourceID,
-                                                               ScalableDimension scalableDimension,
-                                                               MetricType metricType,
-                                                               Long capacityUnits,
-                                                               Integer maxCapacityUnits,
-                                                               Integer utilizationTarget) {
+                                                                String resourceID,
+                                                                ScalableDimension scalableDimension,
+                                                                MetricType metricType,
+                                                                Long capacityUnits,
+                                                                Integer maxCapacityUnits,
+                                                                Integer utilizationTarget) {
         createAndVerifyScalableTarget(resourceID, serviceRoleArn, scalableDimension, capacityUnits.intValue(),
-                maxCapacityUnits);
+        maxCapacityUnits);
         createAndVerifyScalingPolicy(resourceID, scalableDimension, metricType, utilizationTarget.doubleValue());
     }
 
     private void createAndVerifyScalingPolicy(final String resourceID,
-                                              final ScalableDimension scalableDimension,
-                                              final MetricType metricType,
-                                              final Double targetValue) {
+                                               final ScalableDimension scalableDimension,
+                                               final MetricType metricType,
+                                               final Double targetValue) {
         // Configure a scaling policy
         TargetTrackingScalingPolicyConfiguration targetTrackingScalingPolicyConfiguration =
-                new TargetTrackingScalingPolicyConfiguration()
-                        .withPredefinedMetricSpecification(new PredefinedMetricSpecification().withPredefinedMetricType(metricType))
-                        .withTargetValue(targetValue)
-                        .withScaleInCooldown(DEFAULT_SCALE_IN_OUT_COOLDOWN)
-                        .withScaleOutCooldown(DEFAULT_SCALE_IN_OUT_COOLDOWN);
+        new TargetTrackingScalingPolicyConfiguration()
+        .withPredefinedMetricSpecification(new PredefinedMetricSpecification().withPredefinedMetricType(metricType))
+        .withTargetValue(targetValue)
+        .withScaleInCooldown(DEFAULT_SCALE_IN_OUT_COOLDOWN)
+        .withScaleOutCooldown(DEFAULT_SCALE_IN_OUT_COOLDOWN);
 
         // Create the scaling policy, based on your configuration
         PutScalingPolicyRequest pspRequest = new PutScalingPolicyRequest()
-                .withServiceNamespace(ServiceNamespace.Dynamodb)
-                .withScalableDimension(scalableDimension)
-                .withResourceId(resourceID)
-                .withPolicyName("My" + scalableDimension.name() + "ScalingPolicy")
-                .withPolicyType(PolicyType.TargetTrackingScaling)
-                .withTargetTrackingScalingPolicyConfiguration(targetTrackingScalingPolicyConfiguration);
+        .withServiceNamespace(ServiceNamespace.Dynamodb)
+        .withScalableDimension(scalableDimension)
+        .withResourceId(resourceID)
+        .withPolicyName("My" + scalableDimension.name() + "ScalingPolicy")
+        .withPolicyType(PolicyType.TargetTrackingScaling)
+        .withTargetTrackingScalingPolicyConfiguration(targetTrackingScalingPolicyConfiguration);
 
         final String scalingPolicyArn;
         try {
@@ -132,33 +132,33 @@ public class DynamoDBAutoscalingConfigurer {
 
         // Verify that the scaling policy was created
         DescribeScalingPoliciesRequest dspRequest = new DescribeScalingPoliciesRequest()
-                .withServiceNamespace(ServiceNamespace.Dynamodb)
-                .withScalableDimension(scalableDimension)
-                .withResourceId(resourceID);
+        .withServiceNamespace(ServiceNamespace.Dynamodb)
+        .withScalableDimension(scalableDimension)
+        .withResourceId(resourceID);
 
         try {
             autoScalingClient.describeScalingPolicies(dspRequest).getScalingPolicies().stream()
-                    .filter(scalingPolicy -> scalingPolicy.getPolicyARN().equals(scalingPolicyArn))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("Scaling policy was created but arn did not match"));
+            .filter(scalingPolicy -> scalingPolicy.getPolicyARN().equals(scalingPolicyArn))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Scaling policy was created but arn did not match"));
         } catch (Exception e) {
             throw new IllegalStateException("Unable to verify scaling policy", e);
         }
     }
 
     private void createAndVerifyScalableTarget(final String resourceID,
-                                               final String serviceRoleArn,
-                                               final ScalableDimension scalableDimension,
-                                               final Integer minimumCapacity,
-                                               final Integer maximumCapacity) {
+                                                final String serviceRoleArn,
+                                                final ScalableDimension scalableDimension,
+                                                final Integer minimumCapacity,
+                                                final Integer maximumCapacity) {
         // Define the scalable targets
         RegisterScalableTargetRequest rstRequest = new RegisterScalableTargetRequest()
-                .withServiceNamespace(ServiceNamespace.Dynamodb)
-                .withResourceId(resourceID)
-                .withScalableDimension(scalableDimension)
-                .withMinCapacity(minimumCapacity)
-                .withMaxCapacity(maximumCapacity)
-                .withRoleARN(serviceRoleArn);
+        .withServiceNamespace(ServiceNamespace.Dynamodb)
+        .withResourceId(resourceID)
+        .withScalableDimension(scalableDimension)
+        .withMinCapacity(minimumCapacity)
+        .withMaxCapacity(maximumCapacity)
+        .withRoleARN(serviceRoleArn);
 
         try {
             autoScalingClient.registerScalableTarget(rstRequest);
@@ -169,19 +169,19 @@ public class DynamoDBAutoscalingConfigurer {
         // Verify that the target was created
         // note that scalable targets do not have arns of their own so need to verify the contents
         DescribeScalableTargetsRequest dscRequest = new DescribeScalableTargetsRequest()
-                .withServiceNamespace(ServiceNamespace.Dynamodb)
-                .withScalableDimension(scalableDimension)
-                .withResourceIds(resourceID);
+        .withServiceNamespace(ServiceNamespace.Dynamodb)
+        .withScalableDimension(scalableDimension)
+        .withResourceIds(resourceID);
         try {
             autoScalingClient.describeScalableTargets(dscRequest).getScalableTargets().stream()
-                    .filter(target -> target.getResourceId().equals(resourceID)
-                            && target.getScalableDimension().equals(scalableDimension.toString())
-                            && target.getServiceNamespace().equals(ServiceNamespace.Dynamodb.toString())
-                            && target.getMinCapacity().equals(minimumCapacity)
-                            && target.getMaxCapacity().equals(maximumCapacity)
-                            && target.getRoleARN().equals(serviceRoleArn))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("Target was created but not all fields matched"));
+            .filter(target -> target.getResourceId().equals(resourceID)
+            && target.getScalableDimension().equals(scalableDimension.toString())
+            && target.getServiceNamespace().equals(ServiceNamespace.Dynamodb.toString())
+            && target.getMinCapacity().equals(minimumCapacity)
+            && target.getMaxCapacity().equals(maximumCapacity)
+            && target.getRoleARN().equals(serviceRoleArn))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Target was created but not all fields matched"));
         } catch (Exception e) {
             throw new IllegalStateException("Unable to verify scalable target", e);
         }

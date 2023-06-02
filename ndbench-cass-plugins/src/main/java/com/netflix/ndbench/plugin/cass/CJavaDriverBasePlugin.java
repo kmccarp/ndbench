@@ -90,7 +90,7 @@ public abstract class CJavaDriverBasePlugin<C extends CassandraConfigurationBase
     @Override
     public String getConnectionInfo() {
         return String.format("Cluster Name - %s : Keyspace Name - %s : CF Name - %s ::: ReadCL - %s : WriteCL - %s ",
-                             clusterName, keyspaceName, tableName, config.getReadConsistencyLevel(), config.getWriteConsistencyLevel());
+        clusterName, keyspaceName, tableName, config.getReadConsistencyLevel(), config.getWriteConsistencyLevel());
     }
 
     @Override
@@ -102,12 +102,12 @@ public abstract class CJavaDriverBasePlugin<C extends CassandraConfigurationBase
         logger.info("Cassandra  Cluster: " + clusterName);
 
         this.cluster = cassJavaDriverManager.registerCluster(clusterName, clusterContactPoint, connections, port, allowBetaProtocol,
-                                                             username, password);
+        username, password);
         this.session = cassJavaDriverManager.getSession(cluster);
 
         logger.info("Protocol version in use: {}", session.getCluster().getConfiguration().getProtocolOptions().getProtocolVersion());
 
-        if(config.getCreateSchema())
+        if (config.getCreateSchema())
         {
             logger.info("Trying to upsert schema");
             upsertKeyspace(this.session);
@@ -116,10 +116,14 @@ public abstract class CJavaDriverBasePlugin<C extends CassandraConfigurationBase
     }
 
     abstract void prepStatements(Session session);
+
     abstract void upsertKeyspace(Session session);
+
     abstract void upsertCF(Session session);
+
     void preInit() {
     }
+
     void postInit() {
     }
 
@@ -145,12 +149,12 @@ public abstract class CJavaDriverBasePlugin<C extends CassandraConfigurationBase
         Set<Host> hosts = session.getCluster().getMetadata().getAllHosts();
 
         Set<String> dcs = hosts.stream()
-                               .map(h -> "'"+h.getDatacenter()+"': '3'" )
-                               .collect(Collectors.toSet());
+        .map(h -> "'" + h.getDatacenter() + "': '3'")
+        .collect(Collectors.toSet());
 
         String rf = "{'class': 'SimpleStrategy','replication_factor': '1'}";
 
-        if(hosts.size() > 1)
+        if (hosts.size() > 1)
         {
             rf = String.format("{'class': 'NetworkTopologyStrategy', %s}", String.join(", ", dcs));
         }

@@ -21,20 +21,20 @@ public class EsWriterTest {
         long oneMsBeforeMidnightOnFirstDayOfTime = 1000 * 60 * 60 * 24 - 1;
 
         assertEquals(
-                "foo-1970-01-01.0001",
-                EsWriter.constructIndexName("foo", 48, new Date(exactlyHalfAnHourPassedDawnOfTime)));
+        "foo-1970-01-01.0001",
+        EsWriter.constructIndexName("foo", 48, new Date(exactlyHalfAnHourPassedDawnOfTime)));
 
         assertEquals(
-                "foo-1970-01-01.0000",
-                EsWriter.constructIndexName("foo", 48, new Date(exactlyHalfAnHourPassedDawnOfTime - 1)));
+        "foo-1970-01-01.0000",
+        EsWriter.constructIndexName("foo", 48, new Date(exactlyHalfAnHourPassedDawnOfTime - 1)));
 
         assertEquals(
-                "foo-1970-01-01.0047",
-                EsWriter.constructIndexName("foo", 48, new Date(oneMsBeforeMidnightOnFirstDayOfTime)));
+        "foo-1970-01-01.0047",
+        EsWriter.constructIndexName("foo", 48, new Date(oneMsBeforeMidnightOnFirstDayOfTime)));
 
         assertEquals(
-                "foo-1970-01-02.0000",
-                EsWriter.constructIndexName("foo", 48, new Date(oneMsBeforeMidnightOnFirstDayOfTime + 2)));
+        "foo-1970-01-02.0000",
+        EsWriter.constructIndexName("foo", 48, new Date(oneMsBeforeMidnightOnFirstDayOfTime + 2)));
     }
 
     @Test

@@ -93,8 +93,8 @@ public class DynamoDBProgrammaticKeyValue extends DynamoDBKeyValueBase<Programma
      */
     @Inject
     public DynamoDBProgrammaticKeyValue(AWSCredentialsProvider awsCredentialsProvider,
-                                        ProgrammaticDynamoDBConfiguration configuration,
-                                        DynamoDBAutoscalingConfigurer dynamoDBAutoscalingConfigurer) {
+                                                                                                                                                                                                               ProgrammaticDynamoDBConfiguration configuration,
+                                                                                                                                                                                                               DynamoDBAutoscalingConfigurer dynamoDBAutoscalingConfigurer) {
         super(awsCredentialsProvider, configuration);
         this.dynamoDBAutoscalingConfigurer = dynamoDBAutoscalingConfigurer;
     }
@@ -122,8 +122,8 @@ public class DynamoDBProgrammaticKeyValue extends DynamoDBKeyValueBase<Programma
         final DescribeLimitsResult limits = describeLimits.get();
         if (config.getAutoscaling()) {
             dynamoDBAutoscalingConfigurer.setupAutoscaling(rcu, wcu, config.getTableName(), limits,
-                    Integer.valueOf(config.getTargetWriteUtilization()),
-                    Integer.valueOf(config.getTargetReadUtilization()));
+            Integer.valueOf(config.getTargetWriteUtilization()),
+            Integer.valueOf(config.getTargetReadUtilization()));
         }
 
         // build cloudwatch client
@@ -146,14 +146,14 @@ public class DynamoDBProgrammaticKeyValue extends DynamoDBKeyValueBase<Programma
             double thresholdPercentage = config.highResolutionAlarmThresholdPercentageOfProvisionedCapacity();
             //create a high resolution alarm for consuming 80% or more RCU of provisioning
             createHighResolutionAlarm(
-                    "ndbench/DynamoDB/RcuConsumedAlarm",
-                    ND_BENCH_DYNAMO_DB_CONSUMED_RCU,
-                    thresholdPercentage * (double) rcu);
+            "ndbench/DynamoDB/RcuConsumedAlarm",
+            ND_BENCH_DYNAMO_DB_CONSUMED_RCU,
+            thresholdPercentage * (double) rcu);
             //create a high resolution alarm for consuming 80% or more WCU of provisioning
             createHighResolutionAlarm(
-                    "ndbench/DynamoDB/WcuConsumedAlarm",
-                    ND_BENCH_DYNAMO_DB_CONSUMED_WCU,
-                    thresholdPercentage * (double) wcu);
+            "ndbench/DynamoDB/WcuConsumedAlarm",
+            ND_BENCH_DYNAMO_DB_CONSUMED_WCU,
+            thresholdPercentage * (double) wcu);
         }
     }
 
@@ -168,17 +168,17 @@ public class DynamoDBProgrammaticKeyValue extends DynamoDBKeyValueBase<Programma
      */
     private void createHighResolutionAlarm(String alarmName, String metricName, double threshold) {
         putMetricAlarm.apply(new PutMetricAlarmRequest()
-                .withNamespace(CUSTOM_TABLE_METRICS_NAMESPACE)
-                .withDimensions(tableDimension)
-                .withMetricName(metricName)
-                .withAlarmName(alarmName)
-                .withStatistic(Statistic.Sum)
-                .withUnit(StandardUnit.Count)
-                .withComparisonOperator(ComparisonOperator.GreaterThanThreshold)
-                .withDatapointsToAlarm(5).withEvaluationPeriods(5) //alarm when 5 out of 5 consecutive measurements are high
-                .withActionsEnabled(false) //TODO add actions in a later PR
-                .withPeriod(10) //high resolution alarm
-                .withThreshold(10 * threshold));
+        .withNamespace(CUSTOM_TABLE_METRICS_NAMESPACE)
+        .withDimensions(tableDimension)
+        .withMetricName(metricName)
+        .withAlarmName(alarmName)
+        .withStatistic(Statistic.Sum)
+        .withUnit(StandardUnit.Count)
+        .withComparisonOperator(ComparisonOperator.GreaterThanThreshold)
+        .withDatapointsToAlarm(5).withEvaluationPeriods(5) //alarm when 5 out of 5 consecutive measurements are high
+        .withActionsEnabled(false) //TODO add actions in a later PR
+        .withPeriod(10) //high resolution alarm
+        .withThreshold(10 * threshold));
     }
 
     private void checkAndInitCloudwatchReporter() {
@@ -190,8 +190,8 @@ public class DynamoDBProgrammaticKeyValue extends DynamoDBKeyValueBase<Programma
                 while (!Thread.currentThread().isInterrupted()) {
                     final Date now = Date.from(Instant.now());
                     putMetricData.apply(new PutMetricDataRequest()
-                            .withNamespace(CUSTOM_TABLE_METRICS_NAMESPACE)
-                            .withMetricData(createConsumedRcuDatum(now), createConsumedWcuDatum(now)));
+                    .withNamespace(CUSTOM_TABLE_METRICS_NAMESPACE)
+                    .withMetricData(createConsumedRcuDatum(now), createConsumedWcuDatum(now)));
                     Thread.sleep(publishingInterval);
                 }
                 return null;
@@ -202,22 +202,22 @@ public class DynamoDBProgrammaticKeyValue extends DynamoDBKeyValueBase<Programma
 
     private MetricDatum createConsumedRcuDatum(Date now) {
         return createCapacityUnitMetricDatumAndResetCounter(now, getAndResetReadCounsumed(),
-                ND_BENCH_DYNAMO_DB_CONSUMED_RCU);
+        ND_BENCH_DYNAMO_DB_CONSUMED_RCU);
     }
 
     private MetricDatum createConsumedWcuDatum(Date now) {
         return createCapacityUnitMetricDatumAndResetCounter(now, getAndResetWriteCounsumed(),
-                ND_BENCH_DYNAMO_DB_CONSUMED_WCU);
+        ND_BENCH_DYNAMO_DB_CONSUMED_WCU);
     }
 
     private MetricDatum createCapacityUnitMetricDatumAndResetCounter(Date now, double count, String name) {
         return new MetricDatum()
-                .withDimensions(tableDimension)
-                .withMetricName(name)
-                .withStorageResolution(1)
-                .withUnit(StandardUnit.Count)
-                .withTimestamp(now)
-                .withValue(count);
+        .withDimensions(tableDimension)
+        .withMetricName(name)
+        .withStorageResolution(1)
+        .withUnit(StandardUnit.Count)
+        .withTimestamp(now)
+        .withValue(count);
     }
 
     @Override

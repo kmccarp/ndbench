@@ -36,11 +36,13 @@ public class AwsAsgDiscovery implements IClusterDiscovery {
     private static final Logger logger = LoggerFactory.getLogger(LocalClusterDiscovery.class.getName());
 
     IConfiguration config;
+
     @Inject
     public AwsAsgDiscovery(IConfiguration configuration)
     {
         this.config = configuration;
     }
+
     @Override
     public List<String> getApps() {
         return Arrays.asList(getCurrentAsgName());
@@ -49,20 +51,20 @@ public class AwsAsgDiscovery implements IClusterDiscovery {
     @Override
     public List<String> getEndpoints(String appName, int defaultPort) {
 
-        return getRacMembership().stream().map(s -> s+":"+defaultPort).collect(Collectors.toList());
+        return getRacMembership().stream().map(s -> s + ":" + defaultPort).collect(Collectors.toList());
 
     }
 
     public List<String> getRacMembership()
     {
-         /*
-         * Create your credentials file at ~/.aws/credentials (C:\Users\USER_NAME\.aws\credentials for Windows users)
-         * and save the following lines after replacing the underlined values with your own.
-         *
-         * [default]
-         * aws_access_key_id = YOUR_ACCESS_KEY_ID
-         * aws_secret_access_key = YOUR_SECRET_ACCESS_KEY
-         */
+        /*
+        * Create your credentials file at ~/.aws/credentials (C:\Users\USER_NAME\.aws\credentials for Windows users)
+        * and save the following lines after replacing the underlined values with your own.
+        *
+        * [default]
+        * aws_access_key_id = YOUR_ACCESS_KEY_ID
+        * aws_secret_access_key = YOUR_SECRET_ACCESS_KEY
+        */
 
         AmazonAutoScaling client = null;
         AmazonEC2 ec2Client = null;
@@ -83,7 +85,7 @@ public class AwsAsgDiscovery implements IClusterDiscovery {
             {
                 for (com.amazonaws.services.autoscaling.model.Instance ins : asg.getInstances())
                     if (!(ins.getLifecycleState().equalsIgnoreCase("Terminating") || ins.getLifecycleState().equalsIgnoreCase("shutting-down") || ins.getLifecycleState()
-                            .equalsIgnoreCase("Terminated")))
+                    .equalsIgnoreCase("Terminated")))
                         instanceIds.add(ins.getInstanceId());
             }
             logger.info(String.format("Querying Amazon returned following instance in the ASG: %s --> %s", myAsgName, StringUtils.join(instanceIds, ",")));
@@ -94,19 +96,19 @@ public class AwsAsgDiscovery implements IClusterDiscovery {
             DescribeInstancesResult insRes = ec2Client.describeInstances(insReq);
 
             return insRes.getReservations().stream()
-                    .flatMap(r -> r.getInstances().stream())
-                    .map(Instance::getPublicDnsName).distinct().collect(Collectors.toList());
+            .flatMap(r -> r.getInstances().stream())
+            .map(Instance::getPublicDnsName).distinct().collect(Collectors.toList());
         }
         catch (Exception e)
         {
-            logger.error("Exception in getting private IPs from current ASG",e);
+            logger.error("Exception in getting private IPs from current ASG", e);
             return Collections.emptyList();
         }
         finally
         {
             if (client != null)
                 client.shutdown();
-            if(ec2Client !=null)
+            if (ec2Client != null)
                 ec2Client.shutdown();
         }
     }
@@ -114,11 +116,11 @@ public class AwsAsgDiscovery implements IClusterDiscovery {
     private String getCurrentAsgName()
     {
         DescribeAutoScalingInstancesRequest asgInsReq = new DescribeAutoScalingInstancesRequest()
-                .withInstanceIds(AWSUtil.getLocalInstanceId());
+        .withInstanceIds(AWSUtil.getLocalInstanceId());
 
         DescribeAutoScalingInstancesResult asgInsRes = getAutoScalingClient().describeAutoScalingInstances(asgInsReq);
         String myAsgName = asgInsRes.getAutoScalingInstances().get(0).getAutoScalingGroupName();
-        return myAsgName!=null && myAsgName.length() > 0 ? myAsgName : "NdBench_Aws_cluster";
+        return myAsgName != null && myAsgName.length() > 0 ? myAsgName : "NdBench_Aws_cluster";
     }
 
     protected AmazonAutoScaling getAutoScalingClient() {

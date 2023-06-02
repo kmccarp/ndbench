@@ -24,8 +24,8 @@ public final class NdBenchConstants {
     public static final String WEBAPP_NAME = "ndbench";
     public static final String PROP_NAMESPACE = (WEBAPP_NAME + ".config") + ".";
 
-    public static final String NUM_KEYS="numKeys";
-    public static final String NUM_VALUES="numValues";
+    public static final String NUM_KEYS = "numKeys";
+    public static final String NUM_VALUES = "numValues";
     public static final String DATA_SIZE = "dataSize";
     public static final String NUM_WRITERS = "numWriters";
     public static final String NUM_READERS = "numReaders";
@@ -41,17 +41,17 @@ public final class NdBenchConstants {
     public static final String USE_STATIC_DATA = "useStaticData";
 
 
-    public static final String READ_RATE_LIMIT="readRateLimit";
-    public static final String WRITE_RATE_LIMIT="writeRateLimit";
+    public static final String READ_RATE_LIMIT = "readRateLimit";
+    public static final String WRITE_RATE_LIMIT = "writeRateLimit";
 
     // Use constant so as to avoid hard coded string references in calling code
     public static final String WRITE_RATE_LIMIT_FULL_NAME = PROP_NAMESPACE + WRITE_RATE_LIMIT;
 
-    public static final String CONFIG_CLUSTER_DISCOVERY_NAME="clusters.json";
+    public static final String CONFIG_CLUSTER_DISCOVERY_NAME = "clusters.json";
 
-    public static final String DISCOVERY_ENV="DISCOVERY_ENV";
-    public static final String DISCOVERY_ENV_CF="CF";
-    public static final String DISCOVERY_ENV_AWS="AWS";
-    public static final String DISCOVERY_ENV_AWS_ASG="AWS_ASG";
-    public static final String DISCOVERY_ENV_AWS_CONFIG_FILE="CONFIG_FILE";
+    public static final String DISCOVERY_ENV = "DISCOVERY_ENV";
+    public static final String DISCOVERY_ENV_CF = "CF";
+    public static final String DISCOVERY_ENV_AWS = "AWS";
+    public static final String DISCOVERY_ENV_AWS_ASG = "AWS_ASG";
+    public static final String DISCOVERY_ENV_AWS_CONFIG_FILE = "CONFIG_FILE";
 }

@@ -91,9 +91,9 @@ public class CreateTableTest {
         //setup
         when(dynamoDB.describeTable("asdf")).thenThrow(new ResourceNotFoundException("asdf"));
         when(dynamoDB.createTable(any(CreateTableRequest.class)))
-                .thenReturn(new CreateTableResult().withTableDescription(new TableDescription()));
+        .thenReturn(new CreateTableResult().withTableDescription(new TableDescription()));
         when(dynamoDB.describeTable(new DescribeTableRequest().withTableName("asdf")))
-                .thenReturn(new DescribeTableResult().withTable(new TableDescription().withTableStatus(TableStatus.ACTIVE)));
+        .thenReturn(new DescribeTableResult().withTable(new TableDescription().withTableStatus(TableStatus.ACTIVE)));
 
         //test
         createDynamoDBTable.get();

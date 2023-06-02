@@ -39,7 +39,7 @@ public class SlidingWindowStringKeyGenerator extends StringKeyGenerator {
     public SlidingWindowStringKeyGenerator(int windowSize, long testDurationInSeconds, boolean preLoadKeys, int numKeys)
     {
         super(numKeys, preLoadKeys);
-        logger.info("Initialized SlidingWindowKeyGenerator with WindowSize: "+windowSize+", Test Duration (Secs): "+testDurationInSeconds+", NumKeys: "+numKeys);
+        logger.info("Initialized SlidingWindowKeyGenerator with WindowSize: " + windowSize + ", Test Duration (Secs): " + testDurationInSeconds + ", NumKeys: " + numKeys);
         this.windowSize = windowSize;
         this.testDurationInSeconds = testDurationInSeconds;
     }
@@ -48,7 +48,7 @@ public class SlidingWindowStringKeyGenerator extends StringKeyGenerator {
     public void init() {
         super.init();
         startTime = System.currentTimeMillis();
-        endTime = startTime + (testDurationInSeconds*1000);
+        endTime = startTime + (testDurationInSeconds * 1000);
     }
 
     @Override
@@ -58,15 +58,15 @@ public class SlidingWindowStringKeyGenerator extends StringKeyGenerator {
         int min = getCurrentRecord();
         int max = min + this.windowSize;
         int nextKey = randomnum(min, max);
-        logger.debug("NumKeys: "+numKeys+" | CurrentKeySet: [" +min +" - " +max+"] | getNextKey(): "+nextKey);
-        return "T"+nextKey;
+        logger.debug("NumKeys: " + numKeys + " | CurrentKeySet: [" + min + " - " + max + "] | getNextKey(): " + nextKey);
+        return "T" + nextKey;
     }
 
     @Override
     public boolean hasNextKey() {
         long currentTime = System.currentTimeMillis();
-        if ( endTime < currentTime ) {
-            logger.info("No more keys to process since endtime :"+endTime+" < currentTime: "+currentTime);
+        if (endTime < currentTime) {
+            logger.info("No more keys to process since endtime :" + endTime + " < currentTime: " + currentTime);
             return false;
         }
         return true;
@@ -85,13 +85,13 @@ public class SlidingWindowStringKeyGenerator extends StringKeyGenerator {
         long currentTime = System.currentTimeMillis();
 
         //How far along has the test run?
-        long currentDuration=currentTime-startTime;
+        long currentDuration = currentTime - startTime;
         //How far along the test are we?
-        double currentRelativePosition=(currentDuration/1000d)/testDurationInSeconds;
+        double currentRelativePosition = (currentDuration / 1000d) / testDurationInSeconds;
         //determine the position of the test window
-        double currentRecordRaw=currentRelativePosition*(numKeys-windowSize);
+        double currentRecordRaw = currentRelativePosition * (numKeys - windowSize);
 
-        Long currentRecord=Math.round(currentRecordRaw);
+        Long currentRecord = Math.round(currentRecordRaw);
 
         return currentRecord.intValue();
     }
