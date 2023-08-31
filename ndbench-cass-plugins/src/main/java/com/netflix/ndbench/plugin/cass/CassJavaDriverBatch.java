@@ -21,7 +21,7 @@ import java.util.Random;
 public class CassJavaDriverBatch extends CJavaDriverBasePlugin<CassandraGenericConfiguration> {
 
     //Settings
-    private volatile String TableName2;
+    private volatile String tableName2;
 
     Random randomObj = new Random();
 
@@ -37,7 +37,7 @@ public class CassJavaDriverBatch extends CJavaDriverBasePlugin<CassandraGenericC
 
         readPstmt = session.prepare(" SELECT cyclist_name, expense_id, amount, description, paid FROM " + tableName + " WHERE cyclist_name = ?" );
         writePstmt = session.prepare("INSERT INTO " + tableName + " (cyclist_name, expense_id, amount, description, paid) VALUES (?, ?, ?, ?, ?)");
-        writePstmt2 = session.prepare("INSERT INTO "+TableName2+" (expense_id, cyclist_name) VALUES (?, ?)");
+        writePstmt2 = session.prepare("INSERT INTO "+tableName2+" (expense_id, cyclist_name) VALUES (?, ?)");
     }
 
     @Override
@@ -48,12 +48,12 @@ public class CassJavaDriverBatch extends CJavaDriverBasePlugin<CassandraGenericC
     @Override
     void upsertCF(Session session) {
         session.execute("CREATE TABLE IF NOT EXISTS " + tableName + " (cyclist_name text, balance float STATIC, expense_id int, amount float, description text, paid boolean, PRIMARY KEY (cyclist_name, expense_id) ) WITH compression = {'sstable_compression': ''}");
-        session.execute("CREATE TABLE IF NOT EXISTS "+TableName2+" (expense_id int, cyclist_name text, PRIMARY KEY (expense_id, cyclist_name)) WITH compression = {'sstable_compression': ''}");
+        session.execute("CREATE TABLE IF NOT EXISTS "+tableName2+" (expense_id int, cyclist_name text, PRIMARY KEY (expense_id, cyclist_name)) WITH compression = {'sstable_compression': ''}");
     }
 
     @Override
     void preInit() {
-        this.TableName2 = config.getCfname2();
+        this.tableName2 = config.getCfname2();
     }
 
     @Override

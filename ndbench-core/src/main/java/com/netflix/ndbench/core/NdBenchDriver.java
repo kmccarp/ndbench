@@ -194,10 +194,7 @@ public class NdBenchDriver {
 
     public boolean getIsWriteRunning() {
         ExecutorService tp = tpWriteRef.get();
-        if (tp != null) {
-            return true;
-        }
-        return false;
+        return tp != null;
     }
 
     public boolean getIsReadRunning() {
@@ -321,8 +318,9 @@ public class NdBenchDriver {
                 if (!tp.awaitTermination(TIMEOUT, TimeUnit.SECONDS)) {
                     tp.shutdownNow(); // Cancel currently executing tasks
                     // Wait a while for tasks to respond to being cancelled
-                    if (!tp.awaitTermination(TIMEOUT, TimeUnit.SECONDS))
+                    if (!tp.awaitTermination(TIMEOUT, TimeUnit.SECONDS)) {
                         logger.error("Error while shutting down executor service : ");
+                    }
                 }
                 logger.info("Threadpool has terminated!");
             } catch (InterruptedException e) {

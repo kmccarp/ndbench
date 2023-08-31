@@ -26,7 +26,7 @@ import java.util.Random;
  */
 public class SlidingWindowStringKeyGenerator extends StringKeyGenerator {
 
-    private static Logger logger = LoggerFactory.getLogger(SlidingWindowStringKeyGenerator.class);
+    private static final Logger logger = LoggerFactory.getLogger(SlidingWindowStringKeyGenerator.class);
 
     private final int windowSize;
     private final long testDurationInSeconds;
