@@ -167,7 +167,7 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
         int numColsPerRow=config.getColsPerRow();
         int numRowsPerPartition=config.getRowsPerPartition();
         int numPartitions= coreConfig.getNumKeys();
-        int RF = 3;
+        int rf = 3;
         Long numNodes = cluster.getMetadata().getAllHosts()
                                .stream()
                                .collect(groupingBy(Host::getDatacenter,counting()))
@@ -175,7 +175,7 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
 
 
         int partitionSizeInBytes = bytesPerCol * numColsPerRow * numRowsPerPartition;
-        long totalSizeInBytes = (long) partitionSizeInBytes * numPartitions * RF;
+        long totalSizeInBytes = (long) partitionSizeInBytes * numPartitions * rf;
         long totalSizeInBytesPerNode = totalSizeInBytes / numNodes;
 
 

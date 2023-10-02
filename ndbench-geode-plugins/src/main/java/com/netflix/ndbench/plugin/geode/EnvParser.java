@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
  */
 @Singleton
 public class EnvParser {
-  private final String PROPERTIES_VCAP_SERVICES = "VCAP_SERVICES";
-  private final String SERVICE_NAME = "p-cloudcache";
+  private static final String PROPERTIES_VCAP_SERVICES = "VCAP_SERVICES";
+  private static final String SERVICE_NAME = "p-cloudcache";
   private PropertyFactory propertyFactory;
 
   private final Pattern p = Pattern.compile("(.*)\\[(\\d*)\\]");

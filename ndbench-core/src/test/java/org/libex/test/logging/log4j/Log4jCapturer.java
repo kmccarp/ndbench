@@ -49,7 +49,7 @@ import static org.libex.logging.log4j.LoggingEventsEx.toMessage;
  */
 @NotThreadSafe
 @ParametersAreNonnullByDefault
-public class Log4jCapturer implements TestRule {
+public final class Log4jCapturer implements TestRule {
 
     private static final String DEFAULT_LAYOUT = "%d{DATE} %5p %C{1}.%M(),%L - %m%n";
     private static final String APPENDER_NAME = "Log4jCapturerAppender";
@@ -133,7 +133,7 @@ public class Log4jCapturer implements TestRule {
         appender.setThreshold(threshold);
         appender.setLayout(layout);
         appender.setName(APPENDER_NAME);
-        this.loggers = (loggers.isEmpty()) ? newArrayList(Logger.getRootLogger()) : ImmutableList.copyOf(loggers);
+        this.loggers = loggers.isEmpty() ? newArrayList(Logger.getRootLogger()) : ImmutableList.copyOf(loggers);
 
         for (Logger logger : this.loggers) {
             logger.setLevel(threshold);
@@ -237,7 +237,7 @@ public class Log4jCapturer implements TestRule {
 
         if (assertion.times <=1 ) {
             LoggingEvent event = logs.stream().filter(assertion.criteria()).findFirst().orElse(null);
-            Matcher<Object> matcher = (assertion.logged) ? notNullValue()
+            Matcher<Object> matcher = assertion.logged ? notNullValue()
                     : nullValue();
             MatcherAssert.assertThat(assertion.toString(), event, matcher);
         } else {

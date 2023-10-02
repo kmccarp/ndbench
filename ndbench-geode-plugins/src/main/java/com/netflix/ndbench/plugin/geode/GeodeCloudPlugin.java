@@ -104,9 +104,7 @@ public class GeodeCloudPlugin implements NdBenchClient{
   }
 
   public String writeSingle(final String key) throws Exception {
-    String result = sampleRegion.put(key, dataGenerator.getRandomValue());
-
-    return result;
+    return sampleRegion.put(key, dataGenerator.getRandomValue());
   }
 
     /**

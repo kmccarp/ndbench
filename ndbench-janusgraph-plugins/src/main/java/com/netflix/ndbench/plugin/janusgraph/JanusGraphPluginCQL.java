@@ -49,7 +49,7 @@ import java.util.Optional;
 @NdBenchClientPlugin("janusgraph-cql")
 public class JanusGraphPluginCQL extends JanusGraphBasePlugin implements NdBenchClient {
     private static final Logger logger = LoggerFactory.getLogger(JanusGraphPluginCQL.class);
-    private static String BACKEND = "cql";
+    private static String backend = "cql";
 
     private final JanusGraphFactory.Builder graphBuilder;
 
@@ -60,7 +60,7 @@ public class JanusGraphPluginCQL extends JanusGraphBasePlugin implements NdBench
 
     @Inject
     public JanusGraphPluginCQL(IJanusGraphConfig config, JanusGraphBuilderCQLProvider builderProvider) {
-        super(BACKEND, Optional.ofNullable(config.getStorageHostname()).orElse(Inet4Address.getLoopbackAddress().getHostAddress()),
+        super(backend, Optional.ofNullable(config.getStorageHostname()).orElse(Inet4Address.getLoopbackAddress().getHostAddress()),
                 config.getStoragePort());
         this.graphBuilder = builderProvider.getGraphBuilder();
         this.useJanusgraphTransaction = config.useJanusgraphTransaction();
@@ -82,8 +82,9 @@ public class JanusGraphPluginCQL extends JanusGraphBasePlugin implements NdBench
         try {
             return readSingleInternal(key, tx);
         } finally {
-            if (tx != null)
+            if (tx != null) {
                 tx.close();
+            }
         }
     }
 
@@ -100,15 +101,17 @@ public class JanusGraphPluginCQL extends JanusGraphBasePlugin implements NdBench
                 throw new Exception("Internal error when reading data with key" + key + " using JanusGraph Core API");
             }
 
-            if (vertex.keys().isEmpty())
+            if (vertex.keys().isEmpty()) {
                 response = CACHE_MISS;
+            }
         } else {
             List<Vertex> results = traversalSource.V().has(PROP_CUSTOM_ID_KEY, key).toList();
 
-            if (results == null)
+            if (results == null) {
                 throw new Exception("Internal error when reading data with key" + key + " using TinkerPop API");
-            else if (results.size() == 0)
+            } else if (results.isEmpty()) {
                 response = CACHE_MISS;
+            }
         }
 
         return response;
@@ -144,8 +147,9 @@ public class JanusGraphPluginCQL extends JanusGraphBasePlugin implements NdBench
                 responses.add(response);
             }
         } finally {
-            if (transaction != null)
+            if (transaction != null) {
                 transaction.close();
+            }
         }
         return responses;
     }

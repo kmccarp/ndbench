@@ -80,7 +80,7 @@ public final class LoggingEventsEx {
     {
         return event -> event != null
                 && matcher
-                        .matches((event.getThrowableInformation() == null) ? null
+                        .matches(event.getThrowableInformation() == null ? null
                                 : event.getThrowableInformation()
                                         .getThrowable());
     }
