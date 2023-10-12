@@ -33,7 +33,7 @@ class EsAutoTuner {
 
     // Captures time of first auto-tune recommendation request (made via a call to recommendNewRate);
     private volatile long timeOfFirstAutoTuneRequest = -1;
-    private volatile boolean crossedAllowedFailureThreshold = false;
+    private volatile boolean crossedAllowedFailureThreshold;
 
     EsAutoTuner(Integer rampPeriodMs,
                 Integer incrementIntervalMs,
