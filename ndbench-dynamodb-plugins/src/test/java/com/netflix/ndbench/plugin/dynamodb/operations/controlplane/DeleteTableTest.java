@@ -30,9 +30,9 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 public class DeleteTableTest {
-    private AmazonDynamoDB dynamoDB = mock(AmazonDynamoDB.class);
-    private AmazonDynamoDBWaiters waiters = mock(AmazonDynamoDBWaiters.class);
-    private Waiter<DescribeTableRequest> tableNotExists = mock(Waiter.class);
+    private final AmazonDynamoDB dynamoDB = mock(AmazonDynamoDB.class);
+    private final AmazonDynamoDBWaiters waiters = mock(AmazonDynamoDBWaiters.class);
+    private final Waiter<DescribeTableRequest> tableNotExists = mock(Waiter.class);
 
     @Test
     public void delete_whenTableAlreadyExists_deletesTable() {

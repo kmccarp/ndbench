@@ -28,12 +28,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DynoJedisUtils {
     // private final AtomicReference<DynoJedisClient> jedisClient = new
     // AtomicReference<DynoJedisClient>(null);
-    private AtomicReference<DynoJedisClient> jedisClient;
+    private final AtomicReference<DynoJedisClient> jedisClient;
     private static final String ResultOK = "Ok";
     private static final String CacheMiss = null;
 
     private static final Logger logger = LoggerFactory.getLogger(DynoJedisUtils.class);
-    private static Random randomGenerator = new Random();
+    private static final Random randomGenerator = new Random();
 
     public DynoJedisUtils(AtomicReference<DynoJedisClient> jedisClient) {
         this.jedisClient = jedisClient;
@@ -69,25 +69,25 @@ public class DynoJedisUtils {
      * @return "OK" if everything was read
      * @throws Exception
      */
-    public String pipelineRead(String key, int max_pipe_keys, int min_pipe_keys) throws Exception {
-        int pipe_keys = randomGenerator.nextInt(max_pipe_keys);
-        pipe_keys = Math.max(min_pipe_keys, pipe_keys);
+    public String pipelineRead(String key, int maxPipeKeys, int minPipeKeys) throws Exception {
+        int pipeKeys = randomGenerator.nextInt(maxPipeKeys);
+        pipeKeys = Math.max(minPipeKeys, pipeKeys);
 
         DynoJedisPipeline pipeline = this.jedisClient.get().pipelined();
 
         Map<String, Response<String>> responses = new HashMap<>();
-        for (int n = 0; n < pipe_keys; ++n) {
-            String nth_key = key + "_" + n;
+        for (int n = 0; n < pipeKeys; ++n) {
+            String nthKey = key + "_" + n;
             // NOTE: Dyno Jedis works on only one key, so we always use the same
             // key in every get operation
             Response<String> resp = pipeline.get(key);
             // We however use the nth key as the key in the hashmap to check
             // individual response on every operation.
-            responses.put(nth_key, resp);
+            responses.put(nthKey, resp);
         }
         pipeline.sync();
 
-        for (int n = 0; n < pipe_keys; ++n) {
+        for (int n = 0; n < pipeKeys; ++n) {
             String nth_key = key + "_" + n;
             Response<String> resp = responses.get(nth_key);
             if (resp == null || resp.get() == null) {
@@ -116,9 +116,9 @@ public class DynoJedisUtils {
      * @return the contents of the hash
      * @throws Exception
      */
-    public String pipelineReadHGETALL(String key, String hm_key_prefix) throws Exception {
+    public String pipelineReadHGETALL(String key, String hmKeyPrefix) throws Exception {
         DynoJedisPipeline pipeline = jedisClient.get().pipelined();
-        Response<Map<byte[], byte[]>> resp = pipeline.hgetAll((hm_key_prefix + key).getBytes());
+        Response<Map<byte[], byte[]>> resp = pipeline.hgetAll((hmKeyPrefix + key).getBytes());
         pipeline.sync();
         if (resp == null || resp.get() == null) {
             logger.info("Cache Miss: key:" + key);
@@ -140,7 +140,7 @@ public class DynoJedisUtils {
      * 
      * @param key
      */
-    public String nonPipelineZRANGE(String key, int max_score) {
+    public String nonPipelineZRANGE(String key, int maxScore) {
         StringBuilder sb = new StringBuilder();
         // Return all elements
         Set<String> returnEntries = this.jedisClient.get().zrange(key, 0, -1);
@@ -165,7 +165,7 @@ public class DynoJedisUtils {
 
         if (!"OK".equals(result)) {
             logger.error("SET_ERROR: GOT " + result + " for SET operation");
-            throw new RuntimeException(String.format("DynoJedis: value %s for SET operation is NOT VALID", value, key));
+            throw new RuntimeException(String.format("DynoJedis: value %s for SET operation is NOT VALID", value));
 
         }
 
@@ -178,14 +178,14 @@ public class DynoJedisUtils {
      * @param key
      * @return "key_n"
      */
-    public String pipelineWrite(String key, DataGenerator dataGenerator, int max_pipe_keys, int min_pipe_keys)
+    public String pipelineWrite(String key, DataGenerator dataGenerator, int maxPipeKeys, int minPipeKeys)
             throws Exception {
         // Create a random key between [0,MAX_PIPE_KEYS]
-        int pipe_keys = randomGenerator.nextInt(max_pipe_keys);
+        int pipeKeys = randomGenerator.nextInt(maxPipeKeys);
 
         // Make sure that the number of keys in the pipeline are at least
         // MIN_PIPE_KEYS
-        pipe_keys = Math.max(min_pipe_keys, pipe_keys);
+        pipeKeys = Math.max(minPipeKeys, pipeKeys);
 
         DynoJedisPipeline pipeline = this.jedisClient.get().pipelined();
         Map<String, Response<String>> responses = new HashMap<>();
@@ -197,11 +197,11 @@ public class DynoJedisUtils {
          */
         StringBuilder sb = new StringBuilder();
         // Iterate across the number of keys in the pipeline and set
-        for (int n = 0; n < pipe_keys; ++n) {
-            String nth_key = key + "_" + n;
-            sb.append(nth_key);
+        for (int n = 0; n < pipeKeys; ++n) {
+            String nthKey = key + "_" + n;
+            sb.append(nthKey);
             Response<String> resp = pipeline.set(key, key + dataGenerator.getRandomValue() + key);
-            responses.put(nth_key, resp);
+            responses.put(nthKey, resp);
         }
         pipeline.sync();
 
@@ -214,9 +214,9 @@ public class DynoJedisUtils {
      * @param key
      * @return the keys of the hash that was stored.
      */
-    public String pipelineWriteHMSET(String key, DataGenerator dataGenerator, String hm_key_prefix) {
+    public String pipelineWriteHMSET(String key, DataGenerator dataGenerator, String hmKeyPrefix) {
         Map<String, String> map = new HashMap<>();
-        String hmKey = hm_key_prefix + key;
+        String hmKey = hmKeyPrefix + key;
         map.put((hmKey + "__1"), (key + "__" + dataGenerator.getRandomValue() + "__" + key));
         map.put((hmKey + "__2"), (key + "__" + dataGenerator.getRandomValue() + "__" + key));
 
@@ -235,18 +235,18 @@ public class DynoJedisUtils {
      * @return "OK" if all write operations have succeeded
      * @throws Exception
      */
-    public String nonPipelineZADD(String key, DataGenerator dataGenerator, String z_key_prefix, int max_score)
+    public String nonPipelineZADD(String key, DataGenerator dataGenerator, String zKeyPrefix, int maxScore)
             throws Exception {
 
-        String zKey = z_key_prefix + key;
+        String zKey = zKeyPrefix + key;
         int success = 0;
         long returnOp = 0;
-        for (int i = 0; i < max_score; i++) {
+        for (int i = 0; i < maxScore; i++) {
             returnOp = jedisClient.get().zadd(zKey, i, dataGenerator.getRandomValue() + "__" + zKey);
             success += returnOp;
         }
         // all the above operations will separate entries
-        if (success != max_score - 1) {
+        if (success != maxScore - 1) {
             return null;
         }
         return "OK";

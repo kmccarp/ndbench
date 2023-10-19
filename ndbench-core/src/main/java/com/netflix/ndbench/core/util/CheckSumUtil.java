@@ -87,8 +87,9 @@ public class CheckSumUtil
     public static boolean isChecksumValid(String encodedInput)
     {
         // ignore null input
-        if (null == encodedInput)
+        if (null == encodedInput) {
             return true;
+        }
 
         try
         {

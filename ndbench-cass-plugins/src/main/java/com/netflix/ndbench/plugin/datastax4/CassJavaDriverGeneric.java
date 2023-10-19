@@ -147,7 +147,7 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
         int numColsPerRow=config.getColsPerRow();
         int numRowsPerPartition=config.getRowsPerPartition();
         int numPartitions= ndbConfig.getNumKeys();
-        int RF = 3;
+        int rf = 3;
         Long numNodes = session.getMetadata().getNodes().values()
                 .stream()
                 .collect(groupingBy(Node::getDatacenter,counting()))
@@ -155,7 +155,7 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
 
 
         int partitionSizeInBytes = bytesPerCol * numColsPerRow * numRowsPerPartition;
-        long totalSizeInBytes = (long) partitionSizeInBytes * numPartitions * RF;
+        long totalSizeInBytes = (long) partitionSizeInBytes * numPartitions * rf;
         long totalSizeInBytesPerNode = totalSizeInBytes / numNodes;
 
 
@@ -169,7 +169,7 @@ public class CassJavaDriverGeneric extends CJavaDriverBasePlugin<CassandraGeneri
                 humanReadableByteCount(partitionSizeInBytes));
     }
 
-    private SimpleStatement SimpleStatement(String query) {
+    private SimpleStatement simpleStatement(String query) {
         return SimpleStatement.builder(query).build();
     }
 }

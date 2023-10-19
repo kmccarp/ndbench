@@ -65,8 +65,8 @@ public class DynamoDBWriteBulk extends AbstractDynamoDBDataPlaneOperation
         return keys.stream()
                 .map(key -> ImmutableMap.of(partitionKeyName, new AttributeValue(key),
                         ATTRIBUTE_NAME, new AttributeValue(this.dataGenerator.getRandomValue())))
-                .map(item -> new PutRequest().withItem(item))
-                .map(put -> new WriteRequest().withPutRequest(put))
+                .map(new PutRequest()::withItem)
+                .map(new WriteRequest()::withPutRequest)
                 .collect(Collectors.toList());
     }
 

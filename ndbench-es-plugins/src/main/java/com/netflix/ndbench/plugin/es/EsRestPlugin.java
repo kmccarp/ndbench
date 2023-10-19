@@ -83,10 +83,11 @@ public class EsRestPlugin implements NdBenchAbstractClient<WriteResult> {
      * is defined, otherwise returns result of calling {@link EsConfig#getCluster() }
      */
     public String getClusterOrHostName() {
-        if (StringUtils.isNotBlank(config.getHostName()))
+        if (StringUtils.isNotBlank(config.getHostName())) {
             return config.getHostName();
-        else
+        } else {
             return config.getCluster();
+        }
     }
 
     /**
@@ -120,7 +121,7 @@ public class EsRestPlugin implements NdBenchAbstractClient<WriteResult> {
 
         this.esHostPort = hosts.get(0).toString();
         this.connectionInfo = String.format(
-                "Cluster: %s\ntest index URL: %s/%s/%s",
+                "Cluster: %s%ntest index URL: %s/%s/%s",
                 this.getClusterOrHostName(), esHostPort, config.getIndexName(), config.getDocumentType());
 
         writer = new EsWriter(
