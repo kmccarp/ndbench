@@ -135,7 +135,7 @@ public class CockroachDBTransactionPlugin extends CockroachDBPluginBase
                     String sqlState = e.getSQLState();
 
                     // Check if the error code indicates a SERIALIZATION_FAILURE.
-                    if (sqlState.equals("40001"))
+                    if ("40001".equals(sqlState))
                     {
                         // Signal the database that we will attempt a retry.
                         connection.rollback(sp);

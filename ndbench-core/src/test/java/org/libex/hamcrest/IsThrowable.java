@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 @ThreadSafe
-public class IsThrowable<T extends Throwable> extends BaseMatcher<Object> {
+public final class IsThrowable<T extends Throwable> extends BaseMatcher<Object> {
 
     public static <T extends Throwable> IsThrowable<T> isThrowableOfType(
             Class<T> type) {
@@ -51,8 +51,9 @@ public class IsThrowable<T extends Throwable> extends BaseMatcher<Object> {
         }
 
         if (message != null) {
-            if (type != null)
+            if (type != null) {
                 description.appendText("and");
+            }
             description.appendText(" with message matching ");
             description.appendDescriptionOf(message);
         }
@@ -68,10 +69,11 @@ public class IsThrowable<T extends Throwable> extends BaseMatcher<Object> {
             }
 
             if (message != null) {
-                if (arg0 == null)
+                if (arg0 == null) {
                     result = false;
-                else
+                } else {
                     result &= message.matches(t.getMessage());
+                }
             }
         }
 

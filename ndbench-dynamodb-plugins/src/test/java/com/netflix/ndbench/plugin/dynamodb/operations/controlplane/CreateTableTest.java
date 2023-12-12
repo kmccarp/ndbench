@@ -34,7 +34,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CreateTableTest {
-    private AmazonDynamoDB dynamoDB = mock(AmazonDynamoDB.class);
+    private final AmazonDynamoDB dynamoDB = mock(AmazonDynamoDB.class);
 
     @Test(expected = NullPointerException.class)
     public void constructor_whenDynamoDbIsNull_throwsNullPointerException() {

@@ -26,7 +26,7 @@ import java.util.Random;
  */
 public class SlidingWindowFlipStringKeyGenerator extends StringKeyGenerator {
 
-    private static Logger logger = LoggerFactory.getLogger(SlidingWindowFlipStringKeyGenerator.class);
+    private static final Logger logger = LoggerFactory.getLogger(SlidingWindowFlipStringKeyGenerator.class);
 
     private final int windowSize;
     private final long windowDurationInMs;
@@ -79,7 +79,7 @@ public class SlidingWindowFlipStringKeyGenerator extends StringKeyGenerator {
     private int getCurrentWindowIndex()
     {
         long currentTime = System.currentTimeMillis();
-        long currentWindow =((currentTime - startTime) / windowDurationInMs);
+        long currentWindow =(currentTime - startTime) / windowDurationInMs;
         return (int) currentWindow%(numKeys/windowSize);
     }
 }
