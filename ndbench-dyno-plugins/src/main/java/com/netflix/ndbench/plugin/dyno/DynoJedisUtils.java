@@ -28,12 +28,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DynoJedisUtils {
     // private final AtomicReference<DynoJedisClient> jedisClient = new
     // AtomicReference<DynoJedisClient>(null);
-    private AtomicReference<DynoJedisClient> jedisClient;
+    private final AtomicReference<DynoJedisClient> jedisClient;
     private static final String ResultOK = "Ok";
     private static final String CacheMiss = null;
 
     private static final Logger logger = LoggerFactory.getLogger(DynoJedisUtils.class);
-    private static Random randomGenerator = new Random();
+    private static final Random randomGenerator = new Random();
 
     public DynoJedisUtils(AtomicReference<DynoJedisClient> jedisClient) {
         this.jedisClient = jedisClient;
@@ -70,24 +70,24 @@ public class DynoJedisUtils {
      * @throws Exception
      */
     public String pipelineRead(String key, int max_pipe_keys, int min_pipe_keys) throws Exception {
-        int pipe_keys = randomGenerator.nextInt(max_pipe_keys);
-        pipe_keys = Math.max(min_pipe_keys, pipe_keys);
+        int pipeKeys = randomGenerator.nextInt(max_pipe_keys);
+        pipeKeys = Math.max(min_pipe_keys, pipeKeys);
 
         DynoJedisPipeline pipeline = this.jedisClient.get().pipelined();
 
         Map<String, Response<String>> responses = new HashMap<>();
-        for (int n = 0; n < pipe_keys; ++n) {
-            String nth_key = key + "_" + n;
+        for (int n = 0; n < pipeKeys; ++n) {
+            String nthKey = key + "_" + n;
             // NOTE: Dyno Jedis works on only one key, so we always use the same
             // key in every get operation
             Response<String> resp = pipeline.get(key);
             // We however use the nth key as the key in the hashmap to check
             // individual response on every operation.
-            responses.put(nth_key, resp);
+            responses.put(nthKey, resp);
         }
         pipeline.sync();
 
-        for (int n = 0; n < pipe_keys; ++n) {
+        for (int n = 0; n < pipeKeys; ++n) {
             String nth_key = key + "_" + n;
             Response<String> resp = responses.get(nth_key);
             if (resp == null || resp.get() == null) {
@@ -165,7 +165,7 @@ public class DynoJedisUtils {
 
         if (!"OK".equals(result)) {
             logger.error("SET_ERROR: GOT " + result + " for SET operation");
-            throw new RuntimeException(String.format("DynoJedis: value %s for SET operation is NOT VALID", value, key));
+            throw new RuntimeException(String.format("DynoJedis: value %s for SET operation is NOT VALID", value));
 
         }
 
@@ -181,11 +181,11 @@ public class DynoJedisUtils {
     public String pipelineWrite(String key, DataGenerator dataGenerator, int max_pipe_keys, int min_pipe_keys)
             throws Exception {
         // Create a random key between [0,MAX_PIPE_KEYS]
-        int pipe_keys = randomGenerator.nextInt(max_pipe_keys);
+        int pipeKeys = randomGenerator.nextInt(max_pipe_keys);
 
         // Make sure that the number of keys in the pipeline are at least
         // MIN_PIPE_KEYS
-        pipe_keys = Math.max(min_pipe_keys, pipe_keys);
+        pipeKeys = Math.max(min_pipe_keys, pipeKeys);
 
         DynoJedisPipeline pipeline = this.jedisClient.get().pipelined();
         Map<String, Response<String>> responses = new HashMap<>();
@@ -197,11 +197,11 @@ public class DynoJedisUtils {
          */
         StringBuilder sb = new StringBuilder();
         // Iterate across the number of keys in the pipeline and set
-        for (int n = 0; n < pipe_keys; ++n) {
-            String nth_key = key + "_" + n;
-            sb.append(nth_key);
+        for (int n = 0; n < pipeKeys; ++n) {
+            String nthKey = key + "_" + n;
+            sb.append(nthKey);
             Response<String> resp = pipeline.set(key, key + dataGenerator.getRandomValue() + key);
-            responses.put(nth_key, resp);
+            responses.put(nthKey, resp);
         }
         pipeline.sync();
 

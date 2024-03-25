@@ -49,19 +49,19 @@ public class ConstantStepWiseRateIncreaser {
                                   int incrementIntervalMillisecs,
                                   int initRate,
                                   int finalRate) {
-        if (!(initRate >= 0)) {
+        if (initRate < 0) {
             throw new IllegalArgumentException("initRate must be >= 0");
         }
-        if (!(finalRate > 0)) {
+        if (finalRate <= 0) {
             throw new IllegalArgumentException("finalRate must be > 0");
         }
-        if (!(finalRate > initRate)) {
+        if (finalRate <= initRate) {
             throw new IllegalArgumentException("finalRate must be > initRate");
         }
-        if (!(rampPeriodMillisecs > 0)) {
+        if (rampPeriodMillisecs <= 0) {
             throw new IllegalArgumentException("rampPeriodMillisecs must be > 0");
         }
-        if (!(incrementIntervalMillisecs > 0)) {
+        if (incrementIntervalMillisecs <= 0) {
             throw new IllegalArgumentException("incrementIntervalMillisecs must be > 0");
         }
         if (rampPeriodMillisecs % incrementIntervalMillisecs != 0) {
